@@ -566,14 +566,14 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HoloFlows2.6
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: TuDresden
+  metroCertificateIssuer: TuDresden
+  metroCertificateNotAfter: 80498f054dfad501
   metroApplicationDescription: HoloFlows2.6
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: HoloFlows2.6
   metroCommandLineArgsFile: 
   metroTileShowName: 0
   metroMediumTileShowName: 0
