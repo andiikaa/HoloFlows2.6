@@ -8,9 +8,10 @@ public class OverriddenNetworkDiscovery : NetworkDiscovery
         Debug.Log(string.Format("Address: {0} Data: {1}", fromAddress, data));
     }
 
-    public void Awake()
+    public void Start()
     {
+        Debug.Log("Starting unity network discovery");
         Initialize();
-        StartAsClient();
+        StartAsServer();
     }
 }
