@@ -12,8 +12,6 @@ namespace HoloToolkit.Unity.InputModule
 
         private bool placingMode = false;
 
-        private bool isFocused;
-
         public void AllowPlacing()
         {
             placingMode = true;
@@ -124,16 +122,12 @@ namespace HoloToolkit.Unity.InputModule
 
         public void OnFocusEnter()
         {
-            isFocused = true;
-
-            this.transform.GetChild(0).localScale = new Vector3(5, 5, 5);
-
+            transform.GetChild(0).localScale = new Vector3(5, 5, 5);
         }
 
         public void OnFocusExit()
         {
-            isFocused = false;
-            this.transform.GetChild(0).localScale = Vector3.zero;
+            transform.GetChild(0).localScale = Vector3.zero;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace HoloToolkit.Unity.InputModule
         private SpriteRenderer BtnSpriteRenderer;
 
         private Style style;
-        private bool isFocused, isSelected;
+        private bool isSelected;
 
         // Use this for initialization
         void Start()
@@ -31,8 +31,6 @@ namespace HoloToolkit.Unity.InputModule
 
             if (BtnTextMesh != null)
                 BtnTextMesh.color = style.highlightColor;
-
-            isFocused = true;
         }
 
         public void OnFocusExit()
@@ -50,8 +48,6 @@ namespace HoloToolkit.Unity.InputModule
                     BtnTextMesh.color = style.defaultColor;
 
             }
-
-            isFocused = false;
         }
 
         public void Select()

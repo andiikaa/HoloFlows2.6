@@ -1,70 +1,62 @@
 ﻿using HoloToolkit.UX.Progress;
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO initialization!
 public class WizardDialog : MonoBehaviour
 {
+    //child object names
     private const string MAIN_CONTENT = "MainContent";
     private const string NEXT_BTN = "NextButton";
     private const string PROGRESS_INDIC = "ProgressIndicator";
     private const string MAIN_CONTENT_TEXT = "Text";
     private const string MAIN_CONTENT_IMAGE = "Image";
 
-
     private GameObject mainContent;
     private GameObject nextBtn;
     private Text mainText;
     private Image mainImage;
 
-
     private WizardTask nextTask;
+    private bool isFinished = false;
 
     void Start()
     {
+        isFinished = false;
         mainContent = gameObject.transform.Find(MAIN_CONTENT).gameObject;
         nextBtn = gameObject.transform.Find(NEXT_BTN).gameObject;
         mainText = mainContent.GetComponentInChildren<Text>();
         mainImage = mainContent.GetComponentInChildren<Image>();
-        if (mainText == null)
-        {
-            Debug.LogError("NOT FOUND!!!");
-        }
-
-
-        //progressIndicator = gameObject.transform.Find(PROGRESS_INDIC).gameObject;
-    }
-
-
-    public void LoadNextTask()
-    {
-        StartCoroutine(LoadNextTaskInternal());
     }
 
     /// <summary>
-    /// Call this, to indecate the user, that a new task is loaded.
+    /// Call this to load the next task into the wizard. If no task is left, a final message will be shown.
+    /// The next button will say close and on the next click the window is closed.
     /// </summary>
-    public void EnableTransition()
+    public void LoadNextTask()
+    {
+        if (isFinished)
+        {
+            Debug.Log("TODO Close the window");
+            //TODO close window
+            CloseDialog();
+        }
+        else
+        {
+            StartCoroutine(LoadNextTaskInternal());
+        }
+    }
+
+    /// <summary>
+    /// Call this, to indicate the user, that a new task is loaded.
+    /// </summary>
+    private void EnableTransition()
     {
         mainContent.SetActive(false);
         nextBtn.SetActive(false);
         EnableProgressIndicator();
     }
-
-    /// <summary>
-    /// If the new task is available (e.g. received over network), add it to the wizard with this method.
-    /// This method will force the ProgressIndicator to close and after that show the instructions in the dialog.
-    /// </summary>
-    /// <param name="task"></param>
-    [Obsolete("Use the LoadNextTask instead")]
-    public void SetNextTask(WizardTask task)
-    {
-        //TODO handle null as finish or make specific finished task!
-        nextTask = task;
-        StartCoroutine(DisableProgressIndicator());
-    }
-
 
     private void EnableProgressIndicator()
     {
@@ -97,6 +89,7 @@ public class WizardDialog : MonoBehaviour
         EnableTransition();
         yield return new WaitForSeconds(3);
 
+        //TODO with remote process engine it is better to use a metatask which indicates the finish
         nextTask = WizardTaskManager.Instance.GetNextTask();
         Debug.Log("Task Loaded!");
 
@@ -105,9 +98,6 @@ public class WizardDialog : MonoBehaviour
         yield return DisableProgressIndicator();
 
         ActivateMainView();
-
-        //Waits only one frame
-        //yield return null;
 
         //break indicates that there are no more stmts coming
         yield break;
@@ -123,8 +113,32 @@ public class WizardDialog : MonoBehaviour
     private void UpdateContent()
     {
         Debug.Log("Update Content with new Stuff");
-        mainText.text = nextTask.Instruction;
+        if (nextTask == null)
+        {
+            UpdateContentWithFinsihed();
+        }
+        else
+        {
+            UpdateContentWithNextTask();
+        }
+    }
 
+    private void UpdateContentWithFinsihed()
+    {
+        isFinished = true;
+        mainText.text = "You have finished the assembly. Close this dialog to interact with you new device.";
+        nextBtn.GetComponentInChildren<Text>().text = "Close";
+    }
+
+    private void UpdateContentWithNextTask()
+    {
+        mainText.text = nextTask.Instruction;
+    }
+
+    private void CloseDialog()
+    {
+        //gameObject.SetActive(false);
+        GameObject.Destroy(gameObject);
     }
 
 }
