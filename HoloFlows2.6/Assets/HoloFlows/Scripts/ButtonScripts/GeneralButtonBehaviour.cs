@@ -23,8 +23,6 @@ namespace HoloToolkit.Unity.InputModule
 
         public void OnFocusEnter()
         {
-            Debug.Log("Focus Entered");
-
             if (BtnText != null)
                 BtnText.color = style.highlightColor;
 
@@ -39,8 +37,6 @@ namespace HoloToolkit.Unity.InputModule
 
         public void OnFocusExit()
         {
-            Debug.Log("Focus Exit");
-
             if (!isSelected)
             {
 

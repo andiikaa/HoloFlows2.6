@@ -75,8 +75,9 @@ GameObject:
   - component: {fileID: 114973684034433854}
   - component: {fileID: 114886865850277896}
   - component: {fileID: 65814924093053722}
+  - component: {fileID: 114412989683887646}
   m_Layer: 5
-  m_Name: SimpleButton
+  m_Name: NextButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +95,7 @@ GameObject:
   - component: {fileID: 114377193480577280}
   - component: {fileID: 114670012262936210}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: MainContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,6 +147,7 @@ GameObject:
   - component: {fileID: 114091413658494906}
   - component: {fileID: 114478324460785394}
   - component: {fileID: 114252074144349338}
+  - component: {fileID: 114476237468634788}
   m_Layer: 5
   m_Name: WizardV2
   m_TagString: Untagged
@@ -392,6 +394,28 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114412989683887646
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1335086174446434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01517668f5b7a8409c578f64b5bcca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114476237468634788
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1956633176982354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfa5f6ecb5665049976f97a61dc38b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114478324460785394
 MonoBehaviour:
   m_ObjectHideFlags: 1

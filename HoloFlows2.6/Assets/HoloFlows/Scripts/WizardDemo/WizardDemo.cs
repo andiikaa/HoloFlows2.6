@@ -1,7 +1,13 @@
 ﻿using HoloToolkit.Unity;
 
+/// <summary>
+/// Demo Wizard for dev
+/// </summary>
 public class WizardDemo : Singleton<WizardDemo>
 {
+
+    //TODO maybe checkout the speech stuff
+    //https://abhijitjana.net/2017/01/02/using-text-to-speech-in-your-holographic-app/
     public void Start()
     {
         WizardTaskManager tm = WizardTaskManager.Instance;
