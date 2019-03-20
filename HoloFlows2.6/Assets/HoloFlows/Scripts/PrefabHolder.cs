@@ -8,4 +8,9 @@ public class PrefabHolder : Singleton<PrefabHolder>
     /// </summary>
     public GameObject assemblyWizard;
 
+    /// <summary>
+    /// The default device button for button commands like "ON", "OFF"
+    /// </summary>
+    public GameObject defaultDeviceButton;
+
 }
