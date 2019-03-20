@@ -4,9 +4,6 @@ using UnityEngine;
 public class SwitchScene : MonoBehaviour, IInputClickHandler, IFocusable
 {
 
-    public string SceneName = "TODO";
-
-
     public void OnFocusEnter()
     {
     }
@@ -17,7 +14,8 @@ public class SwitchScene : MonoBehaviour, IInputClickHandler, IFocusable
 
     public void OnInputClicked(InputClickedEventData eventData)
     {
-        SceneOrganizer.Instance.SwitchToScene(SceneName);
+        Debug.Log("Wizard should open");
+        Instantiate(PrefabHolder.Instance.assemblyWizard).SetActive(true);
     }
 
     // Use this for initialization
