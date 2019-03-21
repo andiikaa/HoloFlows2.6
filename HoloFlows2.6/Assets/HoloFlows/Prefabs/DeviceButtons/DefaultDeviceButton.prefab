@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 114770766331034374}
   - component: {fileID: 223043580797820576}
   - component: {fileID: 114545827508533544}
+  - component: {fileID: 114344655370565652}
   m_Layer: 0
   m_Name: DefaultDeviceButton
   m_TagString: Untagged
@@ -160,6 +161,25 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
+--- !u!114 &114344655370565652
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1257386677889856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1679637790, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: 1
+  m_MinHeight: 0.3
+  m_PreferredWidth: 1
+  m_PreferredHeight: 0.3
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &114345409407041320
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,7 +313,7 @@ RectTransform:
   m_GameObject: {fileID: 1257386677889856}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.025}
-  m_LocalScale: {x: 1.2500001, y: 1.2500001, z: 1.2500001}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children:
   - {fileID: 224283249311286990}
   - {fileID: 224376985213871586}
@@ -304,7 +324,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1, y: 0.25}
+  m_SizeDelta: {x: 1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224283249311286990
 RectTransform:
