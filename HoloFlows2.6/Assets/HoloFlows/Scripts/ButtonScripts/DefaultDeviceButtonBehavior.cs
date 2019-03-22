@@ -45,8 +45,7 @@ public class DefaultDeviceButtonBehavior : TapSoundButton
         get
         {
             return string.IsNullOrEmpty(DeviceId)
-                || string.IsNullOrEmpty(RealCommandName)
-                || string.IsNullOrEmpty(CommandDisplayName);
+                || string.IsNullOrEmpty(RealCommandName);
         }
     }
 
@@ -64,8 +63,12 @@ public class DefaultDeviceButtonBehavior : TapSoundButton
 
     private void SetDisplayName()
     {
-        Text text = gameObject.transform.Find("Text").GetComponent<Text>();
-        text.text = CommandDisplayName;
+        Transform textObj = gameObject.transform.Find("Text");
+        if (textObj != null)
+        {
+            Text text = textObj.GetComponent<Text>();
+            text.text = CommandDisplayName;
+        }
     }
 
     new void Start()

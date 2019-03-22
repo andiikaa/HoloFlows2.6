@@ -18,7 +18,7 @@ public class CreateSampleButtons : MonoBehaviour
         group = gameObject.transform.Find("EmptyBillboardgroup");
         nextObjectIndex = group.childCount;
 
-        defaultButton = PrefabHolder.Instance.defaultDeviceButton;
+        defaultButton = PrefabHolder.Instance.devices.defaultDeviceButton;
         //Instatiate makes copy of the object
         GameObject buttonInstance = Instantiate(defaultButton);
         buttonInstance.transform.SetParent(group, false);
