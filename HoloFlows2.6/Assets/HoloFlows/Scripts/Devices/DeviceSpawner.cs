@@ -23,6 +23,7 @@ public class DeviceSpawner : Singleton<DeviceSpawner>
             deviceManager = DeviceManager.Instance;
         }
 
+        //tinkerforge_irTemp_1
         DeviceInfo info = deviceManager.DeviceInfos["homematic_dimmer_1"];
         GameObject go = GetDeviceSpecificPrefab(info);
         if (go == null)
@@ -76,8 +77,8 @@ public class DeviceSpawner : Singleton<DeviceSpawner>
         DeviceCommand offCommand = func.Commands.First(c => TYPE_OFF_COMMAND == c.CommandType);
         DeviceCommand upCommand = func.Commands.First(c => TYPE_UP_COMMAND == c.CommandType);
         DeviceCommand downCommand = func.Commands.First(c => TYPE_DOWN_COMMAND == c.CommandType);
-        //buttons are visible in this order from top to bottom
 
+        //buttons are visible in this order from top to bottom
         GameObject btnObject = Instantiate(PrefabHolder.Instance.devices.onOffUpDownButton);
         OnOffUpDownButton btnScript = btnObject.GetComponent<OnOffUpDownButton>();
         btnScript.SetDownButtonData(func.ItemId, downCommand.RealCommandName);
@@ -86,12 +87,6 @@ public class DeviceSpawner : Singleton<DeviceSpawner>
         btnScript.SetOffButtonData(func.ItemId, offCommand.RealCommandName);
 
         btnObject.transform.SetParent(layoutGroup, false);
-
-
-        //SpawnButton(func, onCommand, layoutGroup);
-        //SpawnButton(func, offCommand, layoutGroup);
-        //SpawnButton(func, upCommand, layoutGroup);
-        //SpawnButton(func, downCommand, layoutGroup);
     }
 
     private GameObject SpawnButton(DeviceFunctionality functionality, DeviceCommand command, Transform parent)

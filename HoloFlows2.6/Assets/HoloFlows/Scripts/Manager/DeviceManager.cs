@@ -20,7 +20,7 @@ public class DeviceManager : Singleton<DeviceManager>
         public string Uid { get; set; }
         public string DisplayName { get; set; }
         public DeviceFunctionality[] Functionalities { get; set; }
-
+        public DeviceState[] States { get; set; }
     }
 
     /// <summary>
@@ -40,12 +40,20 @@ public class DeviceManager : Singleton<DeviceManager>
     {
         public string StateType { get; set; }
         public string RealStateValue { get; set; }
+        public string ItemId { get; set; }
         public UnitOfMeasure UnitOfMeasure { get; set; }
     }
 
+    /// <summary>
+    /// UnitType and UnitName could be derived from the instance uri of the unit in the dogont ontology
+    /// E.g. http://elite.polito.it/ontologies/ucum-instances.owl#unit/temperature/degree-Celsius
+    /// Type = temperature,
+    /// Name = degree-Celsius
+    /// </summary>
     public class UnitOfMeasure
     {
         public string UnitName { get; set; }
+        public string UnitType { get; set; }
         public string PrefixSymbol { get; set; }
     }
 
@@ -59,12 +67,49 @@ public class DeviceManager : Singleton<DeviceManager>
     private void AddDemoDevices()
     {
         var homematicDimmer = CreateHomematicDimmer();
+        var tinkerforgeAmbTemp = CreateTinkerforgeIRTemp();
         DeviceInfos.Add(homematicDimmer.Uid, homematicDimmer);
+        DeviceInfos.Add(tinkerforgeAmbTemp.Uid, tinkerforgeAmbTemp);
+    }
+
+    private DeviceInfo CreateTinkerforgeIRTemp()
+    {
+        DeviceInfo tinkerforgeIrTemp = new DeviceInfo()
+        {
+            Uid = "tinkerforge_irTemp_1",
+            DisplayName = "Tinkerforge IR Temp"
+        };
+
+        UnitOfMeasure degree = new UnitOfMeasure()
+        {
+            UnitName = "degree-Celsius",
+            UnitType = "temperature",
+            PrefixSymbol = "°C"
+        };
+
+        DeviceState irTempState = new DeviceState()
+        {
+            ItemId = "tinkerforge_irTemp_irTemp_1",
+            UnitOfMeasure = degree,
+            RealStateValue = "20",
+            StateType = "dogont:TemperatureState"
+        };
+
+        DeviceState ambTempState = new DeviceState()
+        {
+            ItemId = "tinkerforge_irTemp_ambTemp_1",
+            UnitOfMeasure = degree,
+            RealStateValue = "15",
+            StateType = "dogont:TemperatureState"
+        };
+
+
+        tinkerforgeIrTemp.States = new[] { irTempState, ambTempState };
+        return tinkerforgeIrTemp;
     }
 
     private DeviceInfo CreateHomematicDimmer()
     {
-        //TODO Devices for dev stuff
         DeviceInfo homematicDimmer = new DeviceInfo()
         {
             Uid = "homematic_dimmer_1",
