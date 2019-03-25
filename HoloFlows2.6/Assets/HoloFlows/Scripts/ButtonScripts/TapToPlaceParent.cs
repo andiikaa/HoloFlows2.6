@@ -1,5 +1,6 @@
 ﻿using HoloToolkit.Unity;
 using HoloToolkit.Unity.InputModule;
+using System.Collections;
 using UnityEngine;
 
 
@@ -89,43 +90,89 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     {
         // If the user is in placing mode,
         // update the placement to match the user's gaze.
+        DoPlacing();
+        DoMerging();
 
-        if (placing)
+    }
+
+    private bool triggerEntered = false;
+    private int triggerEnteredCount = 0;
+
+    //last hitted objects
+    GameObject thisRootParent = null;
+    GameObject otherRootParent = null;
+
+    private IEnumerator mergeCoroutine = null;
+
+    private void DoMerging()
+    {
+        if (triggerEntered)
         {
-            // Do a raycast into the world that will only hit the Spatial Mapping mesh.
-            var headPosition = Camera.main.transform.position;
-            var gazeDirection = Camera.main.transform.forward;
-
-            this.transform.parent.position = headPosition + 2 * gazeDirection;
-
-            Quaternion toQuat = Camera.main.transform.localRotation;
-            toQuat.x = 0;
-            toQuat.z = 0;
-            this.transform.parent.rotation = toQuat;
-
-            //RaycastHit hitInfo;
-            //if (Physics.Raycast(headPosition, gazeDirection, out hitInfo,
-            //    30.0f, SpatialMappingManager.Instance.LayerMask))
-            //{
-            //    // Move this object's parent object to
-            //    // where the raycast hit the Spatial Mapping mesh.
-            //    this.transform.parent.position = hitInfo.point;
-
-            //    // Rotate this object's parent object to face the user.
-            //    Quaternion toQuat = Camera.main.transform.localRotation;
-            //    toQuat.x = 0;
-            //    toQuat.z = 0;
-            //    this.transform.parent.rotation = toQuat;
-            //}
+            triggerEnteredCount++;
+            if (triggerEnteredCount > 100)
+            {
+                triggerEnteredCount = 0;
+                if (thisRootParent != null && otherRootParent != null)
+                {
+                    MergeDevices();
+                }
+            }
         }
+    }
+
+    private void MergeDevices()
+    {
+        //start to merge 2 devices
+        var mergedDevice = DeviceSpawner.Instance.MergeBasicDevices(otherRootParent, thisRootParent);
+
+        //TODO andere devices ausblenden und noch nicht zerstören das man auch wieder zurückkommt 
+        //und nicht versehentlich irgendwas merged
+        Destroy(otherRootParent);
+        Destroy(thisRootParent);
+    }
+
+    private void DoPlacing()
+    {
+
+        if (!placing)
+        {
+            return;
+        }
+
+        // Do a raycast into the world that will only hit the Spatial Mapping mesh.
+        var headPosition = Camera.main.transform.position;
+        var gazeDirection = Camera.main.transform.forward;
+
+        this.transform.parent.position = headPosition + 2 * gazeDirection;
+
+        Quaternion toQuat = Camera.main.transform.localRotation;
+        toQuat.x = 0;
+        toQuat.z = 0;
+        this.transform.parent.rotation = toQuat;
+
+        //RaycastHit hitInfo;
+        //if (Physics.Raycast(headPosition, gazeDirection, out hitInfo,
+        //    30.0f, SpatialMappingManager.Instance.LayerMask))
+        //{
+        //    // Move this object's parent object to
+        //    // where the raycast hit the Spatial Mapping mesh.
+        //    this.transform.parent.position = hitInfo.point;
+
+        //    // Rotate this object's parent object to face the user.
+        //    Quaternion toQuat = Camera.main.transform.localRotation;
+        //    toQuat.x = 0;
+        //    toQuat.z = 0;
+        //    this.transform.parent.rotation = toQuat;
+        //}
+
     }
 
     public void OnTriggerEnter(Collider other)
     {
         //this device will be the device which is hit by 'other'
 
-        var thisRootParent = GetRootParent(gameObject);
-        var otherRootParent = GetRootParent(other.gameObject);
+        thisRootParent = GetRootParent(gameObject);
+        otherRootParent = GetRootParent(other.gameObject);
 
         //if the object hit itself somehow
         if (thisRootParent == otherRootParent)
@@ -135,12 +182,7 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
 
         Debug.Log(otherRootParent.name + " hit " + thisRootParent.name);
 
-        //start to merge 2 devices
-        var mergedDevice = DeviceSpawner.Instance.MergeBasicDevices(otherRootParent, thisRootParent);
-        //TODO andere devices ausblenden und noch nicht zerstören
-
-        Destroy(otherRootParent);
-        Destroy(thisRootParent);
+        triggerEntered = true;
     }
 
     private GameObject GetRootParent(GameObject go)
@@ -154,7 +196,9 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
 
     public void OnTriggerExit(Collider other)
     {
-        //Debug.Log("Trigger left");
+        triggerEntered = false;
+        triggerEnteredCount = 0;
+        Debug.Log("trigger left");
     }
 
     public void OnFocusEnter()
