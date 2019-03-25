@@ -23,20 +23,99 @@ public class DeviceSpawner : Singleton<DeviceSpawner>
             deviceManager = DeviceManager.Instance;
         }
 
+        //DeviceInfo info = deviceManager.DeviceInfos["homematic_dimmer_1"];
+        //GameObject go = GetDeviceSpecificPrefab(info);
+        //if (go == null)
+        //{
+        //    Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
+        //}
+
         //tinkerforge_irTemp_1
-        DeviceInfo info = deviceManager.DeviceInfos["homematic_dimmer_1"];
-        GameObject go = GetDeviceSpecificPrefab(info);
-        if (go == null)
+        DeviceInfo info2 = deviceManager.DeviceInfos["homematic_dimmer_1"];
+        GameObject go2 = GetDeviceSpecificPrefab(info2);
+        if (go2 == null)
         {
             Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
         }
+    }
+
+    public GameObject MergeBasicDevices(GameObject device1, GameObject device2)
+    {
+        if (!device1.name.StartsWith("BasicDevice") || !device2.name.StartsWith("BasicDevice"))
+        {
+            Debug.LogError("At least on of the merging devices is not from type BasicDevice");
+            return null;
+        }
+
+        GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
+        TwoWayDevice mergedDevice = go.GetComponent<TwoWayDevice>();
+        mergedDevice.CopyFromBasicDevices(device1, device2);
+        go.SetActive(true);
+        return go;
     }
 
     //get the prefab specific for the device (Basic, 2Way, 3Way, Multi)
     private GameObject GetDeviceSpecificPrefab(DeviceInfo info)
     {
         //TODO implement all cases
+        if (info.States != null && info.States.Any())
+        {
+            //get all itemids from the state and group them
+            //the group counter should give the different devices
+            IEnumerable<IGrouping<string, string>> groups = info.States.
+                Select(e => e.ItemId).
+                GroupBy(e => e);
+
+            int differentGroups = groups.Count();
+
+            if (differentGroups == 1)
+            {
+                return InstantiateBasicDevice(info);
+            }
+            else if (differentGroups == 2)
+            {
+                return InstantiateTwoWayDevice(info, groups);
+            }
+            else if (differentGroups == 3)
+            {
+                return InstantiateThreeWayDevice(info);
+            }
+            else
+            {
+                Debug.LogError("Implement MultiDevice!");
+                return null;
+            }
+        }
+
         return InstantiateBasicDevice(info);
+    }
+
+    private GameObject InstantiateTwoWayDevice(DeviceInfo info, IEnumerable<IGrouping<string, string>> groups)
+    {
+        //TODO we must find the specific buttons, which control the state. 
+        //But what to do if there is no state? How to find a name?
+        GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
+        TwoWayDevice device = go.GetComponent<TwoWayDevice>();
+        device.SetDeviceInfos(info);
+        ActivateGameObjectIfNeeded(go);
+        return go;
+    }
+
+    private void ActivateGameObjectIfNeeded(GameObject go)
+    {
+        if (go != null && !go.activeSelf)
+        {
+            go.SetActive(true);
+        }
+    }
+
+    private GameObject InstantiateThreeWayDevice(DeviceInfo info)
+    {
+        GameObject go = Instantiate(PrefabHolder.Instance.devices.threeWayDevice);
+        ThreeWayDevice device = go.GetComponent<ThreeWayDevice>();
+        device.SetDeviceInfos(info);
+        ActivateGameObjectIfNeeded(go);
+        return go;
     }
 
     private GameObject InstantiateBasicDevice(DeviceInfo info)
@@ -48,7 +127,7 @@ public class DeviceSpawner : Singleton<DeviceSpawner>
             Debug.LogError("failed to find the layout group for the buttons");
             return null;
         }
-
+        ActivateGameObjectIfNeeded(go);
         return go;
     }
 

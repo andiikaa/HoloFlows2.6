@@ -28,6 +28,7 @@ public class DeviceManager : Singleton<DeviceManager>
     /// </summary>
     public class DeviceFunctionality
     {
+        public string Label { get; set; }
         public string FunctionalityType { get; set; }
         public string ItemId { get; set; }
         public DeviceCommand[] Commands { get; set; }
@@ -38,6 +39,7 @@ public class DeviceManager : Singleton<DeviceManager>
     /// </summary>
     public class DeviceState
     {
+        public string Label { get; set; }
         public string StateType { get; set; }
         public string RealStateValue { get; set; }
         public string ItemId { get; set; }
@@ -64,12 +66,16 @@ public class DeviceManager : Singleton<DeviceManager>
         public string CommandType { get; set; }
     }
 
+    #region demo devices
+
     private void AddDemoDevices()
     {
         var homematicDimmer = CreateHomematicDimmer();
         var tinkerforgeAmbTemp = CreateTinkerforgeIRTemp();
+        var tinkerforgeAmbTemp2 = CreateTinkerforgeIRTemp2();
         DeviceInfos.Add(homematicDimmer.Uid, homematicDimmer);
         DeviceInfos.Add(tinkerforgeAmbTemp.Uid, tinkerforgeAmbTemp);
+        DeviceInfos.Add(tinkerforgeAmbTemp2.Uid, tinkerforgeAmbTemp2);
     }
 
     private DeviceInfo CreateTinkerforgeIRTemp()
@@ -90,6 +96,7 @@ public class DeviceManager : Singleton<DeviceManager>
         DeviceState irTempState = new DeviceState()
         {
             ItemId = "tinkerforge_irTemp_irTemp_1",
+            Label = "Object Temp",
             UnitOfMeasure = degree,
             RealStateValue = "20",
             StateType = "dogont:TemperatureState"
@@ -98,6 +105,7 @@ public class DeviceManager : Singleton<DeviceManager>
         DeviceState ambTempState = new DeviceState()
         {
             ItemId = "tinkerforge_irTemp_ambTemp_1",
+            Label = "Ambiente Temp",
             UnitOfMeasure = degree,
             RealStateValue = "15",
             StateType = "dogont:TemperatureState"
@@ -105,6 +113,53 @@ public class DeviceManager : Singleton<DeviceManager>
 
 
         tinkerforgeIrTemp.States = new[] { irTempState, ambTempState };
+        return tinkerforgeIrTemp;
+    }
+
+    private DeviceInfo CreateTinkerforgeIRTemp2()
+    {
+        DeviceInfo tinkerforgeIrTemp = new DeviceInfo()
+        {
+            Uid = "tinkerforge_irTemp_2",
+            DisplayName = "Tinkerforge IR Temp"
+        };
+
+        UnitOfMeasure degree = new UnitOfMeasure()
+        {
+            UnitName = "degree-Celsius",
+            UnitType = "temperature",
+            PrefixSymbol = "°C"
+        };
+
+        DeviceState irTempState = new DeviceState()
+        {
+            ItemId = "tinkerforge_irTemp_irTemp_2",
+            Label = "Object Temp1",
+            UnitOfMeasure = degree,
+            RealStateValue = "20",
+            StateType = "dogont:TemperatureState"
+        };
+
+        DeviceState ambTempState = new DeviceState()
+        {
+            ItemId = "tinkerforge_irTemp_ambTemp_2",
+            Label = "Ambiente Temp1",
+            UnitOfMeasure = degree,
+            RealStateValue = "15",
+            StateType = "dogont:TemperatureState"
+        };
+
+        DeviceState ambTempState2 = new DeviceState()
+        {
+            ItemId = "tinkerforge_irTemp_ambTemp_3",
+            Label = "Ambiente Temp2",
+            UnitOfMeasure = degree,
+            RealStateValue = "28",
+            StateType = "dogont:TemperatureState"
+        };
+
+
+        tinkerforgeIrTemp.States = new[] { irTempState, ambTempState, ambTempState2 };
         return tinkerforgeIrTemp;
     }
 
@@ -154,5 +209,7 @@ public class DeviceManager : Singleton<DeviceManager>
         homematicDimmer.Functionalities = new[] { f1 };
         return homematicDimmer;
     }
+
+    #endregion
 }
 

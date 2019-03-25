@@ -71,9 +71,4 @@ public class DefaultDeviceButtonBehavior : TapSoundButton
         }
     }
 
-    new void Start()
-    {
-        base.Start();
-        Debug.Log("Starting default button behavior");
-    }
 }
