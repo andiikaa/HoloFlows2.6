@@ -34,57 +34,8 @@ public class TwoWayDevice : DeviceBehaviorBase
 
     public void CopyFromBasicDevices(GameObject basic1, GameObject basic2)
     {
-        CopyGroup(basic1.transform.Find("EmptyBillboardgroup"), transform.Find("RightDevice/RightGroup"));
-        CopyGroup(basic2.transform.Find("EmptyBillboardgroup"), transform.Find("LeftDevice/LeftGroup"));
-    }
-
-    private void CopyGroup(Transform groupSource, Transform groupTarget)
-    {
-        Transform sourceCanvas = groupSource.Find("Canvas");
-        Transform soruceImage = sourceCanvas.Find("Image");
-        var sDesc = sourceCanvas.Find("Description").GetComponent<Text>();
-        var sValue = sourceCanvas.Find("Value").GetComponent<Text>();
-
-        Transform targetCanvas = groupTarget.Find("Canvas");
-        targetCanvas.Find("Image");
-        var tDesc = targetCanvas.Find("Description").GetComponent<Text>();
-        var tValue = targetCanvas.Find("Value").GetComponent<Text>();
-
-        tDesc.text = sDesc.text;
-        tValue.text = sValue.text;
-
-        if (groupSource.childCount > 1)
-        {
-            for (int i = 1; i < groupSource.childCount; i++)
-            {
-                Transform child = groupSource.GetChild(i);
-                CreateNewButtons(groupTarget, child);
-            }
-        }
-    }
-
-    private void CreateNewButtons(Transform parent, Transform sourceChild)
-    {
-        GameObject newChild = Instantiate(sourceChild.gameObject);
-        //TODO check if button!
-
-        DefaultDeviceButtonBehavior[] sourceBehaviors = sourceChild.GetComponentsInChildren<DefaultDeviceButtonBehavior>();
-        DefaultDeviceButtonBehavior[] targetBehaviors = newChild.GetComponentsInChildren<DefaultDeviceButtonBehavior>();
-
-        if (sourceBehaviors.Length != targetBehaviors.Length)
-        {
-            Debug.LogError("defaultbuttonbehaviors count does not match for copied instance");
-            return;
-        }
-
-        for (int i = 0; i < sourceBehaviors.Length; i++)
-        {
-            targetBehaviors[i].DeviceId = sourceBehaviors[i].DeviceId;
-            targetBehaviors[i].RealCommandName = sourceBehaviors[i].RealCommandName;
-            targetBehaviors[i].CommandDisplayName = sourceBehaviors[i].CommandDisplayName;
-        }
-
-        newChild.transform.SetParent(parent, false);
+        CopyBillboardGroup(basic1.transform.Find("EmptyBillboardgroup"), transform.Find("RightDevice/RightGroup"));
+        CopyBillboardGroup(basic2.transform.Find("EmptyBillboardgroup"), transform.Find("LeftDevice/LeftGroup"));
     }
 
     private void SetDeviceState(Transform transform, DeviceState deviceState)
