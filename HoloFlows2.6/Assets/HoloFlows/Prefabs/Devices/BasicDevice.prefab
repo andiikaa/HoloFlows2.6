@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 65458136462582306}
   - component: {fileID: 23377633850959222}
   - component: {fileID: 114364816214972074}
-  - component: {fileID: 114998329955768778}
   m_Layer: 0
   m_Name: Cube
   m_TagString: PlacingCube
@@ -1293,7 +1292,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7c604c9714bd1408fb1150e26155c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SavedAnchorFriendlyName: Main-Scene-Box
 --- !u!114 &114390137562468350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1668,17 +1666,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 10
---- !u!114 &114998329955768778
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1008247378767200}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b4150b3a23d5b54b99f078a6e466b7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!120 &120048208110424856
 LineRenderer:
   m_ObjectHideFlags: 1

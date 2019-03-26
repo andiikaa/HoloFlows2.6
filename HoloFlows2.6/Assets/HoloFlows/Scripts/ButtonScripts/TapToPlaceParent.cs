@@ -6,11 +6,22 @@ using UnityEngine;
 
 public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
 {
-    public string SavedAnchorFriendlyName = "SavedAnchorFriendlyName";
+    /// <summary>
+    /// This is the id, which is used to find/save the postion of the device control.
+    /// </summary>
+    public string SavedAnchorFriendlyName { get; set; } = "SavedAnchorFriendlyName";
 
-
+    //to check if placing is enabled
     private bool placing = false;
     private bool placingMode = true;
+
+    //to check if two boxes are hitting each other
+    private bool triggerEntered = false;
+    private int triggerEnteredCount = 0;
+
+    //last hitted objects
+    private GameObject thisRootParent = null;
+    private GameObject otherRootParent = null;
 
     public void AllowPlacing()
     {
@@ -21,6 +32,7 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     {
         placingMode = false;
     }
+
     void Start()
     {
         //SpatialMapping.Instance.DrawVisualMeshes = false;
@@ -94,13 +106,6 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
 
     }
 
-    private bool triggerEntered = false;
-    private int triggerEnteredCount = 0;
-
-    //last hitted objects
-    GameObject thisRootParent = null;
-    GameObject otherRootParent = null;
-
     private void DoMerging()
     {
         if (triggerEntered)
@@ -119,13 +124,24 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
 
     private void MergeDevices()
     {
-        //start to merge 2 devices
-        var mergedDevice = DeviceSpawner.Instance.MergeBasicDevices(otherRootParent, thisRootParent);
+        GameObject mergedDevice = DeviceSpawner.Instance.MergeBasicDevices(otherRootParent, thisRootParent);
+        if (mergedDevice != null)
+        {
+            Destroy(otherRootParent);
+            Destroy(thisRootParent);
 
-        //TODO andere devices ausblenden und noch nicht zerstören das man auch wieder zurückkommt 
-        //und nicht versehentlich irgendwas merged
-        Destroy(otherRootParent);
-        Destroy(thisRootParent);
+            TapToPlaceParent tapToPlaceOfMerged = mergedDevice.GetComponentInChildren<TapToPlaceParent>(true);
+            if (tapToPlaceOfMerged == null)
+            {
+                Debug.LogError("TapToPlace Component not found for merged device!");
+            }
+            if (tapToPlaceOfMerged != null)
+            {
+                //simulate tap to trigger the placing mode
+                tapToPlaceOfMerged.OnFocusEnter();
+                tapToPlaceOfMerged.OnInputClicked(null);
+            }
+        }
     }
 
     private void DoPlacing()
