@@ -1,6 +1,5 @@
 ﻿using HoloToolkit.Unity;
 using HoloToolkit.Unity.InputModule;
-using System.Collections;
 using UnityEngine;
 
 
@@ -102,8 +101,6 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     GameObject thisRootParent = null;
     GameObject otherRootParent = null;
 
-    private IEnumerator mergeCoroutine = null;
-
     private void DoMerging()
     {
         if (triggerEntered)
@@ -170,15 +167,17 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     public void OnTriggerEnter(Collider other)
     {
         //this device will be the device which is hit by 'other'
-
-        thisRootParent = GetRootParent(gameObject);
-        otherRootParent = GetRootParent(other.gameObject);
+        var tmpThisRootParent = GetRootParent(gameObject);
+        var tmpOtherRootParent = GetRootParent(other.gameObject);
 
         //if the object hit itself somehow
-        if (thisRootParent == otherRootParent)
+        if (tmpThisRootParent == tmpOtherRootParent)
         {
             return;
         }
+
+        thisRootParent = tmpThisRootParent;
+        otherRootParent = tmpOtherRootParent;
 
         Debug.Log(otherRootParent.name + " hit " + thisRootParent.name);
 
@@ -198,7 +197,6 @@ public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     {
         triggerEntered = false;
         triggerEnteredCount = 0;
-        Debug.Log("trigger left");
     }
 
     public void OnFocusEnter()

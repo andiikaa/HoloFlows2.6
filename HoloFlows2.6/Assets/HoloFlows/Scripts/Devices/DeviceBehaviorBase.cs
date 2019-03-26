@@ -49,13 +49,17 @@ public abstract class DeviceBehaviorBase : MonoBehaviour
     private void CopyDeviceHeaderData(Transform sourceCanvas, Transform targetCanvas)
     {
         //TODO image source
-        Transform soruceImage = sourceCanvas.Find("Image");
+        SpriteRenderer sourceImage = sourceCanvas.Find("Image").GetComponent<SpriteRenderer>();
         var sDesc = sourceCanvas.Find("Description").GetComponent<Text>();
         var sValue = sourceCanvas.Find("Value").GetComponent<Text>();
 
-        targetCanvas.Find("Image");
+        SpriteRenderer targetImage = targetCanvas.Find("Image").GetComponent<SpriteRenderer>();
         var tDesc = targetCanvas.Find("Description").GetComponent<Text>();
         var tValue = targetCanvas.Find("Value").GetComponent<Text>();
+
+        targetImage.sprite = sourceImage.sprite;
+        tDesc.text = sDesc.text;
+        tValue.text = sValue.text;
     }
 
     private void CreateNewButtons(Transform parent, Transform sourceChild)
