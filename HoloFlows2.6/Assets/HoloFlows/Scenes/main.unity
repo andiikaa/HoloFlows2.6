@@ -2215,89 +2215,7 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 120243471187249962, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.003
-      objectReference: {fileID: 0}
-    - target: {fileID: 120903305802884756, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.003
-      objectReference: {fileID: 0}
-    - target: {fileID: 120889223416390470, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.003
-      objectReference: {fileID: 0}
-    - target: {fileID: 224484111697680464, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 224484111697680464, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 224484111697680464, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_LocalScale.z
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 120997188697465730, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Parameters.widthMultiplier
-      value: 0.003
-      objectReference: {fileID: 0}
-    - target: {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_RenderMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_PlaneDistance
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114161086810017552, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_ReferencePixelsPerUnit
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_PixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114161086810017552, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_UiScaleMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114161086810017552, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_FallbackScreenDPI
-      value: 96
-      objectReference: {fileID: 0}
-    - target: {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 120903305802884756, guid: 21605fc640729fe4abed0341d31ba34a,
-        type: 2}
-      propertyPath: m_Loop
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114161086810017552, guid: 21605fc640729fe4abed0341d31ba34a, type: 2}
-    - {fileID: 223909969882245924, guid: 21605fc640729fe4abed0341d31ba34a, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 21605fc640729fe4abed0341d31ba34a, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1190753555
@@ -2420,6 +2338,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b99779d8eccb3e541918c72048d071b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deviceManager: {fileID: 0}
 --- !u!114 &1496418813 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114611684728110934, guid: a611e772ef8ddf64d8106a9cbb70f31c,

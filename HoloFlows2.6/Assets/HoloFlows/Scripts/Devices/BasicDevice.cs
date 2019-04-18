@@ -9,6 +9,17 @@ namespace HoloFlows.Devices
         {
 
         }
+
+        //TODO implement and test this stuff for all devices
+        public override void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public override void Show()
+        {
+            gameObject.SetActive(true);
+        }
     }
 }
 

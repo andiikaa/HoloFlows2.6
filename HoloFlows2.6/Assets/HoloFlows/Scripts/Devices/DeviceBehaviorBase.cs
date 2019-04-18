@@ -1,10 +1,11 @@
 ﻿using HoloFlows.ButtonScripts;
+using HoloFlows.Manager;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace HoloFlows.Devices
 {
-    public abstract class DeviceBehaviorBase : MonoBehaviour
+    public abstract class DeviceBehaviorBase : MonoBehaviour, ManagedObject
     {
         protected enum DeviceType { BASIC, TWO_WAY, THREE_WAY, MULTI }
 
@@ -87,5 +88,8 @@ namespace HoloFlows.Devices
 
             newChild.transform.SetParent(parent, false);
         }
+
+        public abstract void Hide();
+        public abstract void Show();
     }
 }

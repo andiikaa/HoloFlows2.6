@@ -1,20 +1,8 @@
-﻿using UnityEngine;
-
-namespace HoloFlows.Manager
+﻿namespace HoloFlows.Manager
 {
-    public class ManagedObject : MonoBehaviour
+    public interface ManagedObject
     {
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        void Hide();
+        void Show();
     }
 }

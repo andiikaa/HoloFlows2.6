@@ -69,5 +69,15 @@ namespace HoloFlows.Devices
         }
 
         protected override DeviceType GetDeviceType() { return DeviceType.TWO_WAY; }
+
+        public override void Hide()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Show()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
