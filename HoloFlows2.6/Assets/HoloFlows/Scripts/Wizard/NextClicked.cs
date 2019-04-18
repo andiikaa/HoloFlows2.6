@@ -1,20 +1,25 @@
-﻿using HoloToolkit.Unity.InputModule;
+﻿using HoloFlows.ButtonScripts;
+using HoloToolkit.Unity.InputModule;
 
-public class NextClicked : TapSoundButton
+namespace HoloFlows.Wizard
 {
 
-    WizardDialog dialog;
-
-    new public void Start()
+    public class NextClicked : TapSoundButton
     {
-        base.Start();
-        dialog = transform.GetComponentInParent<WizardDialog>();
+
+        WizardDialog dialog;
+
+        new public void Start()
+        {
+            base.Start();
+            dialog = transform.GetComponentInParent<WizardDialog>();
+        }
+
+
+        public override void HandleClickEvent(InputClickedEventData eventData)
+        {
+            dialog.LoadNextTask();
+        }
+
     }
-
-
-    public override void HandleClickEvent(InputClickedEventData eventData)
-    {
-        dialog.LoadNextTask();
-    }
-
 }

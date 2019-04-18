@@ -1,4 +1,6 @@
-﻿using HoloToolkit.Unity.InputModule;
+﻿using HoloFlows.ButtonScripts;
+using HoloFlows.Devices;
+using HoloToolkit.Unity.InputModule;
 
 public class SpawnDevice : TapSoundButton
 {

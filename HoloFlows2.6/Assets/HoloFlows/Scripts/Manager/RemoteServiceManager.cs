@@ -4,28 +4,30 @@ using UnityEngine;
 using Windows.Devices.Enumeration;
 #endif
 
-/// <summary>
-/// Find remote services via dns
-/// 
-/// https://docs.microsoft.com/de-de/windows/uwp/devices-sensors/enumerate-devices-over-a-network
-/// </summary>
-public class RemoteServiceManager : Singleton<RemoteServiceManager>
+namespace HoloFlows.Manager
 {
+    /// <summary>
+    /// Find remote services via dns
+    /// 
+    /// https://docs.microsoft.com/de-de/windows/uwp/devices-sensors/enumerate-devices-over-a-network
+    /// </summary>
+    public class RemoteServiceManager : Singleton<RemoteServiceManager>
+    {
 #if WINDOWS_UWP
     DeviceWatcher watchter;
 #endif
 
-    public string OpenHabAddress { get; private set; }
-    public string ProteusAddress { get; private set; }
+        public string OpenHabAddress { get; private set; }
+        public string ProteusAddress { get; private set; }
 
-    private const string OPENHAB_NAME = "_openhab";
-    private const string PROTEUS_NAME = "_proteus";
+        private const string OPENHAB_NAME = "_openhab";
+        private const string PROTEUS_NAME = "_proteus";
 
-    private const string allDevicesWithIp = "System.Devices.IpAddress:<>[]";
+        private const string allDevicesWithIp = "System.Devices.IpAddress:<>[]";
 
-    // Use this for initialization
-    void Start()
-    {
+        // Use this for initialization
+        void Start()
+        {
 #if WINDOWS_UWP
 
         //AQS
@@ -36,9 +38,9 @@ public class RemoteServiceManager : Singleton<RemoteServiceManager>
         watchter.Added += Watchter_Added;
         watchter.Start();
 #else
-        Debug.LogError("ServiceDiscovery not supported on the current plattform");
+            Debug.LogError("ServiceDiscovery not supported on the current plattform");
 #endif
-    }
+        }
 
 #if WINDOWS_UWP
     private void Watchter_Added(DeviceWatcher sender, DeviceInformation args)
@@ -55,4 +57,5 @@ public class RemoteServiceManager : Singleton<RemoteServiceManager>
     }
 #endif
 
+    }
 }

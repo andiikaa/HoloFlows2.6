@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using HoloToolkit.Unity.InputModule;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace HoloToolkit.Unity.InputModule
+namespace HoloFlows.ButtonScripts
 {
     public class GeneralButtonBehaviour : MonoBehaviour, IFocusable
     {

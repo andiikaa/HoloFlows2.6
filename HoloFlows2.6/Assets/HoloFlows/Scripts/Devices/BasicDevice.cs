@@ -1,10 +1,14 @@
-﻿public class BasicDevice : DeviceBehaviorBase
+﻿
+namespace HoloFlows.Devices
 {
-    protected override DeviceType GetDeviceType() { return DeviceType.BASIC; }
-
-    public void Start()
+    public class BasicDevice : DeviceBehaviorBase
     {
+        protected override DeviceType GetDeviceType() { return DeviceType.BASIC; }
 
+        public void Start()
+        {
+
+        }
     }
 }
 

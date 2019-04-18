@@ -1,17 +1,20 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class OverriddenNetworkDiscovery : NetworkDiscovery
+namespace HoloFlows.Manager
 {
-    public override void OnReceivedBroadcast(string fromAddress, string data)
+    public class OverriddenNetworkDiscovery : NetworkDiscovery
     {
-        Debug.Log(string.Format("Address: {0} Data: {1}", fromAddress, data));
-    }
+        public override void OnReceivedBroadcast(string fromAddress, string data)
+        {
+            Debug.Log(string.Format("Address: {0} Data: {1}", fromAddress, data));
+        }
 
-    public void Start()
-    {
-        Debug.Log("Starting unity network discovery");
-        Initialize();
-        StartAsServer();
+        public void Start()
+        {
+            Debug.Log("Starting unity network discovery");
+            Initialize();
+            StartAsServer();
+        }
     }
 }

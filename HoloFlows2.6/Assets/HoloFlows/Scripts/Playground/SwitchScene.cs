@@ -1,4 +1,5 @@
-﻿using HoloToolkit.Unity.InputModule;
+﻿using HoloFlows;
+using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 
 public class SwitchScene : MonoBehaviour, IInputClickHandler, IFocusable
