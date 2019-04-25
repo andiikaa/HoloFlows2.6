@@ -30,7 +30,7 @@ namespace HoloFlows.Wizard
 
         public void AddLastScannedData(QRCodeData scannedData)
         {
-            if (!qrCodeData.IsValid)
+            if (!scannedData.IsValid)
             {
                 Debug.LogError("Invalid qr code data added to the WizardTaskManager");
                 return;

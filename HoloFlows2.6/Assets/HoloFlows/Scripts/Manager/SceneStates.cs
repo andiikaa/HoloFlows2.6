@@ -127,7 +127,9 @@ namespace HoloFlows.Manager
             //sceneManager.InternalDestroy(scanInterface);
             scanInterface.SetActive(false);
             WizardTaskManager.Instance.AddLastScannedData(data);
-            SetNewState(new WizardState(sceneManager));
+            WizardState wState = new WizardState(sceneManager);
+            SetNewState(wState);
+            wState.StartWizard();
             Debug.Log("Switched to WizardState");
         }
 
@@ -135,11 +137,19 @@ namespace HoloFlows.Manager
 
     internal class WizardState : AppState
     {
+        private GameObject wizard;
+
         public WizardState(HoloFlowSceneManager sceneManager) : base(sceneManager) { }
+
+        public void StartWizard()
+        {
+            wizard = GameObject.Instantiate(PrefabHolder.Instance.assemblyWizard);
+            wizard.SetActive(true);
+        }
 
         public override void SwitchToEdit()
         {
-            //TODO destroy wizard
+            //TODO destroy wizard here?
             EnablePlacingModeForManagedObjects(true);
             SetNewState(new EditState(sceneManager));
             Debug.Log("Switched to EditState");

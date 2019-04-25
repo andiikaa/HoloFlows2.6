@@ -1,6 +1,5 @@
 ﻿using HoloToolkit.UX.Progress;
 using System.Collections;
-using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -182,25 +181,24 @@ namespace HoloFlows.Wizard
             {
                 //strip the path. unity does not support file endings
                 string localPath = path.Replace("file://", string.Empty);
-                if (!File.Exists(localPath))
-                {
-                    Debug.LogErrorFormat("resource not found in '{0}'", localPath);
-                    return null;
-                }
-
-                //Loading resources only relative to the resource path
-                localPath = localPath.Replace("Assets/HoloFlows/Resources/", string.Empty);
-                localPath = localPath.Replace(".jpg", string.Empty);
-                localPath = localPath.Replace(".png", string.Empty);
-                localPath = localPath.Replace(".wav", string.Empty);
-                localPath = localPath.Replace(".mp3", string.Empty);
-
-                return Resources.Load<T>(localPath);
+                localPath = StripPath(localPath);
+                T stuff = Resources.Load<T>(localPath);
+                return stuff;
             }
 
             Debug.LogError("getting image from remote Path is not implemented yet");
             return null;
 
+        }
+
+        private static string StripPath(string path)
+        {
+            string localPath = path.Replace("Assets/HoloFlows/Resources/", string.Empty);
+            localPath = localPath.Replace(".jpg", string.Empty);
+            localPath = localPath.Replace(".png", string.Empty);
+            localPath = localPath.Replace(".wav", string.Empty);
+            localPath = localPath.Replace(".mp3", string.Empty);
+            return localPath;
         }
 
     }
