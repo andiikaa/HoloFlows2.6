@@ -1,4 +1,4 @@
-﻿using HoloFlows.Wizard;
+﻿using HoloFlows.Manager;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.WSA.WebCam;
@@ -77,7 +77,7 @@ namespace HoloFlows.ObjectDetection
                 if (qrData.IsValid)
                 {
                     cancel = true;
-                    WizardTaskManager.Instance.AddLastScannedData(qrData);
+                    HoloFlowSceneManager.Instance.SwitchToWizard(qrData);
                 }
                 else
                 {

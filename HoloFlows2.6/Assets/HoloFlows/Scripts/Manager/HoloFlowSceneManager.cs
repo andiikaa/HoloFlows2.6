@@ -1,4 +1,5 @@
-﻿using HoloToolkit.Unity;
+﻿using HoloFlows.ObjectDetection;
+using HoloToolkit.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,7 +47,7 @@ namespace HoloFlows.Manager
         public void SwitchToQRScan() { InternalState.SwitchToQRScan(); }
         public void SwitchToEdit() { InternalState.SwitchToEdit(); }
         public void SwitchToControl() { InternalState.SwitchToControl(); }
-        public void SwitchToWizard() { InternalState.SwitchToWizard(); }
+        public void SwitchToWizard(QRCodeData data) { InternalState.SwitchToWizard(data); }
         #endregion
 
     }
@@ -56,7 +57,7 @@ namespace HoloFlows.Manager
         void SwitchToQRScan();
         void SwitchToEdit();
         void SwitchToControl();
-        void SwitchToWizard();
+        void SwitchToWizard(QRCodeData data);
     }
 
 }

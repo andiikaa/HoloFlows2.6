@@ -1,5 +1,7 @@
 ﻿
 
+using HoloFlows.ObjectDetection;
+using HoloFlows.Wizard;
 using System;
 using UnityEngine;
 
@@ -25,7 +27,7 @@ namespace HoloFlows.Manager
         public virtual void SwitchToControl() { Debug.LogWarningFormat(ERR_STATE_MSG, "control"); }
         public virtual void SwitchToEdit() { Debug.LogWarningFormat(ERR_STATE_MSG, "edit"); }
         public virtual void SwitchToQRScan() { Debug.LogWarningFormat(ERR_STATE_MSG, "qr_scan"); }
-        public virtual void SwitchToWizard() { Debug.LogWarningFormat(ERR_STATE_MSG, "wizard"); }
+        public virtual void SwitchToWizard(QRCodeData data) { Debug.LogWarningFormat(ERR_STATE_MSG, "wizard"); }
         protected virtual AudioSource GetTransitionSound() { return null; }
 
         protected void HideAllManagedObjects()
@@ -101,7 +103,6 @@ namespace HoloFlows.Manager
 
             scanInterface.gameObject.SetActive(true);
 
-
             SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
             Debug.Log("Switched to QRScanState");
         }
@@ -121,10 +122,11 @@ namespace HoloFlows.Manager
             this.scanInterface = scanInterface;
         }
 
-        public override void SwitchToWizard()
+        public override void SwitchToWizard(QRCodeData data)
         {
             //sceneManager.InternalDestroy(scanInterface);
             scanInterface.SetActive(false);
+            WizardTaskManager.Instance.AddLastScannedData(data);
             SetNewState(new WizardState(sceneManager));
             Debug.Log("Switched to WizardState");
         }
