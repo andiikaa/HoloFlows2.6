@@ -1,6 +1,6 @@
 ﻿namespace HoloFlows.Manager
 {
-    public interface ManagedObject
+    public interface IManagedObject
     {
         void Hide();
         void Show();

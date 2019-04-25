@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace HoloFlows.Devices
 {
-    public abstract class DeviceBehaviorBase : MonoBehaviour, ManagedObject
+    public abstract class DeviceBehaviorBase : MonoBehaviour, IManagedObject
     {
         protected enum DeviceType { BASIC, TWO_WAY, THREE_WAY, MULTI }
 
@@ -101,17 +101,17 @@ namespace HoloFlows.Devices
             HoloFlowSceneManager.Instance.UnregisterObject(this);
         }
 
-        public virtual void Hide()
+        public void Hide()
         {
             gameObject.SetActive(false);
         }
 
-        public virtual void Show()
+        public void Show()
         {
             gameObject.SetActive(true);
         }
 
-        public virtual void EnablePlacingBox(bool enable)
+        public void EnablePlacingBox(bool enable)
         {
             TapToPlaceParent tapToPlace = gameObject.GetComponentInChildren<TapToPlaceParent>();
             if (tapToPlace == null)
@@ -122,7 +122,6 @@ namespace HoloFlows.Devices
 
             if (enable) { tapToPlace.AllowPlacing(); }
             else { tapToPlace.DisallowPlacing(); }
-
         }
 
         #endregion

@@ -7,15 +7,15 @@ using static HoloFlows.Manager.HoloFlowSceneManager;
 namespace HoloFlows.Manager
 {
     /// <summary>
-    /// Handles the visibilty for all application states.
+    /// Handles the visibilty for <see cref="IManagedObject"/>s for all application states.
     /// </summary>
     public class HoloFlowSceneManager : Singleton<HoloFlowSceneManager>, IApplicationStateManager
     {
-        private const string ERR_STATE_MSG = "current state does not support the switch to '{0}' state";
-        private const string ERR_CAM_MSG = "a camera game object with name '{0}' could not be found in the active scene";
-        private const string CAM_NAME = "HoloLensCamera";
+        public const string ERR_STATE_MSG = "current state does not support the switch to '{0}' state";
+        public const string ERR_CAM_MSG = "a camera game object with name '{0}' could not be found in the active scene";
+        public const string CAM_NAME = "HoloLensCamera";
 
-        private HashSet<ManagedObject> managedObjects = new HashSet<ManagedObject>();
+        private HashSet<IManagedObject> managedObjects = new HashSet<IManagedObject>();
         private AppState internalState;
 
         // Use this for initialization
@@ -26,14 +26,14 @@ namespace HoloFlows.Manager
 
 
         /// <summary>
-        /// Registers a <see cref="ManagedObject"/> which should be managed by the <see cref="HoloFlowSceneManager"/>
+        /// Registers a <see cref="IManagedObject"/> which should be managed by the <see cref="HoloFlowSceneManager"/>
         /// </summary>
-        public void RegisterObject(ManagedObject mObject)
+        public void RegisterObject(IManagedObject mObject)
         {
             managedObjects.Add(mObject);
         }
 
-        public void UnregisterObject(ManagedObject mObject)
+        public void UnregisterObject(IManagedObject mObject)
         {
             managedObjects.Remove(mObject);
         }
@@ -47,7 +47,7 @@ namespace HoloFlows.Manager
 
         #region AppStates
 
-        private abstract class AppState : IApplicationStateManager
+        public abstract class AppState : IApplicationStateManager
         {
             protected HoloFlowSceneManager sceneManager;
 
@@ -63,7 +63,7 @@ namespace HoloFlows.Manager
 
             protected void HideAllManagedObjects()
             {
-                foreach (ManagedObject mObj in sceneManager.managedObjects)
+                foreach (IManagedObject mObj in sceneManager.managedObjects)
                 {
                     mObj.Hide();
                 }
@@ -71,7 +71,7 @@ namespace HoloFlows.Manager
 
             protected void EnablePlacingModeForManagedObjects(bool enable)
             {
-                foreach (ManagedObject mObj in sceneManager.managedObjects)
+                foreach (IManagedObject mObj in sceneManager.managedObjects)
                 {
                     mObj.EnablePlacingBox(enable);
                 }
@@ -84,7 +84,7 @@ namespace HoloFlows.Manager
 
         }
 
-        private class ControlState : AppState
+        public class ControlState : AppState
         {
             public ControlState(HoloFlowSceneManager sceneManager) : base(sceneManager) { }
 
@@ -115,9 +115,9 @@ namespace HoloFlows.Manager
             }
         }
 
-        private class QRScanState : AppState
+        public class QRScanState : AppState
         {
-            private GameObject scanInterface;
+            private readonly GameObject scanInterface;
 
             public QRScanState(HoloFlowSceneManager sceneManager, GameObject scanInterface) : base(sceneManager)
             {
@@ -131,13 +131,13 @@ namespace HoloFlows.Manager
 
             public override void SwitchToWizard()
             {
-                Destroy(scanInterface);
+                //Destroy(scanInterface);
                 SetNewState(new WizardState(sceneManager));
             }
 
         }
 
-        private class WizardState : AppState
+        public class WizardState : AppState
         {
             public WizardState(HoloFlowSceneManager sceneManager) : base(sceneManager) { }
 
@@ -149,7 +149,7 @@ namespace HoloFlows.Manager
             }
         }
 
-        private class EditState : AppState
+        public class EditState : AppState
         {
             public EditState(HoloFlowSceneManager sceneManager) : base(sceneManager) { }
         }
@@ -163,6 +163,9 @@ namespace HoloFlows.Manager
         }
 
         #endregion
+
     }
+
+
 
 }
