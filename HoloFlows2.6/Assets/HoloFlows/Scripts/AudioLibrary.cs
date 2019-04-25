@@ -7,5 +7,9 @@ namespace HoloFlows
     {
         public AudioSource ButtonAirTap;
 
+        public AudioSource SwitchFromControlToEdit;
+
+        public AudioSource SwitchFromEditToControl;
+
     }
 }

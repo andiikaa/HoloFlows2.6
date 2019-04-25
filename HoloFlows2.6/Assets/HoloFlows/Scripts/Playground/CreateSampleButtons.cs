@@ -7,7 +7,6 @@ public class CreateSampleButtons : MonoBehaviour
 {
 
     private Transform group;
-    private int nextObjectIndex = 0;
 
     private const float OFFSET = 0.1f;
     private GameObject defaultButton;
@@ -18,7 +17,6 @@ public class CreateSampleButtons : MonoBehaviour
         Debug.Log("Creating sample buttons");
 
         group = gameObject.transform.Find("EmptyBillboardgroup");
-        nextObjectIndex = group.childCount;
 
         defaultButton = PrefabHolder.Instance.devices.defaultDeviceButton;
         //Instatiate makes copy of the object

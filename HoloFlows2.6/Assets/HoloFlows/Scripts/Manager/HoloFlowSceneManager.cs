@@ -5,7 +5,7 @@ using UnityEngine;
 namespace HoloFlows.Manager
 {
     /// <summary>
-    /// Handles the visibilty for <see cref="IManagedObject"/>s for all application states.
+    /// Handles the visibilty for <see cref="IManagedObject"/>s for all application states <see cref="AppState"/>.
     /// </summary>
     public class HoloFlowSceneManager : Singleton<HoloFlowSceneManager>, IApplicationStateManager
     {
