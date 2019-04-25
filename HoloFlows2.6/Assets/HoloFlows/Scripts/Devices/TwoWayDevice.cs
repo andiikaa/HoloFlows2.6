@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using HoloFlows.Model;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static HoloFlows.Manager.DeviceManager;
 
 namespace HoloFlows.Devices
 {

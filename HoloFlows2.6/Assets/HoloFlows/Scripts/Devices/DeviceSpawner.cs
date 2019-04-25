@@ -1,11 +1,11 @@
 ﻿using HoloFlows.ButtonScripts;
 using HoloFlows.Manager;
+using HoloFlows.Model;
 using HoloToolkit.Unity;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static HoloFlows.Manager.DeviceManager;
 
 namespace HoloFlows.Devices
 {
