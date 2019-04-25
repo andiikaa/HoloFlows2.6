@@ -5,21 +5,16 @@ namespace HoloFlows.Devices
     {
         protected override DeviceType GetDeviceType() { return DeviceType.BASIC; }
 
-        public void Start()
+        void Start()
         {
-
+            RegisterToHoloFlowSceneManager();
         }
 
-        //TODO implement and test this stuff for all devices
-        public override void Hide()
+        void OnDestroy()
         {
-            gameObject.SetActive(false);
+            UnregisterFromHoloFlowSceneManager();
         }
 
-        public override void Show()
-        {
-            gameObject.SetActive(true);
-        }
     }
 }
 

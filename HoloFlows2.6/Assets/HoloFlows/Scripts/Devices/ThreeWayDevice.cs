@@ -12,13 +12,18 @@ namespace HoloFlows.Devices
         // Use this for initialization
         void Start()
         {
-
+            RegisterToHoloFlowSceneManager();
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        void OnDestroy()
+        {
+            UnregisterFromHoloFlowSceneManager();
         }
 
         public void SetDeviceInfos(DeviceInfo info)
@@ -70,14 +75,5 @@ namespace HoloFlows.Devices
 
         protected override DeviceType GetDeviceType() { return DeviceType.THREE_WAY; }
 
-        public override void Hide()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void Show()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

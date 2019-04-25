@@ -17,6 +17,12 @@ namespace HoloFlows
         [Tooltip("Holds all device specific prefabs")]
         public Devices devices;
 
+        /// <summary>
+        /// The scan interface, when the user scans a qr code.
+        /// </summary>
+        [Tooltip("The scan interface, when the user scans a qr code")]
+        public GameObject qrScanInterface;
+
 
         private void Start()
         {

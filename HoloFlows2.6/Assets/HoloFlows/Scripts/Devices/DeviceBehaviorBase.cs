@@ -89,7 +89,42 @@ namespace HoloFlows.Devices
             newChild.transform.SetParent(parent, false);
         }
 
-        public abstract void Hide();
-        public abstract void Show();
+        #region managed object
+
+        protected void RegisterToHoloFlowSceneManager()
+        {
+            HoloFlowSceneManager.Instance.RegisterObject(this);
+        }
+
+        protected void UnregisterFromHoloFlowSceneManager()
+        {
+            HoloFlowSceneManager.Instance.UnregisterObject(this);
+        }
+
+        public virtual void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public virtual void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public virtual void EnablePlacingBox(bool enable)
+        {
+            TapToPlaceParent tapToPlace = gameObject.GetComponentInChildren<TapToPlaceParent>();
+            if (tapToPlace == null)
+            {
+                Debug.LogErrorFormat("current gameobject '{0}' does not support the enabling/disabling of the placing box", gameObject.name);
+                return;
+            }
+
+            if (enable) { tapToPlace.AllowPlacing(); }
+            else { tapToPlace.DisallowPlacing(); }
+
+        }
+
+        #endregion
     }
 }
