@@ -11,8 +11,9 @@ namespace HoloFlows.Manager
     internal abstract class AppState : IApplicationStateManager
     {
         protected const string ERR_STATE_MSG = "current state does not support the switch to '{0}' state";
-        protected const string ERR_CAM_MSG = "a camera game object with name '{0}' could not be found in the active scene";
+        protected const string ERR_CAM_MSG = "a game object with name '{0}' could not be found in the active scene";
         protected const string CAM_NAME = "HoloLensCamera";
+        protected const string SCAN_NAME = "QRCodeScanner";
 
         protected HoloFlowSceneManager sceneManager;
 
@@ -93,17 +94,15 @@ namespace HoloFlows.Manager
             HideAllManagedObjects();
 
             //enable scan interface and set fixed position to camera
-            GameObject scanInterface = sceneManager.InternalInstantiate(PrefabHolder.Instance.qrScanInterface);
             GameObject cameraObject = GameObject.Find(CAM_NAME);
-            if (cameraObject == null)
-            {
-                throw new NullReferenceException(string.Format(ERR_CAM_MSG, CAM_NAME));
-            }
+            if (cameraObject == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, CAM_NAME)); }
+            Transform scanInterface = cameraObject.transform.Find(SCAN_NAME);
+            if (scanInterface == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, SCAN_NAME)); }
 
-            scanInterface.transform.SetParent(cameraObject.transform);
-            scanInterface.SetActive(true);
+            scanInterface.gameObject.SetActive(true);
 
-            SetNewState(new QRScanState(sceneManager, scanInterface));
+
+            SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
             Debug.Log("Switched to QRScanState");
         }
     }
@@ -124,7 +123,8 @@ namespace HoloFlows.Manager
 
         public override void SwitchToWizard()
         {
-            sceneManager.InternalDestroy(scanInterface);
+            //sceneManager.InternalDestroy(scanInterface);
+            scanInterface.SetActive(false);
             SetNewState(new WizardState(sceneManager));
             Debug.Log("Switched to WizardState");
         }

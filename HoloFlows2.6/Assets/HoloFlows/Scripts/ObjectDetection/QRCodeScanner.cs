@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HoloFlows.Wizard;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.WSA.WebCam;
 
@@ -21,6 +22,8 @@ namespace HoloFlows.ObjectDetection
 
         bool captureStarted = false;
         bool firstScan = true;
+        //indicating the cancelation or stopping of the scan job
+        bool cancel = false;
 
         // Use this for initialization
         void Start()
@@ -35,8 +38,11 @@ namespace HoloFlows.ObjectDetection
         // Update is called once per frame
         void Update()
         {
-            StartCapture();
-            HandlePresentImage();
+            if (!cancel)
+            {
+                StartCapture();
+                HandlePresentImage();
+            }
         }
 
         void OnDestroy() { Debug.Log("destroying the qrcode scanning object"); }
@@ -54,24 +60,37 @@ namespace HoloFlows.ObjectDetection
             TryToReadQRCode();
         }
 
+        /// <summary>
+        /// QRCode data is handled within this method.
+        /// </summary>
         private void HandleExistingQRCode()
         {
             if (scanJob == null || !scanJob.IsDataReady) return;
 
-            //do whatever you want with the data
             Debug.Log("#### qr code data is ready ####");
             Debug.Log(scanJob.ScanResult.BarcodeFormat.ToString());
             string tmpString = scanJob.ScanResult.Text;
             Debug.Log(tmpString);
             if (!string.IsNullOrEmpty(tmpString))
             {
-                //TODO handle the data
+                QRCodeData qrData = QRCodeData.FromQrCodeData(tmpString);
+                if (qrData.IsValid)
+                {
+                    cancel = true;
+                    WizardTaskManager.Instance.AddLastScannedData(qrData);
+                }
+                else
+                {
+                    Debug.LogError("QRCode Data is Invalid");
+                }
             }
         }
 
         //tries to read the qrcode async
         private void TryToReadQRCode()
         {
+            if (cancel) return;
+
             lock (imageBuffer)
             {
                 byte[] tmpBuffer = new byte[imageBuffer.Count];
@@ -87,7 +106,7 @@ namespace HoloFlows.ObjectDetection
         private void StartCapture()
         {
             //there can only be one active PhotoCapture
-            if (captureStarted) return;
+            if (captureStarted || cancel) return;
             captureStarted = true;
 
             // Create a PhotoCapture object

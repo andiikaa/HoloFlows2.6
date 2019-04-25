@@ -31,7 +31,7 @@ namespace HoloFlows.Manager
 
         private void InitKeywordRecognizer()
         {
-            keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray());
+            keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(), ConfidenceLevel.Low);
             keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
             keywordRecognizer.Start();
         }

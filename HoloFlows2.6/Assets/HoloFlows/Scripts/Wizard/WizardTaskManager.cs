@@ -1,6 +1,8 @@
-﻿using HoloToolkit.Unity;
+﻿using HoloFlows.ObjectDetection;
+using HoloToolkit.Unity;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace HoloFlows.Wizard
 {
@@ -12,6 +14,7 @@ namespace HoloFlows.Wizard
     {
 
         private List<WizardTask> tasks = new List<WizardTask>();
+        private QRCodeData qrCodeData;
 
         // Use this for initialization
         void Start()
@@ -23,6 +26,16 @@ namespace HoloFlows.Wizard
         void Update()
         {
 
+        }
+
+        public void AddLastScannedData(QRCodeData scannedData)
+        {
+            if (!qrCodeData.IsValid)
+            {
+                Debug.LogError("Invalid qr code data added to the WizardTaskManager");
+                return;
+            }
+            qrCodeData = scannedData;
         }
 
         public void AddTask(WizardTask task)
