@@ -21,6 +21,9 @@ namespace HoloFlows.Devices
 
         public GameObject SpawnDevice(string deviceUid)
         {
+            // get thing from sal with device data
+            // create the specific control
+
             //Get The DeviceManager for a bit shorter syntax
             if (deviceManager == null)
             {

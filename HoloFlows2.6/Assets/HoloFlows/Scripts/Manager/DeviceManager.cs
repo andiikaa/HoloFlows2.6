@@ -21,6 +21,8 @@ namespace HoloFlows.Manager
         //TODO Get this uri somehow via the discovery service
         private string openhabUri = "http://192.168.1.115:8080/";
 
+        //TODO device state formatter
+
         void Start()
         {
             AddDemoDevices();
