@@ -180,6 +180,7 @@ namespace HoloFlows.Wizard
             if (path.StartsWith("file://"))
             {
                 //strip the path. unity does not support file endings
+                //checking with File.Exists(path) has different behavior depending on which platform (hololens vs editor)
                 string localPath = path.Replace("file://", string.Empty);
                 localPath = StripPath(localPath);
                 T stuff = Resources.Load<T>(localPath);

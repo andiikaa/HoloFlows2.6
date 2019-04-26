@@ -8,6 +8,10 @@ namespace HoloFlows.ButtonScripts
 
     public class TapToPlaceParent : MonoBehaviour, IInputClickHandler, IFocusable
     {
+        //colors when placing boxes are colliding
+        private static readonly Color BLOBB_COLOR_DEFAULT = new Color(0f, 0.6f, 0.877f, 1f);
+        private static readonly Color BLOBB_COLOR_HIT = Color.red;
+
         /// <summary>
         /// This is the id, which is used to find/save the postion of the device control.
         /// </summary>
@@ -185,8 +189,8 @@ namespace HoloFlows.ButtonScripts
         public void OnTriggerEnter(Collider other)
         {
             //this device will be the device which is hit by 'other'
-            var tmpThisRootParent = GetRootParent(gameObject);
-            var tmpOtherRootParent = GetRootParent(other.gameObject);
+            GameObject tmpThisRootParent = GetRootParent(gameObject);
+            GameObject tmpOtherRootParent = GetRootParent(other.gameObject);
 
             //if the object hit itself somehow
             if (tmpThisRootParent == tmpOtherRootParent)
@@ -198,6 +202,8 @@ namespace HoloFlows.ButtonScripts
             otherRootParent = tmpOtherRootParent;
 
             Debug.Log(otherRootParent.name + " hit " + thisRootParent.name);
+
+            ChangePlacingBoxColor(tmpThisRootParent, BLOBB_COLOR_HIT);
 
             triggerEntered = true;
         }
@@ -211,10 +217,39 @@ namespace HoloFlows.ButtonScripts
             return go;
         }
 
+        private void ChangePlacingBoxColor(GameObject deviceObject, Color color)
+        {
+            if (deviceObject == null) { return; }
+
+            Transform child = deviceObject.transform.Find("Cube/Box-Visual");
+            if (child == null)
+            {
+                Debug.LogErrorFormat("Box-Visual not found in '{0}'", deviceObject.name);
+                return;
+            }
+
+            MeshRenderer mesh = child.gameObject.GetComponent<MeshRenderer>();
+            if (mesh == null)
+            {
+                Debug.LogErrorFormat("Box-Visual has no mesh '{0}'", child.gameObject.name);
+                return;
+            }
+
+            if (mesh.materials.Length == 0)
+            {
+                Debug.LogErrorFormat("Box-Visual has no mesh material '{0}'", child.gameObject.name);
+                return;
+            }
+
+            mesh.materials[0].color = color;
+        }
+
         public void OnTriggerExit(Collider other)
         {
             triggerEntered = false;
             triggerEnteredCount = 0;
+            GameObject tmpThisRootParent = GetRootParent(gameObject);
+            ChangePlacingBoxColor(tmpThisRootParent, BLOBB_COLOR_DEFAULT);
         }
 
         public void OnFocusEnter()

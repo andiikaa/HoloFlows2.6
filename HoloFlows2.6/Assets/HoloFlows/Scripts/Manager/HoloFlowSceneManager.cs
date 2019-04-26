@@ -10,15 +10,22 @@ namespace HoloFlows.Manager
     /// </summary>
     public class HoloFlowSceneManager : Singleton<HoloFlowSceneManager>, IApplicationStateManager
     {
-        internal HashSet<IManagedObject> ManagedObjects { get; set; } = new HashSet<IManagedObject>();
+        internal HashSet<IManagedObject> ManagedObjects { get; private set; } = new HashSet<IManagedObject>();
         internal AppState InternalState { get; set; }
+
+        /// <summary>
+        /// Gets the current <see cref="ApplicationState"/>.
+        /// </summary>
+        public ApplicationState ApplicationState
+        {
+            get { return InternalState.ApplicationState; }
+        }
 
         // Use this for initialization
         void Start()
         {
             InternalState = new ControlState(this);
         }
-
 
         /// <summary>
         /// Registers a <see cref="IManagedObject"/> which should be managed by the <see cref="HoloFlowSceneManager"/>
@@ -28,6 +35,10 @@ namespace HoloFlows.Manager
             ManagedObjects.Add(mObject);
         }
 
+        /// <summary>
+        /// Unregister the <see cref="IManagedObject"/>. The object is then no longer managed by the <see cref="HoloFlowSceneManager"/>
+        /// </summary>
+        /// <param name="mObject"></param>
         public void UnregisterObject(IManagedObject mObject)
         {
             ManagedObjects.Remove(mObject);
@@ -58,6 +69,13 @@ namespace HoloFlows.Manager
         void SwitchToEdit();
         void SwitchToControl();
         void SwitchToWizard(QRCodeData data);
+        ApplicationState ApplicationState { get; }
+
+    }
+
+    public enum ApplicationState
+    {
+        QRScan, Edit, Control, Wizard
     }
 
 }

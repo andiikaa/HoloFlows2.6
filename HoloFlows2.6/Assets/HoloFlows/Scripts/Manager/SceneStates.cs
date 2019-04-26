@@ -19,6 +19,14 @@ namespace HoloFlows.Manager
 
         protected HoloFlowSceneManager sceneManager;
 
+        public ApplicationState ApplicationState
+        {
+            get
+            {
+                return GetApplicationState();
+            }
+        }
+
         public AppState(HoloFlowSceneManager sceneManager)
         {
             this.sceneManager = sceneManager;
@@ -29,6 +37,7 @@ namespace HoloFlows.Manager
         public virtual void SwitchToQRScan() { Debug.LogWarningFormat(ERR_STATE_MSG, "qr_scan"); }
         public virtual void SwitchToWizard(QRCodeData data) { Debug.LogWarningFormat(ERR_STATE_MSG, "wizard"); }
         protected virtual AudioSource GetTransitionSound() { return null; }
+        protected abstract ApplicationState GetApplicationState();
 
         protected void HideAllManagedObjects()
         {
@@ -106,6 +115,8 @@ namespace HoloFlows.Manager
             SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
             Debug.Log("Switched to QRScanState");
         }
+
+        protected override ApplicationState GetApplicationState() { return ApplicationState.Control; }
     }
 
     internal class QRScanState : AppState
@@ -133,6 +144,7 @@ namespace HoloFlows.Manager
             Debug.Log("Switched to WizardState");
         }
 
+        protected override ApplicationState GetApplicationState() { return ApplicationState.QRScan; }
     }
 
     internal class WizardState : AppState
@@ -154,6 +166,8 @@ namespace HoloFlows.Manager
             SetNewState(new EditState(sceneManager));
             Debug.Log("Switched to EditState");
         }
+
+        protected override ApplicationState GetApplicationState() { return ApplicationState.Wizard; }
     }
 
     internal class EditState : AppState
@@ -172,6 +186,8 @@ namespace HoloFlows.Manager
         {
             return AudioLibrary.Instance.SwitchFromEditToControl;
         }
+
+        protected override ApplicationState GetApplicationState() { return ApplicationState.Edit; }
     }
 
 }
