@@ -98,7 +98,8 @@ namespace HoloFlows.Devices
 
         protected void UnregisterFromHoloFlowSceneManager()
         {
-            HoloFlowSceneManager.Instance.UnregisterObject(this);
+            //check is neccesary or at app exit a np is thrown
+            if (HoloFlowSceneManager.IsInitialized) { HoloFlowSceneManager.Instance.UnregisterObject(this); }
         }
 
         public void Hide()
