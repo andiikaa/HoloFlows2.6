@@ -61,45 +61,20 @@ namespace HoloFlows.ButtonScripts
         // Called by GazeGestureManager when the user performs a Select gesture
         public void OnInputClicked(InputClickedEventData eventData)
         {
-            // On each Select gesture, toggle whether the user is in placing mode.
+            StartPlacing();
+        }
+
+        /// <summary>
+        /// Starts the placing
+        /// </summary>
+        public void StartPlacing()
+        {
             if (placingMode)
             {
                 placing = !placing;
-
-                // ***** remove comment syntax ****** //
-                if (placing)
-                {
-                    WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
-                }
-                else
-                {
-                    WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
-                }
+                if (placing) { WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject); }
+                else { WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName); }
             }
-            //    placing = !placing;
-
-            //// ***** remove comment syntax ****** //
-            //if (placing)
-            //{
-            //    WorldAnchorManager.Instance.RemoveAnchor(this.transform.parent.gameObject);
-            //}
-            //else
-            //{
-            //    WorldAnchorManager.Instance.AttachAnchor(this.transform.parent.gameObject, SavedAnchorFriendlyName);
-            //}
-
-
-
-            // If the user is in placing mode, display the spatial mapping mesh.
-            /*if (placing)
-            {
-                SpatialMapping.Instance.DrawVisualMeshes = true;
-            }
-            // If the user is not in placing mode, hide the spatial mapping mesh.
-            else
-            {
-                SpatialMapping.Instance.DrawVisualMeshes = false;
-            }*/
         }
 
         // Update is called once per frame

@@ -26,7 +26,10 @@ namespace HoloFlows.Manager
 
         void OnDisable()
         {
-            keywordRecognizer.Stop();
+            if (keywordRecognizer != null && keywordRecognizer.IsRunning)
+            {
+                keywordRecognizer.Stop();
+            }
         }
 
         private void InitKeywordRecognizer()
@@ -43,7 +46,6 @@ namespace HoloFlows.Manager
             // if the keyword recognized is in our dictionary, call that Action.
             if (keywords.TryGetValue(args.text, out keywordAction))
             {
-
                 keywordAction.Invoke();
             }
         }

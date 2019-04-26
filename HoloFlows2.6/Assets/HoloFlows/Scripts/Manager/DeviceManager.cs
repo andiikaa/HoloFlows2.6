@@ -1,19 +1,30 @@
 ﻿
+using HoloFlows.Client;
 using HoloFlows.Model;
 using HoloToolkit.Unity;
+using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine;
 
 namespace HoloFlows.Manager
 {
     public class DeviceManager : Singleton<DeviceManager>
     {
-
         public Dictionary<string, DeviceInfo> DeviceInfos { get; private set; } = new Dictionary<string, DeviceInfo>();
+        public Dictionary<string, string> ItemStates { get; private set; } = new Dictionary<string, string>();
+
+        //polling every seconds
+        private const int POLLING_DELAY = 2;
+        private const int INITIAL_POLLING_DELAY = 5;
+        private bool stopPolling = false;
+
+        //TODO Get this uri somehow via the discovery service
+        private string openhabUri = "http://192.168.1.115:8080/";
 
         void Start()
         {
             AddDemoDevices();
+            StartCoroutine(PollOpenHab(INITIAL_POLLING_DELAY));
         }
 
         #region demo devices
@@ -26,6 +37,27 @@ namespace HoloFlows.Manager
             DeviceInfos.Add(homematicDimmer.Uid, homematicDimmer);
             DeviceInfos.Add(tinkerforgeAmbTemp.Uid, tinkerforgeAmbTemp);
             DeviceInfos.Add(tinkerforgeAmbTemp2.Uid, tinkerforgeAmbTemp2);
+        }
+
+        private IEnumerator PollOpenHab(int delay)
+        {
+            var request = new AllItemsShortGetRequest(openhabUri, HandlePollingData);
+            yield return request.ExecuteRequest();
+            yield return new WaitForSeconds(delay);
+
+            if (!stopPolling) { StartCoroutine(PollOpenHab(POLLING_DELAY)); }
+        }
+
+        private void HandlePollingData(List<ItemDataShort> itemData)
+        {
+            //TODO handle dynamic data handling
+            foreach (var item in itemData)
+            {
+                if (item.name == "hue_bulb210_")
+                {
+                    //TODO complete for evaluation
+                }
+            }
         }
 
         private DeviceInfo CreateTinkerforgeIRTemp()

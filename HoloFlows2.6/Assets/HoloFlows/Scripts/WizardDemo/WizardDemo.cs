@@ -95,12 +95,12 @@ public class WizardDemo : Singleton<WizardDemo>
         // WfMS Task: GetBridge id
         // WfMS Task: Create Items
 
-        tasks.Add(Bt1);
-        tasks.Add(Bt2);
-        tasks.Add(Bt3);
-        tasks.Add(Bt4);
-        tasks.Add(t2);
-        tasks.Add(t3);
+        //tasks.Add(Bt1);
+        //tasks.Add(Bt2);
+        //tasks.Add(Bt3);
+        //tasks.Add(Bt4);
+        //tasks.Add(t2);
+        //tasks.Add(t3);
 
         return tasks;
     }

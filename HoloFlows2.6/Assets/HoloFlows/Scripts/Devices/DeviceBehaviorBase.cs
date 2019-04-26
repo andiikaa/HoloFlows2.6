@@ -125,6 +125,19 @@ namespace HoloFlows.Devices
             else { tapToPlace.DisallowPlacing(); }
         }
 
+        public void StartPlacing()
+        {
+            TapToPlaceParent tapToPlace = gameObject.GetComponentInChildren<TapToPlaceParent>();
+            if (tapToPlace == null)
+            {
+                Debug.LogErrorFormat("current gameobject '{0}' does not support the enabling/disabling of the placing box", gameObject.name);
+                return;
+            }
+            //ensure placing is allowed
+            tapToPlace.AllowPlacing();
+            tapToPlace.StartPlacing();
+        }
+
         #endregion
     }
 }

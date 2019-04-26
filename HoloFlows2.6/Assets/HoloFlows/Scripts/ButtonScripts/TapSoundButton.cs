@@ -16,7 +16,7 @@ namespace HoloFlows.ButtonScripts
         /// <summary>
         /// Base class starting routine. If overriden you must call this method explicit.
         /// </summary>
-        public void Start()
+        public virtual void Start()
         {
             if (!AudioLibrary.IsInitialized)
             {

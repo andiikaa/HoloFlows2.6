@@ -1,5 +1,6 @@
 ﻿
 
+using HoloFlows.Devices;
 using HoloFlows.ObjectDetection;
 using HoloFlows.Wizard;
 using System;
@@ -47,12 +48,35 @@ namespace HoloFlows.Manager
             }
         }
 
+        protected void ShowAllManagedObjects()
+        {
+            foreach (IManagedObject mObj in sceneManager.ManagedObjects)
+            {
+                mObj.Show();
+            }
+        }
+
         protected void EnablePlacingModeForManagedObjects(bool enable)
         {
             foreach (IManagedObject mObj in sceneManager.ManagedObjects)
             {
                 mObj.EnablePlacingBox(enable);
             }
+        }
+
+        /// <summary>
+        /// Starts the placing for the game object.
+        /// </summary>
+        /// <param name="go"></param>
+        protected void PlaceTheGameObject(GameObject go)
+        {
+            DeviceBehaviorBase db = go.GetComponent<DeviceBehaviorBase>();
+            if (db == null)
+            {
+                Debug.LogErrorFormat("could not find DeviceBehaviorBase for {0}", go.name);
+                return;
+            }
+            db.StartPlacing();
         }
 
         protected void SetNewState(AppState state)
@@ -68,10 +92,7 @@ namespace HoloFlows.Manager
             if (AudioLibrary.IsInitialized)
             {
                 AudioSource soundToPlay = GetTransitionSound();
-                if (soundToPlay != null)
-                {
-                    soundToPlay.Play();
-                }
+                soundToPlay?.Play();
             }
             else
             {
@@ -104,16 +125,29 @@ namespace HoloFlows.Manager
             //hide all
             HideAllManagedObjects();
 
+            //TODO remove direct jump to wizard
+
             //enable scan interface and set fixed position to camera
-            GameObject cameraObject = GameObject.Find(CAM_NAME);
-            if (cameraObject == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, CAM_NAME)); }
-            Transform scanInterface = cameraObject.transform.Find(SCAN_NAME);
-            if (scanInterface == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, SCAN_NAME)); }
+            //GameObject cameraObject = GameObject.Find(CAM_NAME);
+            //if (cameraObject == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, CAM_NAME)); }
+            //Transform scanInterface = cameraObject.transform.Find(SCAN_NAME);
+            //if (scanInterface == null) { throw new NullReferenceException(string.Format(ERR_CAM_MSG, SCAN_NAME)); }
 
-            scanInterface.gameObject.SetActive(true);
+            //scanInterface.gameObject.SetActive(true);
 
-            SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
-            Debug.Log("Switched to QRScanState");
+            //SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
+            //Debug.Log("Switched to QRScanState");
+            JumpToWizard();
+        }
+
+        private void JumpToWizard()
+        {
+            QRCodeData data = QRCodeData.FromQrCodeData("FIXMEFIXME");
+            WizardTaskManager.Instance.AddLastScannedData(data);
+            WizardState wState = new WizardState(sceneManager, data);
+            SetNewState(wState);
+            wState.StartWizard();
+            Debug.Log("Switched to WizardState");
         }
 
         protected override ApplicationState GetApplicationState() { return ApplicationState.Control; }
@@ -127,7 +161,7 @@ namespace HoloFlows.Manager
         {
             if (scanInterface == null)
             {
-                throw new NullReferenceException("scanInterface could not be null for QRScanState");
+                throw new ArgumentNullException("scanInterface could not be null for QRScanState");
             }
 
             this.scanInterface = scanInterface;
@@ -137,8 +171,15 @@ namespace HoloFlows.Manager
         {
             //sceneManager.InternalDestroy(scanInterface);
             scanInterface.SetActive(false);
+            if (!data.IsValid)
+            {
+                SetNewState(new ControlState(sceneManager));
+                Debug.Log("Switched to ControlState");
+                return;
+            }
+
             WizardTaskManager.Instance.AddLastScannedData(data);
-            WizardState wState = new WizardState(sceneManager);
+            WizardState wState = new WizardState(sceneManager, data);
             SetNewState(wState);
             wState.StartWizard();
             Debug.Log("Switched to WizardState");
@@ -150,19 +191,45 @@ namespace HoloFlows.Manager
     internal class WizardState : AppState
     {
         private GameObject wizard;
+        private QRCodeData data;
 
-        public WizardState(HoloFlowSceneManager sceneManager) : base(sceneManager) { }
+        public WizardState(HoloFlowSceneManager sceneManager, QRCodeData data) : base(sceneManager)
+        {
+            this.data = data;
+        }
 
         public void StartWizard()
         {
             wizard = GameObject.Instantiate(PrefabHolder.Instance.assemblyWizard);
+            WizardDialog dialog = wizard.GetComponent<WizardDialog>();
+            if (dialog != null) { dialog.WizardDone = WizardDone; }
+            else { Debug.LogError("There was no WizardDialog found. Callback not set."); }
             wizard.SetActive(true);
+        }
+
+        private void WizardDone()
+        {
+            SwitchToEdit();
         }
 
         public override void SwitchToEdit()
         {
             //TODO destroy wizard here?
+            GameObject go = DeviceSpawner.Instance.SpawnDevice(data.ThingId);
+
+            //in case device could not be spawned
+            if (go == null)
+            {
+                ShowAllManagedObjects();
+                SetNewState(new ControlState(sceneManager));
+                Debug.Log("Switched to ControlState");
+                return;
+            }
+
+            //the spawned device is in placing mode
+            ShowAllManagedObjects();
             EnablePlacingModeForManagedObjects(true);
+            PlaceTheGameObject(go);
             SetNewState(new EditState(sceneManager));
             Debug.Log("Switched to EditState");
         }

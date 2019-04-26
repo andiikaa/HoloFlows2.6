@@ -19,7 +19,7 @@ namespace HoloFlows.Devices
 
         }
 
-        public void SpawnDevice(string deviceUid)
+        public GameObject SpawnDevice(string deviceUid)
         {
             //Get The DeviceManager for a bit shorter syntax
             if (deviceManager == null)
@@ -41,6 +41,7 @@ namespace HoloFlows.Devices
             {
                 Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
             }
+            return go2;
         }
 
         public GameObject MergeBasicDevices(GameObject device1, GameObject device2)

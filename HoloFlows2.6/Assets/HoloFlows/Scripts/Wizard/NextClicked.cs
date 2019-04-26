@@ -9,7 +9,7 @@ namespace HoloFlows.Wizard
 
         WizardDialog dialog;
 
-        new public void Start()
+        public override void Start()
         {
             base.Start();
             dialog = transform.GetComponentInParent<WizardDialog>();

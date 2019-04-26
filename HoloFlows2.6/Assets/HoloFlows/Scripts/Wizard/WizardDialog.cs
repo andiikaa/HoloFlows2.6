@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace HoloFlows.Wizard
 {
-
     //TODO initialization!
     [RequireComponent(typeof(AudioSource))]
     public class WizardDialog : MonoBehaviour
@@ -28,6 +27,8 @@ namespace HoloFlows.Wizard
         private WizardTask nextTask;
         private bool isFinished = false;
 
+        public System.Action WizardDone { get; set; } = null;
+
         void Start()
         {
             isFinished = false;
@@ -44,21 +45,10 @@ namespace HoloFlows.Wizard
         /// </summary>
         public void LoadNextTask()
         {
-            if (audioSource.isPlaying)
-            {
-                audioSource.Stop();
-            }
+            if (audioSource.isPlaying) { audioSource.Stop(); }
 
-            if (isFinished)
-            {
-                Debug.Log("TODO Close the window");
-                //TODO close window
-                CloseDialog();
-            }
-            else
-            {
-                StartCoroutine(LoadNextTaskInternal());
-            }
+            if (isFinished) { CloseDialog(); }
+            else { StartCoroutine(LoadNextTaskInternal()); }
         }
 
         /// <summary>
@@ -126,14 +116,8 @@ namespace HoloFlows.Wizard
         private void UpdateContent()
         {
             Debug.Log("Update Content with new Stuff");
-            if (nextTask == null)
-            {
-                UpdateContentWithFinsihed();
-            }
-            else
-            {
-                UpdateContentWithNextTask();
-            }
+            if (nextTask == null) { UpdateContentWithFinsihed(); }
+            else { UpdateContentWithNextTask(); }
         }
 
         private void UpdateContentWithFinsihed()
@@ -161,6 +145,7 @@ namespace HoloFlows.Wizard
         {
             //gameObject.SetActive(false);
             GameObject.Destroy(gameObject);
+            WizardDone();
         }
 
         /// <summary>
