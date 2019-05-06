@@ -9,6 +9,7 @@
         public string DisplayName { get; set; }
         public DeviceFunctionality[] Functionalities { get; set; }
         public DeviceState[] States { get; set; }
+        public GroupBox[] GroupBoxes { get; set; }
     }
 
     /// <summary>
@@ -20,6 +21,7 @@
         public string FunctionalityType { get; set; }
         public string ItemId { get; set; }
         public DeviceCommand[] Commands { get; set; }
+        public GroupBox GroupBox { get; set; }
     }
 
     /// <summary>
@@ -32,6 +34,7 @@
         public string RealStateValue { get; set; }
         public string ItemId { get; set; }
         public UnitOfMeasure UnitOfMeasure { get; set; }
+        public GroupBox GroupBox { get; set; }
     }
 
     /// <summary>
@@ -52,5 +55,15 @@
         public string Name { get; set; }
         public string RealCommandName { get; set; }
         public string CommandType { get; set; }
+        public string Label { get; set; }
+    }
+
+    /// <summary>
+    /// GroupBoxes define grouping for functionality and states
+    /// </summary>
+    public class GroupBox
+    {
+        public string Name { get; set; }
+        public string IconName { get; set; }
     }
 }

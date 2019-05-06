@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace HoloFlows.Devices
 {
-    public class ThreeWayDevice : DeviceBehaviorBase
+    public class TwoPieceDevice : DeviceBehaviorBase
     {
 
         // Use this for initialization
@@ -18,7 +18,6 @@ namespace HoloFlows.Devices
         // Update is called once per frame
         void Update()
         {
-
         }
 
         void OnDestroy()
@@ -29,15 +28,20 @@ namespace HoloFlows.Devices
         public void SetDeviceInfos(DeviceInfo info)
         {
             IEnumerable<string> stateItems = GetStateItems(info);
-            if (stateItems.Count() != 3)
+            if (stateItems.Count() != 2)
             {
-                Debug.LogError("TwoWayDevice can only handle 2 different states!");
+                Debug.LogError("TwoPieceDevice can only handle 2 different states!");
                 return;
             }
 
             SetDeviceState(gameObject.transform.Find("RightDevice/RightGroup"), info.States[0]);
-            SetDeviceState(gameObject.transform.Find("MiddleDevice/MiddleGroup"), info.States[1]);
-            SetDeviceState(gameObject.transform.Find("LeftDevice/LeftGroup"), info.States[2]);
+            SetDeviceState(gameObject.transform.Find("LeftDevice/LeftGroup"), info.States[1]);
+        }
+
+        public void CopyFromBasicDevices(GameObject basic1, GameObject basic2)
+        {
+            CopyBillboardGroup(basic1.transform.Find("EmptyBillboardgroup"), transform.Find("RightDevice/RightGroup"));
+            CopyBillboardGroup(basic2.transform.Find("EmptyBillboardgroup"), transform.Find("LeftDevice/LeftGroup"));
         }
 
         private void SetDeviceState(Transform transform, DeviceState deviceState)
@@ -47,13 +51,16 @@ namespace HoloFlows.Devices
             Text description = transform.Find("Canvas/Description").GetComponent<Text>();
             Text value = transform.Find("Canvas/Value").GetComponent<Text>();
 
-            description.text = GetLabelOrItemId(deviceState);
+            description.text = deviceState.ItemId;
             value.text = deviceState.RealStateValue + " " + GetValuePrefix(deviceState.UnitOfMeasure);
         }
 
-        private string GetLabelOrItemId(DeviceState state)
+        private IEnumerable<string> GetStateItems(DeviceInfo info)
         {
-            return string.IsNullOrEmpty(state.Label) ? state.ItemId : state.Label;
+            return info.States
+                .Select(e => e.ItemId)
+                .GroupBy(e => e).Select(e => e.Key)
+                .Distinct();
         }
 
         private static string GetValuePrefix(UnitOfMeasure unitOfMeasure)
@@ -65,15 +72,7 @@ namespace HoloFlows.Devices
             return unitOfMeasure.PrefixSymbol;
         }
 
-        private IEnumerable<string> GetStateItems(DeviceInfo info)
-        {
-            return info.States
-                .Select(e => e.ItemId)
-                .GroupBy(e => e).Select(e => e.Key)
-                .Distinct();
-        }
-
-        protected override DeviceType GetDeviceType() { return DeviceType.THREE_WAY; }
+        protected override DeviceType GetDeviceType() { return DeviceType.TWO_PIECE; }
 
     }
 }

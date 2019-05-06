@@ -2,6 +2,7 @@
 using HoloFlows.Client;
 using HoloFlows.Model;
 using HoloToolkit.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,14 @@ namespace HoloFlows.Manager
 {
     public class DeviceManager : Singleton<DeviceManager>
     {
+        /// <summary>
+        /// Contains the cached device information. Use <see cref="GetDeviceInfo(string, Action{DeviceInfo})"/> for getting the latest device information.
+        /// </summary>
         public Dictionary<string, DeviceInfo> DeviceInfos { get; private set; } = new Dictionary<string, DeviceInfo>();
+
+        /// <summary>
+        /// Constains the current state for each device
+        /// </summary>
         public Dictionary<string, string> ItemStates { get; private set; } = new Dictionary<string, string>();
 
         //polling every seconds
@@ -25,20 +33,40 @@ namespace HoloFlows.Manager
 
         void Start()
         {
-            AddDemoDevices();
+            StartCoroutine(RequestAllThings());
             StartCoroutine(PollOpenHab(INITIAL_POLLING_DELAY));
         }
 
-        #region demo devices
-
-        private void AddDemoDevices()
+        /// <summary>
+        /// Gets the current item value. Returns null if no value was found.
+        /// </summary>
+        public string GetItemState(string itemName)
         {
-            var homematicDimmer = CreateHomematicDimmer();
-            var tinkerforgeAmbTemp = CreateTinkerforgeIRTemp();
-            var tinkerforgeAmbTemp2 = CreateTinkerforgeIRTemp2();
-            DeviceInfos.Add(homematicDimmer.Uid, homematicDimmer);
-            DeviceInfos.Add(tinkerforgeAmbTemp.Uid, tinkerforgeAmbTemp);
-            DeviceInfos.Add(tinkerforgeAmbTemp2.Uid, tinkerforgeAmbTemp2);
+            string outValue = null;
+            if (!ItemStates.TryGetValue(itemName, out outValue))
+            {
+                Debug.LogWarningFormat("No value found for item '{0}'", itemName);
+            }
+            return outValue;
+        }
+
+        /// <summary>
+        /// Gets the device informations for the given thing id.
+        /// First the cached devices data is queried. If no device info for the given uid was found, a web request is executed to get the latest device data.
+        /// </summary>
+        /// <param name="thingId">thing id</param>
+        /// <param name="handleDeviceInfo">the callback method</param>
+        public void GetDeviceInfo(string thingId, Action<DeviceInfo> handleDeviceInfo)
+        {
+            DeviceInfo outValue = null;
+            if (!DeviceInfos.TryGetValue(thingId, out outValue))
+            {
+                StartCoroutine(RequestAllThings(thingId, handleDeviceInfo));
+            }
+            else
+            {
+                handleDeviceInfo(outValue);
+            }
         }
 
         private IEnumerator PollOpenHab(int delay)
@@ -50,151 +78,52 @@ namespace HoloFlows.Manager
             if (!stopPolling) { StartCoroutine(PollOpenHab(POLLING_DELAY)); }
         }
 
+        /// <summary>
+        /// Requests all things data from th SAL. If thingUid and callback action added, the callback is called with the device data.
+        /// </summary>
+        private IEnumerator RequestAllThings(string thingUid = null, Action<DeviceInfo> handleDeviceInfo = null)
+        {
+            var request = new AllThingsRequest(openhabUri, HandleAllThingsData);
+            yield return request.ExecuteRequest();
+            if (thingUid != null)
+            {
+                DeviceInfo outInfo = null;
+                if (!DeviceInfos.TryGetValue(thingUid, out outInfo))
+                {
+                    Debug.LogErrorFormat("device info not found for uid '{0}'", thingUid);
+                }
+                handleDeviceInfo?.Invoke(outInfo);
+            }
+        }
+
         private void HandlePollingData(List<ItemDataShort> itemData)
         {
-            //TODO handle dynamic data handling
             foreach (var item in itemData)
             {
-                if (item.name == "hue_bulb210_")
+                if (ItemStates.ContainsKey(item.name))
                 {
-                    //TODO complete for evaluation
+                    ItemStates[item.name] = item.state;
+                }
+                else
+                {
+                    ItemStates.Add(item.name, item.state);
                 }
             }
         }
 
-        private DeviceInfo CreateTinkerforgeIRTemp()
+        private void HandleAllThingsData(List<DeviceInfo> deviceInfos)
         {
-            DeviceInfo tinkerforgeIrTemp = new DeviceInfo()
+            foreach (DeviceInfo info in deviceInfos)
             {
-                Uid = "tinkerforge_irTemp_1",
-                DisplayName = "Tinkerforge IR Temp"
-            };
-
-            UnitOfMeasure degree = new UnitOfMeasure()
-            {
-                UnitName = "degree-Celsius",
-                UnitType = "temperature",
-                PrefixSymbol = "°C"
-            };
-
-            DeviceState irTempState = new DeviceState()
-            {
-                ItemId = "tinkerforge_irTemp_irTemp_1",
-                Label = "Object Temp",
-                UnitOfMeasure = degree,
-                RealStateValue = "20",
-                StateType = "dogont:TemperatureState"
-            };
-
-            DeviceState ambTempState = new DeviceState()
-            {
-                ItemId = "tinkerforge_irTemp_ambTemp_1",
-                Label = "Ambiente Temp",
-                UnitOfMeasure = degree,
-                RealStateValue = "15",
-                StateType = "dogont:TemperatureState"
-            };
-
-
-            tinkerforgeIrTemp.States = new[] { irTempState, ambTempState };
-            return tinkerforgeIrTemp;
+                //TODO updating device information could be useful someday
+                //so we could just override all and update the ui?
+                if (!DeviceInfos.ContainsKey(info.Uid))
+                {
+                    DeviceInfos.Add(info.Uid, info);
+                }
+            }
         }
 
-        private DeviceInfo CreateTinkerforgeIRTemp2()
-        {
-            DeviceInfo tinkerforgeIrTemp = new DeviceInfo()
-            {
-                Uid = "tinkerforge_irTemp_2",
-                DisplayName = "Tinkerforge IR Temp"
-            };
-
-            UnitOfMeasure degree = new UnitOfMeasure()
-            {
-                UnitName = "degree-Celsius",
-                UnitType = "temperature",
-                PrefixSymbol = "°C"
-            };
-
-            DeviceState irTempState = new DeviceState()
-            {
-                ItemId = "tinkerforge_irTemp_irTemp_2",
-                Label = "Object Temp1",
-                UnitOfMeasure = degree,
-                RealStateValue = "20",
-                StateType = "dogont:TemperatureState"
-            };
-
-            DeviceState ambTempState = new DeviceState()
-            {
-                ItemId = "tinkerforge_irTemp_ambTemp_2",
-                Label = "Ambiente Temp1",
-                UnitOfMeasure = degree,
-                RealStateValue = "15",
-                StateType = "dogont:TemperatureState"
-            };
-
-            DeviceState ambTempState2 = new DeviceState()
-            {
-                ItemId = "tinkerforge_irTemp_ambTemp_3",
-                Label = "Ambiente Temp2",
-                UnitOfMeasure = degree,
-                RealStateValue = "28",
-                StateType = "dogont:TemperatureState"
-            };
-
-
-            tinkerforgeIrTemp.States = new[] { irTempState, ambTempState, ambTempState2 };
-            return tinkerforgeIrTemp;
-        }
-
-        private DeviceInfo CreateHomematicDimmer()
-        {
-            DeviceInfo homematicDimmer = new DeviceInfo()
-            {
-                Uid = "homematic_dimmer_1",
-                DisplayName = "Homematic Dimmer"
-            };
-
-            DeviceCommand onCommand = new DeviceCommand()
-            {
-                Name = "DEFAULT_ON_COMMAND",
-                RealCommandName = "ON",
-                CommandType = "dogont:OnCommand"
-            };
-
-            DeviceCommand offCommand = new DeviceCommand()
-            {
-                Name = "DEFAULT_OFF_COMMAND",
-                RealCommandName = "OFF",
-                CommandType = "dogont:OffCommand"
-            };
-
-            DeviceCommand upCommand = new DeviceCommand()
-            {
-                Name = "DEFAULT_UP_COMMAND",
-                RealCommandName = "UP",
-                CommandType = "dogont:UpCommand"
-            };
-
-            DeviceCommand downCommand = new DeviceCommand()
-            {
-                Name = "DEFAULT_DOWN_COMMAND",
-                RealCommandName = "DOWN",
-                CommandType = "dogont:DownCommand"
-            };
-
-            DeviceFunctionality f1 = new DeviceFunctionality()
-            {
-                FunctionalityType = "dogont:LevelControlFunctionality",
-                ItemId = "homematic_dimmer_dimmer_1",
-                Commands = new[] { onCommand, offCommand, upCommand, downCommand }
-            };
-
-            homematicDimmer.Functionalities = new[] { f1 };
-            return homematicDimmer;
-        }
-
-        #endregion
     }
 }
 

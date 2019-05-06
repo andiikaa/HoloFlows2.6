@@ -7,11 +7,11 @@ namespace HoloFlows.Devices
 {
     public abstract class DeviceBehaviorBase : MonoBehaviour, IManagedObject
     {
-        protected enum DeviceType { BASIC, TWO_WAY, THREE_WAY, MULTI }
+        protected enum DeviceType { BASIC, TWO_PIECE, THREE_PIECE, MULTI }
 
         public bool IsBasicDevice { get { return GetDeviceType() == DeviceType.BASIC; } }
-        public bool IsTwoWayDevice { get { return GetDeviceType() == DeviceType.TWO_WAY; } }
-        public bool IsThreeWayDevice { get { return GetDeviceType() == DeviceType.THREE_WAY; } }
+        public bool IsTwoPieceDevice { get { return GetDeviceType() == DeviceType.TWO_PIECE; } }
+        public bool IsThreePieceDevice { get { return GetDeviceType() == DeviceType.THREE_PIECE; } }
         public bool IsMultiDevice { get { return GetDeviceType() == DeviceType.MULTI; } }
 
         protected abstract DeviceType GetDeviceType();

@@ -1,14 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace HoloFlows.Client
 {
-
-    public class AllItemsShortGetRequest
+    /// <summary>
+    /// Gets (only) the item states.
+    /// </summary>
+    public class AllItemsShortGetRequest : SimpleGetRequestBase
     {
         private const string URI_TARGET = "rest/items?recursive=false&fields=name%2C%20state";
         private const string HTTP = "http://";
@@ -17,38 +18,15 @@ namespace HoloFlows.Client
 
         private readonly Action<List<ItemDataShort>> responseReadyAction;
 
-        public AllItemsShortGetRequest(string requestURL, Action<List<ItemDataShort>> responseReadyAction = null)
+        public AllItemsShortGetRequest(string requestURL, Action<List<ItemDataShort>> responseReadyAction = null) : base(requestURL, URI_TARGET)
         {
-            this.requestURL = requestURL.StartsWith(HTTP) ? requestURL : HTTP + requestURL;
-            if (!this.requestURL.EndsWith("/")) { this.requestURL = this.requestURL + "/"; }
-            this.requestURL = this.requestURL + URI_TARGET;
             this.responseReadyAction = responseReadyAction;
+            responses = new List<ItemDataShort>();
         }
 
-        public IEnumerator ExecuteRequest()
+        protected override void HandleResponse(UnityWebRequest www)
         {
             responses = new List<ItemDataShort>();
-            UnityWebRequest www = UnityWebRequest.Get(requestURL);
-            yield return www.SendWebRequest();
-
-            while (!www.isDone)
-            {
-                Debug.LogError(".");
-                yield return null;
-            }
-
-            if (www.isNetworkError || www.isHttpError)
-            {
-                Debug.Log("AllItemsGetRequest: " + requestURL + " " + www.error);
-            }
-            else
-            {
-                HandleResponse(www);
-            }
-        }
-
-        private void HandleResponse(UnityWebRequest www)
-        {
             string temp = www.downloadHandler.text;
             try
             {
@@ -61,7 +39,6 @@ namespace HoloFlows.Client
             }
 
             responseReadyAction?.Invoke(responses);
-
         }
     }
 }

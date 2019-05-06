@@ -2,6 +2,7 @@
 using HoloFlows.Manager;
 using HoloFlows.Model;
 using HoloToolkit.Unity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -19,10 +20,15 @@ namespace HoloFlows.Devices
 
         }
 
-        public GameObject SpawnDevice(string deviceUid)
+        /// <summary>
+        /// Spawn a 
+        /// </summary>
+        /// <param name="deviceUid"></param>
+        /// <returns></returns>
+        public void SpawnDevice(string deviceUid, Action<GameObject> handleGameObject)
         {
-            // get thing from sal with device data
-            // create the specific control
+            //TODO use the deviceUid from the scan
+            deviceUid = "tinkerforge_irTemp_1";
 
             //Get The DeviceManager for a bit shorter syntax
             if (deviceManager == null)
@@ -30,23 +36,31 @@ namespace HoloFlows.Devices
                 deviceManager = DeviceManager.Instance;
             }
 
-            //DeviceInfo info = deviceManager.DeviceInfos["homematic_dimmer_1"];
-            //GameObject go = GetDeviceSpecificPrefab(info);
-            //if (go == null)
-            //{
-            //    Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
-            //}
-
-            //tinkerforge_irTemp_1
-            DeviceInfo info2 = deviceManager.DeviceInfos["homematic_dimmer_1"];
-            GameObject go2 = GetDeviceSpecificPrefab(info2);
-            if (go2 == null)
+            deviceManager.GetDeviceInfo(deviceUid, info =>
             {
-                Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
-            }
-            return go2;
+                if (info == null)
+                {
+                    Debug.LogErrorFormat("device info for '{0}' not found", deviceUid);
+                    handleGameObject(null);
+                }
+                else
+                {
+                    GameObject go = GetDeviceSpecificPrefab(info);
+                    if (go == null)
+                    {
+                        Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
+                    }
+                }
+
+            });
         }
 
+        /// <summary>
+        /// Merge <see cref="BasicDevice"/> devices to a <see cref="TwoPieceDevice"/>
+        /// </summary>
+        /// <param name="device1"></param>
+        /// <param name="device2"></param>
+        /// <returns></returns>
         public GameObject MergeBasicDevices(GameObject device1, GameObject device2)
         {
             if (!device1.name.StartsWith("BasicDevice") || !device2.name.StartsWith("BasicDevice"))
@@ -56,54 +70,47 @@ namespace HoloFlows.Devices
             }
 
             GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
-            TwoWayDevice mergedDevice = go.GetComponent<TwoWayDevice>();
+            TwoPieceDevice mergedDevice = go.GetComponent<TwoPieceDevice>();
             mergedDevice.CopyFromBasicDevices(device1, device2);
             go.SetActive(true);
             return go;
         }
 
-        //get the prefab specific for the device (Basic, 2Way, 3Way, Multi)
+        //get the prefab specific for the device (Basic, 2piece, 3piece, multi)
         private GameObject GetDeviceSpecificPrefab(DeviceInfo info)
         {
-            //TODO implement all cases
-            if (info.States != null && info.States.Any())
+
+            if (info.GroupBoxes == null || !info.GroupBoxes.Any())
             {
-                //get all itemids from the state and group them
-                //the group counter should give the different devices
-                IEnumerable<IGrouping<string, string>> groups = info.States.
-                    Select(e => e.ItemId).
-                    GroupBy(e => e);
-
-                int differentGroups = groups.Count();
-
-                if (differentGroups == 1)
-                {
-                    return InstantiateBasicDevice(info);
-                }
-                else if (differentGroups == 2)
-                {
-                    return InstantiateTwoWayDevice(info, groups);
-                }
-                else if (differentGroups == 3)
-                {
-                    return InstantiateThreeWayDevice(info);
-                }
-                else
-                {
-                    Debug.LogError("Implement MultiDevice!");
-                    return null;
-                }
+                Debug.LogErrorFormat("Device info does not contain any group box: thing: '{0}'", info.Uid);
+                return null;
             }
 
-            return InstantiateBasicDevice(info);
+            int differentGroups = info.GroupBoxes.Count();
+
+            if (differentGroups == 1)
+            {
+                return InstantiateBasicDevice(info);
+            }
+            else if (differentGroups == 2)
+            {
+                return InstantiateTwoWayDevice(info);
+            }
+            else if (differentGroups == 3)
+            {
+                return InstantiateThreeWayDevice(info);
+            }
+            else
+            {
+                Debug.LogError("Multidevice not supported yet!");
+                return null;
+            }
         }
 
-        private GameObject InstantiateTwoWayDevice(DeviceInfo info, IEnumerable<IGrouping<string, string>> groups)
+        private GameObject InstantiateTwoWayDevice(DeviceInfo info)
         {
-            //TODO we must find the specific buttons, which control the state. 
-            //But what to do if there is no state? How to find a name?
             GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
-            TwoWayDevice device = go.GetComponent<TwoWayDevice>();
+            TwoPieceDevice device = go.GetComponent<TwoPieceDevice>();
             device.SetDeviceInfos(info);
             ActivateGameObjectIfNeeded(go);
             return go;
@@ -120,7 +127,7 @@ namespace HoloFlows.Devices
         private GameObject InstantiateThreeWayDevice(DeviceInfo info)
         {
             GameObject go = Instantiate(PrefabHolder.Instance.devices.threeWayDevice);
-            ThreeWayDevice device = go.GetComponent<ThreeWayDevice>();
+            ThreePieceDevice device = go.GetComponent<ThreePieceDevice>();
             device.SetDeviceInfos(info);
             ActivateGameObjectIfNeeded(go);
             return go;
@@ -188,6 +195,9 @@ namespace HoloFlows.Devices
             return buttonInstance;
         }
 
+        /// <summary>
+        /// Gets functionalities which supports on, off, up and down
+        /// </summary>
         private List<DeviceFunctionality> GetOffUpDownFunctionalities(DeviceInfo info)
         {
             if (info.Functionalities == null) return new List<DeviceFunctionality>();

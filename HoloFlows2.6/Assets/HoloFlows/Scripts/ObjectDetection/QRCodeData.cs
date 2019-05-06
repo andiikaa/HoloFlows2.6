@@ -28,8 +28,8 @@
             //TODO remove hardcoded stuff
             QRCodeData qrData = new QRCodeData
             {
-                BindingId = "hue",
-                ThingId = "Thing_hue_bulb210_1",
+                BindingId = "tinkerforge1",
+                ThingId = "tinkerforge_irTemp_1",
                 IsValid = true
             };
             return qrData;

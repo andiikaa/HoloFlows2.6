@@ -142,6 +142,7 @@ namespace HoloFlows.Manager
 
         private void JumpToWizard()
         {
+            //TODO ftom qr code data
             QRCodeData data = QRCodeData.FromQrCodeData("FIXMEFIXME");
             WizardTaskManager.Instance.AddLastScannedData(data);
             WizardState wState = new WizardState(sceneManager, data);
@@ -215,23 +216,24 @@ namespace HoloFlows.Manager
         public override void SwitchToEdit()
         {
             //TODO destroy wizard here?
-            GameObject go = DeviceSpawner.Instance.SpawnDevice(data.ThingId);
-
-            //in case device could not be spawned
-            if (go == null)
+            DeviceSpawner.Instance.SpawnDevice(data.ThingId, go =>
             {
-                ShowAllManagedObjects();
-                SetNewState(new ControlState(sceneManager));
-                Debug.Log("Switched to ControlState");
-                return;
-            }
+                //in case device could not be spawned
+                if (go == null)
+                {
+                    ShowAllManagedObjects();
+                    SetNewState(new ControlState(sceneManager));
+                    Debug.Log("Switched to ControlState");
+                    return;
+                }
 
-            //the spawned device is in placing mode
-            ShowAllManagedObjects();
-            EnablePlacingModeForManagedObjects(true);
-            PlaceTheGameObject(go);
-            SetNewState(new EditState(sceneManager));
-            Debug.Log("Switched to EditState");
+                //the spawned device is in placing mode
+                ShowAllManagedObjects();
+                EnablePlacingModeForManagedObjects(true);
+                PlaceTheGameObject(go);
+                SetNewState(new EditState(sceneManager));
+                Debug.Log("Switched to EditState");
+            });
         }
 
         protected override ApplicationState GetApplicationState() { return ApplicationState.Wizard; }
