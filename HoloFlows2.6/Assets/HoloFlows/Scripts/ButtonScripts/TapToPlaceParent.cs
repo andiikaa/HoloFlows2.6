@@ -1,4 +1,5 @@
-﻿using HoloFlows.Devices;
+﻿using HoloFlows.Client;
+using HoloFlows.Devices;
 using HoloToolkit.Unity;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace HoloFlows.ButtonScripts
         /// This is the id, which is used to find/save the postion of the device control.
         /// </summary>
         //TODO if this name changes, we need to load/save the anchor
-        public string SavedAnchorFriendlyName { get; private set; } = "SavedAnchorFriendlyName";
+        public string DeviceUid { get; private set; } = "SavedAnchorFriendlyName";
 
         //to check if placing is enabled
         private bool placing = false;
@@ -43,7 +44,7 @@ namespace HoloFlows.ButtonScripts
         void Start()
         {
             //SpatialMapping.Instance.DrawVisualMeshes = false;
-            SavedAnchorFriendlyName = GetAnchorName() ?? SavedAnchorFriendlyName;
+            DeviceUid = GetAnchorName() ?? DeviceUid;
 
             // ***** remove comment syntax ****** //
             if (WorldAnchorManager.Instance == null)
@@ -55,7 +56,7 @@ namespace HoloFlows.ButtonScripts
             {
                 if (!placing)
                 {
-                    WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+                    //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
                 }
             }
         }
@@ -76,13 +77,17 @@ namespace HoloFlows.ButtonScripts
                 placing = !placing;
                 if (placing)
                 {
-                    Debug.LogFormat("Remove anchor for '{0}'", transform.parent.gameObject.name);
-                    WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
+                    //Debug.LogFormat("Remove anchor for '{0}'", transform.parent.gameObject.name);
+                    //WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
                 }
                 else
                 {
-                    Debug.LogFormat("Attach anchor with id '{0}'", SavedAnchorFriendlyName);
-                    WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+                    Debug.LogFormat("Attach anchor with id '{0}'", DeviceUid);
+                    //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+                    var request = new UpdateWorldPositionRequest("", DeviceUid);
+
+                    //TODO update request to openhab
+                    StartCoroutine(request.ExecuteRequest("TODO"));
                 }
             }
         }
