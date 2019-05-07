@@ -84,10 +84,12 @@ namespace HoloFlows.ButtonScripts
                 {
                     Debug.LogFormat("Attach anchor with id '{0}'", DeviceUid);
                     //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+
                     var request = new UpdateWorldPositionRequest("", DeviceUid);
+                    SerializableVector3 sv3 = transform.parent.position;
 
                     //TODO update request to openhab
-                    StartCoroutine(request.ExecuteRequest("TODO"));
+                    StartCoroutine(request.ExecuteRequest(sv3.ToJson()));
                 }
             }
         }
