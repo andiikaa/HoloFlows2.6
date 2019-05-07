@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 4553962225007198}
   - component: {fileID: 114174346673297152}
   m_Layer: 0
-  m_Name: TwoWayDevice
+  m_Name: TwoPieceDevice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2264,7 +2264,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7c604c9714bd1408fb1150e26155c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SavedAnchorFriendlyName: SavedAnchorFriendlyName
 --- !u!114 &114741210702201088
 MonoBehaviour:
   m_ObjectHideFlags: 1

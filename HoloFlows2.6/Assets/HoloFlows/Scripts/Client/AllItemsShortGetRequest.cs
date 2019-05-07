@@ -12,8 +12,6 @@ namespace HoloFlows.Client
     public class AllItemsShortGetRequest : SimpleGetRequestBase
     {
         private const string URI_TARGET = "rest/items?recursive=false&fields=name%2C%20state";
-        private const string HTTP = "http://";
-        private readonly string requestURL;
         private List<ItemDataShort> responses;
 
         private readonly Action<List<ItemDataShort>> responseReadyAction;

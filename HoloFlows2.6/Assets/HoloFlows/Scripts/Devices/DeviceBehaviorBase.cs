@@ -7,14 +7,15 @@ namespace HoloFlows.Devices
 {
     public abstract class DeviceBehaviorBase : MonoBehaviour, IManagedObject
     {
-        protected enum DeviceType { BASIC, TWO_PIECE, THREE_PIECE, MULTI }
-
         public bool IsBasicDevice { get { return GetDeviceType() == DeviceType.BASIC; } }
         public bool IsTwoPieceDevice { get { return GetDeviceType() == DeviceType.TWO_PIECE; } }
         public bool IsThreePieceDevice { get { return GetDeviceType() == DeviceType.THREE_PIECE; } }
         public bool IsMultiDevice { get { return GetDeviceType() == DeviceType.MULTI; } }
 
+        public string DeviceId { get; set; }
+
         protected abstract DeviceType GetDeviceType();
+
 
         /// <summary>
         /// 
@@ -135,9 +136,12 @@ namespace HoloFlows.Devices
             }
             //ensure placing is allowed
             tapToPlace.AllowPlacing();
-            tapToPlace.StartPlacing();
+            tapToPlace.TogglePlacing();
         }
 
         #endregion
     }
+
+    public enum DeviceType { BASIC, TWO_PIECE, THREE_PIECE, MULTI }
+
 }

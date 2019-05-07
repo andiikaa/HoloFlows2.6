@@ -50,6 +50,7 @@ namespace HoloFlows.Devices
                     {
                         Debug.LogErrorFormat("failed to spawn device for uid '{0}'", deviceUid);
                     }
+                    handleGameObject(go);
                 }
 
             });
@@ -65,11 +66,11 @@ namespace HoloFlows.Devices
         {
             if (!device1.name.StartsWith("BasicDevice") || !device2.name.StartsWith("BasicDevice"))
             {
-                Debug.LogError("At least on of the merging devices is not from type BasicDevice");
+                Debug.LogError("At least one of the merging devices is not from type BasicDevice");
                 return null;
             }
 
-            GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
+            GameObject go = Instantiate(PrefabHolder.Instance.devices.twoPieceDevice);
             TwoPieceDevice mergedDevice = go.GetComponent<TwoPieceDevice>();
             mergedDevice.CopyFromBasicDevices(device1, device2);
             go.SetActive(true);
@@ -79,7 +80,6 @@ namespace HoloFlows.Devices
         //get the prefab specific for the device (Basic, 2piece, 3piece, multi)
         private GameObject GetDeviceSpecificPrefab(DeviceInfo info)
         {
-
             if (info.GroupBoxes == null || !info.GroupBoxes.Any())
             {
                 Debug.LogErrorFormat("Device info does not contain any group box: thing: '{0}'", info.Uid);
@@ -98,7 +98,7 @@ namespace HoloFlows.Devices
             }
             else if (differentGroups == 3)
             {
-                return InstantiateThreeWayDevice(info);
+                return InstantiateThreePieceDevice(info);
             }
             else
             {
@@ -109,9 +109,36 @@ namespace HoloFlows.Devices
 
         private GameObject InstantiateTwoWayDevice(DeviceInfo info)
         {
-            GameObject go = Instantiate(PrefabHolder.Instance.devices.twoWayDevice);
+            GameObject go = Instantiate(PrefabHolder.Instance.devices.twoPieceDevice);
             TwoPieceDevice device = go.GetComponent<TwoPieceDevice>();
+            device.DeviceId = info.Uid;
             device.SetDeviceInfos(info);
+            ActivateGameObjectIfNeeded(go);
+            return go;
+        }
+
+
+        private GameObject InstantiateThreePieceDevice(DeviceInfo info)
+        {
+            GameObject go = Instantiate(PrefabHolder.Instance.devices.threePieceDevice);
+            ThreePieceDevice device = go.GetComponent<ThreePieceDevice>();
+            device.DeviceId = info.Uid;
+            device.SetDeviceInfos(info);
+            ActivateGameObjectIfNeeded(go);
+            return go;
+        }
+
+        private GameObject InstantiateBasicDevice(DeviceInfo info)
+        {
+            GameObject go = Instantiate(PrefabHolder.Instance.devices.basicDevice);
+            BasicDevice device = go.GetComponent<BasicDevice>();
+            device.DeviceId = info.Uid;
+            Transform btnLayoutGroup = go.transform.Find(PrefabHolder.Instance.devices.buttonLayoutGroupName);
+            if (!AddButtonsToLayoutGroup(btnLayoutGroup, info))
+            {
+                Debug.LogError("failed to find the layout group for the buttons");
+                return null;
+            }
             ActivateGameObjectIfNeeded(go);
             return go;
         }
@@ -122,28 +149,6 @@ namespace HoloFlows.Devices
             {
                 go.SetActive(true);
             }
-        }
-
-        private GameObject InstantiateThreeWayDevice(DeviceInfo info)
-        {
-            GameObject go = Instantiate(PrefabHolder.Instance.devices.threeWayDevice);
-            ThreePieceDevice device = go.GetComponent<ThreePieceDevice>();
-            device.SetDeviceInfos(info);
-            ActivateGameObjectIfNeeded(go);
-            return go;
-        }
-
-        private GameObject InstantiateBasicDevice(DeviceInfo info)
-        {
-            GameObject go = Instantiate(PrefabHolder.Instance.devices.basicDevice);
-            Transform btnLayoutGroup = go.transform.Find(PrefabHolder.Instance.devices.buttonLayoutGroupName);
-            if (!AddButtonsToLayoutGroup(btnLayoutGroup, info))
-            {
-                Debug.LogError("failed to find the layout group for the buttons");
-                return null;
-            }
-            ActivateGameObjectIfNeeded(go);
-            return go;
         }
 
         private bool AddButtonsToLayoutGroup(Transform layoutGroup, DeviceInfo info)

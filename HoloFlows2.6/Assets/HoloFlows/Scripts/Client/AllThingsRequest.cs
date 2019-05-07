@@ -1,5 +1,6 @@
 ﻿using HoloFlows.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
@@ -21,7 +22,17 @@ namespace HoloFlows.Client
         protected override void HandleResponse(UnityWebRequest www)
         {
             //TODO implement the web request in openhab
-            throw new System.NotImplementedException();
+            List<DeviceInfo> infos = new List<DeviceInfo>();
+            infos.Add(CreateTinkerforgeIRTemp());
+            infos.Add(CreateHomematicDimmer());
+            responseReadyAction?.Invoke(infos);
+        }
+
+        //TODO remove this override
+        new public IEnumerator ExecuteRequest()
+        {
+            HandleResponse(null);
+            yield break;
         }
 
         #region static demo devices
@@ -174,10 +185,12 @@ namespace HoloFlows.Client
             {
                 FunctionalityType = "dogont:LevelControlFunctionality",
                 ItemId = "homematic_dimmer_dimmer_1",
-                Commands = new[] { onCommand, offCommand, upCommand, downCommand }
+                Commands = new[] { onCommand, offCommand, upCommand, downCommand },
+                GroupBox = box
             };
 
             homematicDimmer.Functionalities = new[] { f1 };
+            homematicDimmer.GroupBoxes = new[] { box };
             return homematicDimmer;
         }
 

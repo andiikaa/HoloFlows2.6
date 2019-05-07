@@ -1,5 +1,4 @@
 ﻿using HoloFlows.Model;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +26,7 @@ namespace HoloFlows.Devices
 
         public void SetDeviceInfos(DeviceInfo info)
         {
-            IEnumerable<string> stateItems = GetStateItems(info);
-            if (stateItems.Count() != 2)
+            if (info.GroupBoxes.Count() != 2 || info.States.Count() < 2)
             {
                 Debug.LogError("TwoPieceDevice can only handle 2 different states!");
                 return;
@@ -51,16 +49,8 @@ namespace HoloFlows.Devices
             Text description = transform.Find("Canvas/Description").GetComponent<Text>();
             Text value = transform.Find("Canvas/Value").GetComponent<Text>();
 
-            description.text = deviceState.ItemId;
+            description.text = deviceState.GroupBox.Name;
             value.text = deviceState.RealStateValue + " " + GetValuePrefix(deviceState.UnitOfMeasure);
-        }
-
-        private IEnumerable<string> GetStateItems(DeviceInfo info)
-        {
-            return info.States
-                .Select(e => e.ItemId)
-                .GroupBy(e => e).Select(e => e.Key)
-                .Distinct();
         }
 
         private static string GetValuePrefix(UnitOfMeasure unitOfMeasure)

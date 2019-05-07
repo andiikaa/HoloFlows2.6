@@ -34,9 +34,16 @@ namespace HoloFlows.Manager
 
         private void InitKeywordRecognizer()
         {
-            keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(), ConfidenceLevel.Low);
-            keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
-            keywordRecognizer.Start();
+            try
+            {
+                keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(), ConfidenceLevel.Low);
+                keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
+                keywordRecognizer.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogErrorFormat("Could not init the KeywordRecognizer. Speech is not recognized!\n{0}", ex.Message);
+            }
         }
 
         private void KeywordRecognizer_OnPhraseRecognized(PhraseRecognizedEventArgs args)

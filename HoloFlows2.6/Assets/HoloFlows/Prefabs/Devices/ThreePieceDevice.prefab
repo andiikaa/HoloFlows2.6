@@ -729,7 +729,7 @@ GameObject:
   - component: {fileID: 4561572206216744}
   - component: {fileID: 114016001943689376}
   m_Layer: 0
-  m_Name: ThreeWayDevice
+  m_Name: ThreePieceDevice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2715,7 +2715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7c604c9714bd1408fb1150e26155c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SavedAnchorFriendlyName: SavedAnchorFriendlyName
 --- !u!114 &114444403450775700
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -72,6 +72,7 @@ namespace HoloFlows.Wizard
             Debug.Log("Closing Progress...");
             ProgressIndicator.Instance.SetMessage("Task Loaded");
 
+
             // Close the loading dialog
             // ProgressIndicator.Instance.IsLoading will report true until its 'Closing' animation has ended
             // This typically takes about 1 second

@@ -15,7 +15,8 @@ namespace HoloFlows.ButtonScripts
         /// <summary>
         /// This is the id, which is used to find/save the postion of the device control.
         /// </summary>
-        public string SavedAnchorFriendlyName { get; set; } = "SavedAnchorFriendlyName";
+        //TODO if this name changes, we need to load/save the anchor
+        public string SavedAnchorFriendlyName { get; private set; } = "SavedAnchorFriendlyName";
 
         //to check if placing is enabled
         private bool placing = false;
@@ -42,6 +43,7 @@ namespace HoloFlows.ButtonScripts
         void Start()
         {
             //SpatialMapping.Instance.DrawVisualMeshes = false;
+            SavedAnchorFriendlyName = GetAnchorName() ?? SavedAnchorFriendlyName;
 
             // ***** remove comment syntax ****** //
             if (WorldAnchorManager.Instance == null)
@@ -61,19 +63,27 @@ namespace HoloFlows.ButtonScripts
         // Called by GazeGestureManager when the user performs a Select gesture
         public void OnInputClicked(InputClickedEventData eventData)
         {
-            StartPlacing();
+            TogglePlacing();
         }
 
         /// <summary>
-        /// Starts the placing
+        /// Starts or ends the placing depending on the current state (placingMode).
         /// </summary>
-        public void StartPlacing()
+        public void TogglePlacing()
         {
             if (placingMode)
             {
                 placing = !placing;
-                if (placing) { WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject); }
-                else { WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName); }
+                if (placing)
+                {
+                    Debug.LogFormat("Remove anchor for '{0}'", transform.parent.gameObject.name);
+                    WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
+                }
+                else
+                {
+                    Debug.LogFormat("Attach anchor with id '{0}'", SavedAnchorFriendlyName);
+                    WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+                }
             }
         }
 
@@ -84,7 +94,6 @@ namespace HoloFlows.ButtonScripts
             // update the placement to match the user's gaze.
             DoPlacing();
             DoMerging();
-
         }
 
         private void DoMerging()
@@ -127,7 +136,6 @@ namespace HoloFlows.ButtonScripts
 
         private void DoPlacing()
         {
-
             if (!placing)
             {
                 return;
@@ -159,6 +167,18 @@ namespace HoloFlows.ButtonScripts
             //    this.transform.parent.rotation = toQuat;
             //}
 
+        }
+
+        private string GetAnchorName()
+        {
+            GameObject root = GetRootParent(gameObject);
+            DeviceBehaviorBase db = root.GetComponent<DeviceBehaviorBase>();
+            if (db == null)
+            {
+                Debug.LogErrorFormat("DeviceBehavior not found for '{0}'", root.name);
+                return null;
+            }
+            return db.DeviceId;
         }
 
         public void OnTriggerEnter(Collider other)

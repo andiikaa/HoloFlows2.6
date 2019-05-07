@@ -50,13 +50,13 @@ namespace HoloFlows
             /// Prefab for devices with 2 billboards
             /// </summary>
             [Tooltip("Prefab for devices with 2 billboards")]
-            public GameObject twoWayDevice;
+            public GameObject twoPieceDevice;
 
             /// <summary>
             /// Prefab for devices with 3 billboards
             /// </summary>
             [Tooltip("Prefab for devices with 3 billboards")]
-            public GameObject threeWayDevice;
+            public GameObject threePieceDevice;
 
             /// <summary>
             /// Prefab for devices with 4 or more billboards
@@ -97,8 +97,8 @@ namespace HoloFlows
 
             CheckNull(devices.defaultDeviceButton, "devices.defaultDeviceButton");
             CheckNull(devices.basicDevice, "devices.basicDevice");
-            CheckNull(devices.twoWayDevice, "devices.twoWayDevice");
-            CheckNull(devices.threeWayDevice, "devices.threeWayDevice");
+            CheckNull(devices.twoPieceDevice, "devices.twoPieceDevice");
+            CheckNull(devices.threePieceDevice, "devices.threePieceDevice");
             CheckNull(devices.multiDevice, "devices.multiDevice");
             CheckNull(devices.buttonLayoutGroupName, "devices.buttonLayoutGroupName");
         }
