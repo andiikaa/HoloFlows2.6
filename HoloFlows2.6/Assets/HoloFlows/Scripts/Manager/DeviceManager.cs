@@ -13,6 +13,7 @@ namespace HoloFlows.Manager
     {
         /// <summary>
         /// Contains the cached device information. Use <see cref="GetDeviceInfo(string, Action{DeviceInfo})"/> for getting the latest device information.
+        /// Device info contains only the initial states of the device. Due to performance reasons, latest real state values are stored within the <see cref="ItemStates"/>.
         /// </summary>
         public Dictionary<string, DeviceInfo> DeviceInfos { get; private set; } = new Dictionary<string, DeviceInfo>();
 
@@ -27,7 +28,7 @@ namespace HoloFlows.Manager
         private bool stopPolling = false;
 
         //TODO Get this uri somehow via the discovery service
-        private string openhabUri = "http://192.168.1.115:8080/";
+        private string openhabUri = Settings.OPENHAB_URI;
 
         //TODO device state formatter
 

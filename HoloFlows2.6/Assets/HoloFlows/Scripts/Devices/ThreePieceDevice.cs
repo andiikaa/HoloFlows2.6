@@ -8,17 +8,16 @@ namespace HoloFlows.Devices
 {
     public class ThreePieceDevice : DeviceBehaviorBase
     {
+        public List<DeviceInfo> DeviceInfo { get; private set; } = new List<DeviceInfo>();
 
-        // Use this for initialization
         void Start()
         {
             RegisterToHoloFlowSceneManager();
         }
 
-        // Update is called once per frame
         void Update()
         {
-
+            UpdateDeviceStatesInternal();
         }
 
         void OnDestroy()
@@ -26,12 +25,18 @@ namespace HoloFlows.Devices
             UnregisterFromHoloFlowSceneManager();
         }
 
+        protected override void UpdateDeviceStates()
+        {
+            //TODO implement update
+            Debug.LogFormat("implement update for {0}", gameObject.name);
+        }
+
         public void SetDeviceInfos(DeviceInfo info)
         {
-            IEnumerable<string> stateItems = GetStateItems(info);
-            if (stateItems.Count() != 3)
+            //TODO what if we have one state and 3 buttons?
+            if (info.GroupBoxes.Count() != 3 || info.States.Count() < 3)
             {
-                Debug.LogError("ThreePieceDevice can only handle 2 different states!");
+                Debug.LogError("ThreePieceDevice can only handle 3 different states!");
                 return;
             }
 
@@ -54,23 +59,6 @@ namespace HoloFlows.Devices
         private string GetLabelOrItemId(DeviceState state)
         {
             return string.IsNullOrEmpty(state.Label) ? state.ItemId : state.Label;
-        }
-
-        private static string GetValuePrefix(UnitOfMeasure unitOfMeasure)
-        {
-            if (unitOfMeasure == null || string.IsNullOrEmpty(unitOfMeasure.PrefixSymbol))
-            {
-                return string.Empty;
-            }
-            return unitOfMeasure.PrefixSymbol;
-        }
-
-        private IEnumerable<string> GetStateItems(DeviceInfo info)
-        {
-            return info.States
-                .Select(e => e.ItemId)
-                .GroupBy(e => e).Select(e => e.Key)
-                .Distinct();
         }
 
         protected override DeviceType GetDeviceType() { return DeviceType.THREE_PIECE; }

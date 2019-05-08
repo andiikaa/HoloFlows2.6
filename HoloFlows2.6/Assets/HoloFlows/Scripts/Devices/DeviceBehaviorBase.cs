@@ -1,5 +1,8 @@
 ﻿using HoloFlows.ButtonScripts;
 using HoloFlows.Manager;
+using HoloFlows.Model;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,8 +17,37 @@ namespace HoloFlows.Devices
 
         public string DeviceId { get; set; }
 
+
+        /// <summary>
+        /// The number of frames between every polling request.
+        /// </summary>
+        protected int PollingFrameDelay { get; private set; } = Settings.POLLING_DELAY_FRAMES;
+        private int frameNumber = 0;
+
+        /// <summary>
+        /// Gets the current <see cref=" DeviceType"/>
+        /// </summary>
         protected abstract DeviceType GetDeviceType();
 
+        /// <summary>
+        /// Called, when the device should update its device states (if there are any).
+        /// The Method is called every <see cref="PollingFrameDelay"/> frames.
+        /// </summary>
+        protected abstract void UpdateDeviceStates();
+
+
+        /// <summary>
+        /// Call this method every frame! It will invoke the <see cref="UpdateDeviceStates"/> method every <see cref="PollingFrameDelay"/> frames.
+        /// </summary>
+        protected void UpdateDeviceStatesInternal()
+        {
+            frameNumber++;
+            if (frameNumber > PollingFrameDelay)
+            {
+                frameNumber = 0;
+                UpdateDeviceStates();
+            }
+        }
 
         /// <summary>
         /// 
@@ -50,6 +82,38 @@ namespace HoloFlows.Devices
             CopyButtonsWithBehaviors(groupSource, groupTarget);
         }
 
+        protected static string GetValuePrefix(UnitOfMeasure unitOfMeasure)
+        {
+            if (unitOfMeasure == null || string.IsNullOrEmpty(unitOfMeasure.PrefixSymbol))
+            {
+                return string.Empty;
+            }
+            return unitOfMeasure.PrefixSymbol;
+        }
+
+        /// <summary>
+        /// Gets the grouped device functionalities, orderd by group box name.
+        /// </summary>
+        protected IEnumerable<IGrouping<string, DeviceFunctionality>> GetGroupedFunctionalities(DeviceInfo info)
+        {
+            if (info == null || info.Functionalities == null) { return null; }
+            return from func in info.Functionalities
+                   group func by func.GroupBox.Name into newGroup
+                   orderby newGroup.Key
+                   select newGroup;
+        }
+
+        /// <summary>
+        /// gets the grouped device states, orderd by group box name.
+        /// </summary>
+        protected IEnumerable<IGrouping<string, DeviceState>> GetGroupedStates(DeviceInfo info)
+        {
+            if (info == null || info.States == null) { return null; }
+            return from state in info.States
+                   group state by state.GroupBox.Name into newGroup
+                   orderby newGroup.Key
+                   select newGroup;
+        }
 
         private void CopyDeviceHeaderData(Transform sourceCanvas, Transform targetCanvas)
         {

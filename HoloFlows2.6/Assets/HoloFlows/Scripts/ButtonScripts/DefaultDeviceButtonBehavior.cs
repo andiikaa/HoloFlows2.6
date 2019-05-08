@@ -1,4 +1,5 @@
-﻿using HoloToolkit.Unity.InputModule;
+﻿using HoloFlows.Client;
+using HoloToolkit.Unity.InputModule;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,6 +63,8 @@ namespace HoloFlows.ButtonScripts
             else
             {
                 Debug.LogFormat("Sending Command '{0}' to device {1}", RealCommandName, DeviceId);
+                var request = new ItemCommandRequest(Settings.OPENHAB_URI, DeviceId);
+                StartCoroutine(request.ExecuteRequestOnly(RealCommandName));
             }
         }
 

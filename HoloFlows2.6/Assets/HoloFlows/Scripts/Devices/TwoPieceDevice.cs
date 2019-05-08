@@ -1,4 +1,5 @@
 ﻿using HoloFlows.Model;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,20 +9,27 @@ namespace HoloFlows.Devices
     public class TwoPieceDevice : DeviceBehaviorBase
     {
 
-        // Use this for initialization
+        public List<DeviceInfo> DeviceInfo { get; private set; } = new List<DeviceInfo>();
+
         void Start()
         {
             RegisterToHoloFlowSceneManager();
         }
 
-        // Update is called once per frame
         void Update()
         {
+            UpdateDeviceStatesInternal();
         }
 
         void OnDestroy()
         {
             UnregisterFromHoloFlowSceneManager();
+        }
+
+        protected override void UpdateDeviceStates()
+        {
+            //TODO implement update
+            Debug.LogFormat("implement update for {0}", gameObject.name);
         }
 
         public void SetDeviceInfos(DeviceInfo info)
@@ -31,6 +39,8 @@ namespace HoloFlows.Devices
                 Debug.LogError("TwoPieceDevice can only handle 2 different states!");
                 return;
             }
+
+            //find all states
 
             SetDeviceState(gameObject.transform.Find("RightDevice/RightGroup"), info.States[0]);
             SetDeviceState(gameObject.transform.Find("LeftDevice/LeftGroup"), info.States[1]);
@@ -53,16 +63,8 @@ namespace HoloFlows.Devices
             value.text = deviceState.RealStateValue + " " + GetValuePrefix(deviceState.UnitOfMeasure);
         }
 
-        private static string GetValuePrefix(UnitOfMeasure unitOfMeasure)
-        {
-            if (unitOfMeasure == null || string.IsNullOrEmpty(unitOfMeasure.PrefixSymbol))
-            {
-                return string.Empty;
-            }
-            return unitOfMeasure.PrefixSymbol;
-        }
-
         protected override DeviceType GetDeviceType() { return DeviceType.TWO_PIECE; }
+
 
     }
 }

@@ -20,6 +20,19 @@ namespace HoloFlows.Client
 
         public IEnumerator ExecuteRequest(string postData)
         {
+            return InternalExecute(postData, true);
+        }
+
+        /// <summary>
+        /// Without callback
+        /// </summary>
+        public IEnumerator ExecuteRequestOnly(string postData)
+        {
+            return InternalExecute(postData);
+        }
+
+        private IEnumerator InternalExecute(string postData, bool handleResponse = false)
+        {
             UnityWebRequest www = UnityWebRequest.Post(requestURL, postData);
             www.SetRequestHeader("Content-Type", contentType);
             yield return www.SendWebRequest();
@@ -36,7 +49,7 @@ namespace HoloFlows.Client
             }
             else
             {
-                HandleResponse(www);
+                if (handleResponse) { HandleResponse(www); }
             }
         }
 

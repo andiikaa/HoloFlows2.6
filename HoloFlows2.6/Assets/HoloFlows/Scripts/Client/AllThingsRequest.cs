@@ -25,6 +25,8 @@ namespace HoloFlows.Client
             List<DeviceInfo> infos = new List<DeviceInfo>();
             infos.Add(CreateTinkerforgeIRTemp());
             infos.Add(CreateHomematicDimmer());
+            infos.Add(CreateTinkerforgeLuminance());
+            infos.Add(CreateHue());
             responseReadyAction?.Invoke(infos);
         }
 
@@ -92,52 +94,122 @@ namespace HoloFlows.Client
             return tinkerforgeIrTemp;
         }
 
-        //private DeviceInfo CreateTinkerforgeIRTemp2()
-        //{
-        //    DeviceInfo tinkerforgeIrTemp = new DeviceInfo()
-        //    {
-        //        Uid = "tinkerforge_irTemp_2",
-        //        DisplayName = "Tinkerforge IR Temp"
-        //    };
+        private DeviceInfo CreateTinkerforgeLuminance()
+        {
+            DeviceInfo info = new DeviceInfo()
+            {
+                Uid = "tinkerforge_ambientLight_ambientLight_2",
+                DisplayName = "Ambient Light Sensor"
+            };
 
-        //    UnitOfMeasure degree = new UnitOfMeasure()
-        //    {
-        //        UnitName = "degree-Celsius",
-        //        UnitType = "temperature",
-        //        PrefixSymbol = "°C"
-        //    };
+            GroupBox boxLum = new GroupBox()
+            {
+                Name = "Luminance",
+                IconName = "light"
+            };
 
-        //    DeviceState irTempState = new DeviceState()
-        //    {
-        //        ItemId = "tinkerforge_irTemp_irTemp_2",
-        //        Label = "Object Temp1",
-        //        UnitOfMeasure = degree,
-        //        RealStateValue = "20",
-        //        StateType = "dogont:TemperatureState"
-        //    };
+            UnitOfMeasure lux = new UnitOfMeasure()
+            {
+                UnitName = "lux",
+                UnitType = "light",
+                PrefixSymbol = "Lux"
+            };
 
-        //    DeviceState ambTempState = new DeviceState()
-        //    {
-        //        ItemId = "tinkerforge_irTemp_ambTemp_2",
-        //        Label = "Ambiente Temp1",
-        //        UnitOfMeasure = degree,
-        //        RealStateValue = "15",
-        //        StateType = "dogont:TemperatureState"
-        //    };
+            DeviceState ambienteLight = new DeviceState()
+            {
+                ItemId = "tinkerforge_ambientLight_ambientLight_2",
+                Label = "Luminance",
+                UnitOfMeasure = lux,
+                GroupBox = boxLum,
+                RealStateValue = "150"
+            };
 
-        //    DeviceState ambTempState2 = new DeviceState()
-        //    {
-        //        ItemId = "tinkerforge_irTemp_ambTemp_3",
-        //        Label = "Ambiente Temp2",
-        //        UnitOfMeasure = degree,
-        //        RealStateValue = "28",
-        //        StateType = "dogont:TemperatureState"
-        //    };
+            info.States = new[] { ambienteLight };
+            info.GroupBoxes = new[] { boxLum };
+            return info;
+        }
 
+        //TODO create Hue stuff
+        private DeviceInfo CreateHue()
+        {
+            DeviceInfo info = new DeviceInfo()
+            {
+                DisplayName = "Hue Bulb 1",
+                Uid = "hue_bulb210_1"
+            };
 
-        //    tinkerforgeIrTemp.States = new[] { irTempState, ambTempState, ambTempState2 };
-        //    return tinkerforgeIrTemp;
-        //}
+            GroupBox box = new GroupBox()
+            {
+                Name = "Hue Bulb 1",
+                IconName = "color_light"
+            };
+
+            DeviceState state = new DeviceState()
+            {
+                ItemId = "hue_bulb210_light_1",
+                Label = "State",
+                RealStateValue = "OFF",
+                GroupBox = box
+            };
+
+            DeviceCommand onCommand = new DeviceCommand()
+            {
+                Name = "DEFAULT_ON_COMMAND",
+                RealCommandName = "ON",
+                CommandType = "dogont:OnCommand"
+            };
+
+            DeviceCommand offCommand = new DeviceCommand()
+            {
+                Name = "DEFAULT_OFF_COMMAND",
+                RealCommandName = "OFF",
+                CommandType = "dogont:OffCommand"
+            };
+
+            DeviceCommand upCommand = new DeviceCommand()
+            {
+                Name = "DEFAULT_UP_COMMAND",
+                RealCommandName = "INCREASE",
+                CommandType = "dogont:UpCommand"
+            };
+
+            DeviceCommand downCommand = new DeviceCommand()
+            {
+                Name = "DEFAULT_DOWN_COMMAND",
+                RealCommandName = "DECREASE",
+                CommandType = "dogont:DownCommand"
+            };
+
+            DeviceFunctionality lightOnOff = new DeviceFunctionality()
+            {
+                FunctionalityType = "dogont:OnOffFunctionality",
+                Commands = new[] { onCommand, offCommand },
+                ItemId = "hue_bulb210_light_1",
+                GroupBox = box
+            };
+
+            DeviceFunctionality lightDimm = new DeviceFunctionality()
+            {
+                FunctionalityType = "dogont:LevelControlFunctionality",
+                Commands = new[] { upCommand, downCommand },
+                ItemId = "hue_bulb210_dimmer_1",
+                GroupBox = box
+            };
+
+            DeviceFunctionality color = new DeviceFunctionality()
+            {
+                FunctionalityType = "dogont:ColorControlFunctionality",
+                Commands = new[] { upCommand, downCommand },
+                ItemId = "hue_bulb210_color_1",
+                GroupBox = box
+            };
+
+            info.Functionalities = new[] { lightOnOff, lightDimm, color };
+            info.States = new[] { state };
+            info.GroupBoxes = new[] { box };
+            return info;
+        }
+
 
         private DeviceInfo CreateHomematicDimmer()
         {

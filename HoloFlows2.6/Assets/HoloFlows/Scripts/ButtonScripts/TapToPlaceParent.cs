@@ -85,11 +85,20 @@ namespace HoloFlows.ButtonScripts
                     Debug.LogFormat("Attach anchor with id '{0}'", DeviceUid);
                     //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
 
+
+                    // TODO reload the position via unity? with the load method? 
+                    // https://docs.unity3d.com/560/Documentation/ScriptReference/VR.WSA.Persistence.WorldAnchorStore.html
+                    // OR: share anchor via https://docs.unity3d.com/Manual/windowsholographic-anchorsharing.html
+                    // the sharing could maybe be used for persistence in database?
+
+
+
                     var request = new UpdateWorldPositionRequest("", DeviceUid);
                     SerializableVector3 sv3 = transform.parent.position;
 
                     //TODO update request to openhab
                     StartCoroutine(request.ExecuteRequest(sv3.ToJson()));
+                    Debug.LogFormat("Position: {0}", sv3.ToString());
                 }
             }
         }
@@ -126,6 +135,8 @@ namespace HoloFlows.ButtonScripts
             {
                 Destroy(otherRootParent);
                 Destroy(thisRootParent);
+
+                //TODO merge request to openhab
 
                 TapToPlaceParent tapToPlaceOfMerged = mergedDevice.GetComponentInChildren<TapToPlaceParent>(true);
                 if (tapToPlaceOfMerged == null)
