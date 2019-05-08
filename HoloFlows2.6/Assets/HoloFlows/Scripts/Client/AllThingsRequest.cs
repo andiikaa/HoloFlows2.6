@@ -59,12 +59,14 @@ namespace HoloFlows.Client
 
             GroupBox boxIr = new GroupBox()
             {
+                Uid = "box_ir_1",
                 Name = "IR Temp",
                 IconName = "temp"
             };
 
             GroupBox boxAmb = new GroupBox()
             {
+                Uid = "box_amb_1",
                 Name = "Ambiente Temp",
                 IconName = "temp"
             };
@@ -104,6 +106,7 @@ namespace HoloFlows.Client
 
             GroupBox boxLum = new GroupBox()
             {
+                Uid = "box_lum_1",
                 Name = "Luminance",
                 IconName = "light"
             };
@@ -140,6 +143,7 @@ namespace HoloFlows.Client
 
             GroupBox box = new GroupBox()
             {
+                Uid = "box_hue_1",
                 Name = "Hue Bulb 1",
                 IconName = "color_light"
             };
@@ -221,6 +225,7 @@ namespace HoloFlows.Client
 
             GroupBox box = new GroupBox()
             {
+                Uid = "box_dimmer_1",
                 Name = "Dimmer 1",
                 IconName = "dimmer"
             };

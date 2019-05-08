@@ -44,6 +44,8 @@ namespace HoloFlows.Devices
         {
             if (DeviceInfo == null || DeviceInfo.States == null || !DeviceInfo.States.Any()) { return; }
 
+            if (DeviceInfo.States.Count() > 1) { Debug.LogWarningFormat("{0} contains more than one state. Only the first is shown", DeviceInfo.Uid); }
+
             DeviceState deviceState = DeviceInfo.States[0];
             if (DeviceManager.IsInitialized)
             {
@@ -121,7 +123,7 @@ namespace HoloFlows.Devices
         {
             if (info.Functionalities == null) return new List<DeviceFunctionality>();
 
-            var groupedFunc = GetGroupedFunctionalities(info);
+            var groupedFunc = GetGroupedFunctionalities(info.Functionalities.ToList());
             if (groupedFunc == null) { return new List<DeviceFunctionality>(); }
 
             //basic device - only one group

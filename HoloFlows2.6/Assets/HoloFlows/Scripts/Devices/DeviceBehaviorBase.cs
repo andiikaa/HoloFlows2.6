@@ -94,11 +94,11 @@ namespace HoloFlows.Devices
         /// <summary>
         /// Gets the grouped device functionalities, orderd by group box name.
         /// </summary>
-        protected IEnumerable<IGrouping<string, DeviceFunctionality>> GetGroupedFunctionalities(DeviceInfo info)
+        protected IEnumerable<IGrouping<string, DeviceFunctionality>> GetGroupedFunctionalities(List<DeviceFunctionality> funcs)
         {
-            if (info == null || info.Functionalities == null) { return null; }
-            return from func in info.Functionalities
-                   group func by func.GroupBox.Name into newGroup
+            if (funcs == null) { return null; }
+            return from func in funcs
+                   group func by func.GroupBox.Uid into newGroup
                    orderby newGroup.Key
                    select newGroup;
         }
@@ -106,11 +106,11 @@ namespace HoloFlows.Devices
         /// <summary>
         /// gets the grouped device states, orderd by group box name.
         /// </summary>
-        protected IEnumerable<IGrouping<string, DeviceState>> GetGroupedStates(DeviceInfo info)
+        protected IEnumerable<IGrouping<string, DeviceState>> GetGroupedStates(List<DeviceState> states)
         {
-            if (info == null || info.States == null) { return null; }
-            return from state in info.States
-                   group state by state.GroupBox.Name into newGroup
+            if (states == null) { return null; }
+            return from state in states
+                   group state by state.GroupBox.Uid into newGroup
                    orderby newGroup.Key
                    select newGroup;
         }
@@ -207,5 +207,11 @@ namespace HoloFlows.Devices
     }
 
     public enum DeviceType { BASIC, TWO_PIECE, THREE_PIECE, MULTI }
+
+    internal class DeviceStateHolder
+    {
+        internal Transform transform;
+        internal DeviceState deviceState;
+    }
 
 }

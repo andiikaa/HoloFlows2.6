@@ -1,4 +1,5 @@
-﻿using HoloFlows.Model;
+﻿using HoloFlows.Manager;
+using HoloFlows.Model;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,11 @@ namespace HoloFlows.Devices
 {
     public class ThreePieceDevice : DeviceBehaviorBase
     {
-        public List<DeviceInfo> DeviceInfo { get; private set; } = new List<DeviceInfo>();
+        public List<DeviceInfo> DeviceInfos { get; private set; } = new List<DeviceInfo>();
+
+        private DeviceStateHolder leftHolder;
+        private DeviceStateHolder middleHolder;
+        private DeviceStateHolder rightHolder;
 
         void Start()
         {
@@ -27,22 +32,74 @@ namespace HoloFlows.Devices
 
         protected override void UpdateDeviceStates()
         {
-            //TODO implement update
-            Debug.LogFormat("implement update for {0}", gameObject.name);
+            UpdateStateAndSetValues(rightHolder);
+            UpdateStateAndSetValues(middleHolder);
+            UpdateStateAndSetValues(leftHolder);
         }
 
-        public void SetDeviceInfos(DeviceInfo info)
+        private void UpdateStateAndSetValues(DeviceStateHolder holder)
         {
-            //TODO what if we have one state and 3 buttons?
-            if (info.GroupBoxes.Count() != 3 || info.States.Count() < 3)
+            if (holder != null)
             {
-                Debug.LogError("ThreePieceDevice can only handle 3 different states!");
+                if (DeviceManager.IsInitialized)
+                {
+                    string realStateValue = DeviceManager.Instance.GetItemState(holder.deviceState.ItemId);
+                    if (realStateValue != null) holder.deviceState.RealStateValue = realStateValue;
+                }
+                SetDeviceState(holder.transform, holder.deviceState);
+            }
+        }
+
+        public void SetDeviceInfos(params DeviceInfo[] infos)
+        {
+            DeviceInfos.AddRange(infos.ToList());
+
+            List<DeviceState> states = new List<DeviceState>();
+            foreach (var tmpInfo in DeviceInfos)
+            {
+                states.AddRange(tmpInfo.States);
+            }
+
+            var groupedStates = GetGroupedStates(states);
+            if (groupedStates == null || groupedStates.Count() == 0)
+            {
+                Debug.LogWarning("ThreePieceDevice with no states");
                 return;
             }
 
-            SetDeviceState(gameObject.transform.Find("RightDevice/RightGroup"), info.States[0]);
-            SetDeviceState(gameObject.transform.Find("MiddleDevice/MiddleGroup"), info.States[1]);
-            SetDeviceState(gameObject.transform.Find("LeftDevice/LeftGroup"), info.States[2]);
+            var groupedList = groupedStates.ToList();
+
+            if (groupedList.Count > 0)
+            {
+                DeviceState firstState = groupedList[0].First();
+                rightHolder = new DeviceStateHolder()
+                {
+                    transform = gameObject.transform.Find("RightDevice/RightGroup"),
+                    deviceState = firstState
+                };
+            }
+
+            if (groupedList.Count > 1)
+            {
+                DeviceState secondState = groupedList[1].First();
+                middleHolder = new DeviceStateHolder()
+                {
+                    transform = gameObject.transform.Find("MiddleDevice/MiddleGroup"),
+                    deviceState = secondState
+                };
+            }
+
+            if (groupedList.Count > 2)
+            {
+                DeviceState thirdState = groupedList[2].First();
+                leftHolder = new DeviceStateHolder()
+                {
+                    transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
+                    deviceState = thirdState
+                };
+            }
+
+            UpdateDeviceStates();
         }
 
         private void SetDeviceState(Transform transform, DeviceState deviceState)

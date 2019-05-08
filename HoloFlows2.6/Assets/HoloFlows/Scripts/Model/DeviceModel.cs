@@ -67,6 +67,7 @@
     /// </summary>
     public class GroupBox
     {
+        public string Uid { get; set; }
         public string Name { get; set; }
         public string IconName { get; set; }
     }

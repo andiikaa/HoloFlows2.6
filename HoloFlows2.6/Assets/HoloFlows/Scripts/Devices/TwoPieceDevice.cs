@@ -1,4 +1,5 @@
-﻿using HoloFlows.Model;
+﻿using HoloFlows.Manager;
+using HoloFlows.Model;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,7 +10,10 @@ namespace HoloFlows.Devices
     public class TwoPieceDevice : DeviceBehaviorBase
     {
 
-        public List<DeviceInfo> DeviceInfo { get; private set; } = new List<DeviceInfo>();
+        public List<DeviceInfo> DeviceInfos { get; private set; } = new List<DeviceInfo>();
+
+        private DeviceStateHolder leftHolder;
+        private DeviceStateHolder rightHolder;
 
         void Start()
         {
@@ -28,22 +32,66 @@ namespace HoloFlows.Devices
 
         protected override void UpdateDeviceStates()
         {
-            //TODO implement update
-            Debug.LogFormat("implement update for {0}", gameObject.name);
+            UpdateStateAndSetValues(rightHolder);
+            UpdateStateAndSetValues(leftHolder);
         }
 
-        public void SetDeviceInfos(DeviceInfo info)
+        private void UpdateStateAndSetValues(DeviceStateHolder holder)
         {
-            if (info.GroupBoxes.Count() != 2 || info.States.Count() < 2)
+            if (holder != null)
             {
-                Debug.LogError("TwoPieceDevice can only handle 2 different states!");
+                if (DeviceManager.IsInitialized)
+                {
+                    string realStateValue = DeviceManager.Instance.GetItemState(holder.deviceState.ItemId);
+                    if (realStateValue != null) holder.deviceState.RealStateValue = realStateValue;
+                }
+                SetDeviceState(holder.transform, holder.deviceState);
+            }
+        }
+
+        public void SetDeviceInfos(params DeviceInfo[] infos)
+        {
+            //TODO MERGE WITH DEVICE INFO!
+
+            DeviceInfos.AddRange(infos.ToList());
+
+            List<DeviceState> states = new List<DeviceState>();
+            foreach (var tmpInfo in DeviceInfos)
+            {
+                states.AddRange(tmpInfo.States);
+            }
+
+            var groupedStates = GetGroupedStates(states);
+            if (groupedStates == null || groupedStates.Count() == 0)
+            {
+                Debug.LogWarning("TwoPieceDevice with no states");
                 return;
             }
 
-            //find all states
+            var groupedList = groupedStates.ToList();
 
-            SetDeviceState(gameObject.transform.Find("RightDevice/RightGroup"), info.States[0]);
-            SetDeviceState(gameObject.transform.Find("LeftDevice/LeftGroup"), info.States[1]);
+
+            if (groupedList.Count > 0)
+            {
+                DeviceState firstState = groupedList[0].First();
+                rightHolder = new DeviceStateHolder()
+                {
+                    transform = gameObject.transform.Find("RightDevice/RightGroup"),
+                    deviceState = firstState
+                };
+            }
+
+            if (groupedList.Count > 1)
+            {
+                DeviceState secondState = groupedList[1].First();
+                leftHolder = new DeviceStateHolder()
+                {
+                    transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
+                    deviceState = secondState
+                };
+            }
+
+            UpdateDeviceStates();
         }
 
         public void CopyFromBasicDevices(GameObject basic1, GameObject basic2)

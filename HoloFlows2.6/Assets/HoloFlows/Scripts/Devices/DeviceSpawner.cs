@@ -17,6 +17,8 @@ namespace HoloFlows.Devices
 
         }
 
+        string lastSpawned = null;
+
         /// <summary>
         /// Spawn a 
         /// </summary>
@@ -25,8 +27,30 @@ namespace HoloFlows.Devices
         public void SpawnDevice(string deviceUid, Action<GameObject> handleGameObject)
         {
             //TODO use the deviceUid from the scan
+            deviceUid = "tinkerforge_irTemp_1";
+
+            if (lastSpawned == null)
+            {
+                deviceUid = "tinkerforge_irTemp_1";
+            }
+            else if (lastSpawned == "tinkerforge_irTemp_1")
+            {
+                deviceUid = "hue_bulb210_1";
+            }
+            else if (lastSpawned == "hue_bulb210_1")
+            {
+                deviceUid = "tinkerforge_ambientLight_ambientLight_2";
+            }
+            else if (lastSpawned == "tinkerforge_ambientLight_ambientLight_2")
+            {
+                deviceUid = "tinkerforge_irTemp_1";
+            }
+
+            lastSpawned = deviceUid;
+
+
             //deviceUid = "hue_bulb210_1";
-            deviceUid = "hue_bulb210_1";
+            //deviceUid = "tinkerforge_ambientLight_ambientLight_2";
 
             //Get The DeviceManager for a bit shorter syntax
             if (deviceManager == null)
@@ -68,9 +92,14 @@ namespace HoloFlows.Devices
                 return null;
             }
 
+            BasicDevice left = device1.GetComponent<BasicDevice>();
+            BasicDevice right = device2.GetComponent<BasicDevice>();
+
+
             GameObject go = Instantiate(PrefabHolder.Instance.devices.twoPieceDevice);
             TwoPieceDevice mergedDevice = go.GetComponent<TwoPieceDevice>();
-            mergedDevice.CopyFromBasicDevices(device1, device2);
+            mergedDevice.SetDeviceInfos(left.DeviceInfo, right.DeviceInfo);
+            //mergedDevice.CopyFromBasicDevices(device1, device2);
             go.SetActive(true);
             return go;
         }
