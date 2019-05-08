@@ -95,7 +95,6 @@ namespace HoloFlows.Devices
             BasicDevice left = device1.GetComponent<BasicDevice>();
             BasicDevice right = device2.GetComponent<BasicDevice>();
 
-
             GameObject go = Instantiate(PrefabHolder.Instance.devices.twoPieceDevice);
             TwoPieceDevice mergedDevice = go.GetComponent<TwoPieceDevice>();
             mergedDevice.SetDeviceInfos(left.DeviceInfo, right.DeviceInfo);

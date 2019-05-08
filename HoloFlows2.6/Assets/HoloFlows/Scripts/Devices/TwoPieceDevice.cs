@@ -12,8 +12,8 @@ namespace HoloFlows.Devices
 
         public List<DeviceInfo> DeviceInfos { get; private set; } = new List<DeviceInfo>();
 
-        private DeviceStateHolder leftHolder;
-        private DeviceStateHolder rightHolder;
+        private GroupBoxHolder leftHolder;
+        private GroupBoxHolder rightHolder;
 
         void Start()
         {
@@ -36,7 +36,7 @@ namespace HoloFlows.Devices
             UpdateStateAndSetValues(leftHolder);
         }
 
-        private void UpdateStateAndSetValues(DeviceStateHolder holder)
+        private void UpdateStateAndSetValues(GroupBoxHolder holder)
         {
             if (holder != null)
             {
@@ -51,14 +51,47 @@ namespace HoloFlows.Devices
 
         public void SetDeviceInfos(params DeviceInfo[] infos)
         {
-            //TODO MERGE WITH DEVICE INFO!
-
             DeviceInfos.AddRange(infos.ToList());
+            InitGroupBoxes();
+            if (leftHolder == null || rightHolder == null)
+            {
+                Debug.LogError("Could not init device information. Failed to set all groupboxes");
+                return;
+            }
+            AddStates();
+            UpdateDeviceStates();
+            AddButtons();
+        }
 
+        private void InitGroupBoxes()
+        {
+            List<GroupBox> boxes = new List<GroupBox>();
+            foreach (var info in DeviceInfos) { boxes.AddRange(info.GroupBoxes); }
+
+            if (boxes.Count != 2)
+            {
+                Debug.LogError("TwoPieceDevice needs 2 GroupBoxes!");
+                return;
+            }
+
+            leftHolder = new GroupBoxHolder()
+            {
+                groupBoxId = boxes[0].Uid,
+                transform = gameObject.transform.Find("LeftDevice/LeftGroup")
+            };
+            rightHolder = new GroupBoxHolder()
+            {
+                groupBoxId = boxes[1].Uid,
+                transform = gameObject.transform.Find("RightDevice/RightGroup")
+            };
+        }
+
+        private void AddStates()
+        {
             List<DeviceState> states = new List<DeviceState>();
             foreach (var tmpInfo in DeviceInfos)
             {
-                states.AddRange(tmpInfo.States);
+                if (tmpInfo.States != null) states.AddRange(tmpInfo.States);
             }
 
             var groupedStates = GetGroupedStates(states);
@@ -70,28 +103,53 @@ namespace HoloFlows.Devices
 
             var groupedList = groupedStates.ToList();
 
+            DeviceState leftState = groupedList.FirstOrDefault(e => e.Key == leftHolder.groupBoxId)?.FirstOrDefault();
+            DeviceState rightState = groupedList.FirstOrDefault(e => e.Key == rightHolder.groupBoxId)?.FirstOrDefault();
 
-            if (groupedList.Count > 0)
+            leftHolder.deviceState = leftState;
+            rightHolder.deviceState = rightState;
+
+            //if (groupedList.Count > 0)
+            //{
+            //    DeviceState firstState = groupedList[0].First();
+            //    rightHolder = new GroupBoxHolder()
+            //    {
+            //        transform = gameObject.transform.Find("RightDevice/RightGroup"),
+            //        deviceState = firstState
+            //    };
+            //}
+
+            //if (groupedList.Count > 1)
+            //{
+            //    DeviceState secondState = groupedList[1].First();
+            //    leftHolder = new GroupBoxHolder()
+            //    {
+            //        transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
+            //        deviceState = secondState
+            //    };
+            //}
+        }
+
+        private void AddButtons()
+        {
+            List<DeviceFunctionality> funcs = new List<DeviceFunctionality>();
+            foreach (var tmpInfo in DeviceInfos)
             {
-                DeviceState firstState = groupedList[0].First();
-                rightHolder = new DeviceStateHolder()
-                {
-                    transform = gameObject.transform.Find("RightDevice/RightGroup"),
-                    deviceState = firstState
-                };
+                if (tmpInfo.Functionalities != null) funcs.AddRange(tmpInfo.Functionalities);
             }
 
-            if (groupedList.Count > 1)
+            var groupedFuncs = GetGroupedFunctionalities(funcs);
+            if (groupedFuncs == null || groupedFuncs.Count() == 0)
             {
-                DeviceState secondState = groupedList[1].First();
-                leftHolder = new DeviceStateHolder()
-                {
-                    transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
-                    deviceState = secondState
-                };
+                Debug.LogWarning("TwoPieceDevice with no functions");
+                return;
             }
 
-            UpdateDeviceStates();
+            var groupedList = groupedFuncs.ToList();
+            //groupedList.Where(k => k.Key == leftHolder.)
+
+            //TODO Buttons
+
         }
 
         public void CopyFromBasicDevices(GameObject basic1, GameObject basic2)

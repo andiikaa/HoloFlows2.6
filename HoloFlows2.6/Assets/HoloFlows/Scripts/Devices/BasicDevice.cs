@@ -1,5 +1,4 @@
-﻿
-using HoloFlows.ButtonScripts;
+﻿using HoloFlows.ButtonScripts;
 using HoloFlows.Manager;
 using HoloFlows.Model;
 using System.Collections.Generic;
@@ -64,7 +63,9 @@ namespace HoloFlows.Devices
             }
         }
 
-        private bool AddButtonsToLayoutGroup(Transform layoutGroup, DeviceInfo info)
+        #region Gen Buttons
+
+        protected bool AddButtonsToLayoutGroup(Transform layoutGroup, DeviceInfo info)
         {
             if (layoutGroup == null || layoutGroup.GetComponent<VerticalLayoutGroup>() == null)
                 return false;
@@ -136,20 +137,9 @@ namespace HoloFlows.Devices
                     || (func.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType)
                     && func.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType))
                     select func).ToList();
-
-            //return
-            //   (from func in info.Functionalities
-            //    where func.Commands.Any(c => TYPE_ON_COMMAND == c.CommandType)
-            //    && func.Commands.Any(c => TYPE_OFF_COMMAND == c.CommandType)
-            //    && func.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType)
-            //    && func.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType)
-            //    select func).ToList();
         }
 
-        private const string TYPE_ON_COMMAND = "dogont:OnCommand";
-        private const string TYPE_OFF_COMMAND = "dogont:OffCommand";
-        private const string TYPE_DOWN_COMMAND = "dogont:DownCommand";
-        private const string TYPE_UP_COMMAND = "dogont:UpCommand";
+        #endregion
 
         private void SetDeviceState(Transform transform, DeviceState deviceState)
         {

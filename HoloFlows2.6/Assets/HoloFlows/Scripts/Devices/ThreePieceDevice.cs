@@ -11,9 +11,9 @@ namespace HoloFlows.Devices
     {
         public List<DeviceInfo> DeviceInfos { get; private set; } = new List<DeviceInfo>();
 
-        private DeviceStateHolder leftHolder;
-        private DeviceStateHolder middleHolder;
-        private DeviceStateHolder rightHolder;
+        private GroupBoxHolder leftHolder;
+        private GroupBoxHolder middleHolder;
+        private GroupBoxHolder rightHolder;
 
         void Start()
         {
@@ -37,7 +37,7 @@ namespace HoloFlows.Devices
             UpdateStateAndSetValues(leftHolder);
         }
 
-        private void UpdateStateAndSetValues(DeviceStateHolder holder)
+        private void UpdateStateAndSetValues(GroupBoxHolder holder)
         {
             if (holder != null)
             {
@@ -57,7 +57,7 @@ namespace HoloFlows.Devices
             List<DeviceState> states = new List<DeviceState>();
             foreach (var tmpInfo in DeviceInfos)
             {
-                states.AddRange(tmpInfo.States);
+                if (tmpInfo.States != null) states.AddRange(tmpInfo.States);
             }
 
             var groupedStates = GetGroupedStates(states);
@@ -72,7 +72,7 @@ namespace HoloFlows.Devices
             if (groupedList.Count > 0)
             {
                 DeviceState firstState = groupedList[0].First();
-                rightHolder = new DeviceStateHolder()
+                rightHolder = new GroupBoxHolder()
                 {
                     transform = gameObject.transform.Find("RightDevice/RightGroup"),
                     deviceState = firstState
@@ -82,7 +82,7 @@ namespace HoloFlows.Devices
             if (groupedList.Count > 1)
             {
                 DeviceState secondState = groupedList[1].First();
-                middleHolder = new DeviceStateHolder()
+                middleHolder = new GroupBoxHolder()
                 {
                     transform = gameObject.transform.Find("MiddleDevice/MiddleGroup"),
                     deviceState = secondState
@@ -92,7 +92,7 @@ namespace HoloFlows.Devices
             if (groupedList.Count > 2)
             {
                 DeviceState thirdState = groupedList[2].First();
-                leftHolder = new DeviceStateHolder()
+                leftHolder = new GroupBoxHolder()
                 {
                     transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
                     deviceState = thirdState
