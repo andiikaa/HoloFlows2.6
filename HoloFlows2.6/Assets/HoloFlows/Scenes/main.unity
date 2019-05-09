@@ -941,6 +941,9 @@ MonoBehaviour:
     buttonLayoutGroupName: EmptyBillboardgroup
     onOffUpDownButton: {fileID: 1539691397291146, guid: bd7c9f33984f9cc4caeef580ec342448,
       type: 2}
+    upButton: {fileID: 1220216022044986, guid: 6131383de1d80cf4191b6a6a7887095d, type: 2}
+    downButton: {fileID: 1930640567162648, guid: eab2c92644e6c7d498589e9599b17fc4,
+      type: 2}
   qrScanInterface: {fileID: 1393720631786158, guid: 21605fc640729fe4abed0341d31ba34a,
     type: 2}
 --- !u!1 &1190753555

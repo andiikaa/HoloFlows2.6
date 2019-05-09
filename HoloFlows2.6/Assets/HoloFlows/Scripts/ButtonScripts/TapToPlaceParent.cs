@@ -130,7 +130,7 @@ namespace HoloFlows.ButtonScripts
 
         private void MergeDevices()
         {
-            GameObject mergedDevice = DeviceSpawner.Instance.MergeBasicDevices(otherRootParent, thisRootParent);
+            GameObject mergedDevice = DeviceSpecificMerge();
             if (mergedDevice != null)
             {
                 Destroy(otherRootParent);
@@ -149,6 +149,31 @@ namespace HoloFlows.ButtonScripts
                     tapToPlaceOfMerged.OnFocusEnter();
                     tapToPlaceOfMerged.OnInputClicked(null);
                 }
+            }
+        }
+
+        private GameObject DeviceSpecificMerge()
+        {
+            DeviceBehaviorBase otherRootDevice = otherRootParent.GetComponent<DeviceBehaviorBase>();
+            DeviceBehaviorBase thisRootDevice = thisRootParent.GetComponent<DeviceBehaviorBase>();
+
+            if (otherRootDevice == null || thisRootDevice == null)
+            {
+                Debug.LogError("could not merge. device behavior not found");
+                return null;
+            }
+
+            switch (otherRootDevice.GetDeviceType())
+            {
+                case Devices.DeviceType.BASIC:
+                    if (thisRootDevice.IsBasicDevice) return DeviceSpawner.Instance.MergeBasicDevices((BasicDevice)otherRootDevice, (BasicDevice)thisRootDevice);
+                    if (thisRootDevice.IsTwoPieceDevice) return DeviceSpawner.Instance.MergeBasicAndTwoPiece((BasicDevice)otherRootDevice, (TwoPieceDevice)thisRootDevice);
+                    return null;
+                case Devices.DeviceType.TWO_PIECE:
+                    if (thisRootDevice.IsBasicDevice) return DeviceSpawner.Instance.MergeBasicAndTwoPiece((BasicDevice)thisRootDevice, (TwoPieceDevice)otherRootDevice);
+                    return null;
+                default:
+                    return null;
             }
         }
 

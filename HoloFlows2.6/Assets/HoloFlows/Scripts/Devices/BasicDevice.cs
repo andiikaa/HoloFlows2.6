@@ -1,5 +1,4 @@
-﻿using HoloFlows.ButtonScripts;
-using HoloFlows.Manager;
+﻿using HoloFlows.Manager;
 using HoloFlows.Model;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace HoloFlows.Devices
 {
     public class BasicDevice : DeviceBehaviorBase
     {
-        protected override DeviceType GetDeviceType() { return DeviceType.BASIC; }
+        public override DeviceType GetDeviceType() { return DeviceType.BASIC; }
 
         public DeviceInfo DeviceInfo { get; private set; }
 
@@ -35,8 +34,8 @@ namespace HoloFlows.Devices
         public void SetDeviceInfo(DeviceInfo info)
         {
             DeviceInfo = info;
-            AddContent();
             UpdateDeviceStates();
+            AddButtons();
         }
 
         protected override void UpdateDeviceStates()
@@ -54,12 +53,17 @@ namespace HoloFlows.Devices
             }
         }
 
-        private void AddContent()
+        private void AddButtons()
         {
+            if (DeviceInfo.Functionalities == null || !DeviceInfo.Functionalities.Any())
+            {
+                Debug.LogWarning("no functionalities for basic device");
+                return;
+            }
             Transform btnLayoutGroup = gameObject.transform.Find("EmptyBillboardgroup");
             if (!AddButtonsToLayoutGroup(btnLayoutGroup, DeviceInfo))
             {
-                Debug.LogError("failed to find the layout group for the buttons");
+                Debug.LogError("VerticalLayoutGroup not found for basic device");
             }
         }
 
@@ -75,46 +79,19 @@ namespace HoloFlows.Devices
             {
                 AddOnOffUpDownCombination(layoutGroup, onOffUpDownFunc);
             }
+
+            foreach (var func in info.Functionalities)
+            {
+                if (onOffUpDownFunc.Contains(func)) continue;
+                if (func.Commands == null) continue;
+
+                foreach (var cmd in func.Commands)
+                {
+                    SpawnButton(func, cmd, layoutGroup);
+                }
+            }
+
             return true;
-        }
-
-        private void AddOnOffUpDownCombination(Transform layoutGroup, List<DeviceFunctionality> onOffUpDownFunc)
-        {
-            DeviceFunctionality onCommandFunc = onOffUpDownFunc
-                .Where(f => f.Commands.Any(c => TYPE_ON_COMMAND == c.CommandType))
-                .First();
-            DeviceFunctionality offCommandFunc = onOffUpDownFunc
-                .Where(f => f.Commands.Any(c => TYPE_OFF_COMMAND == c.CommandType))
-                .First();
-            DeviceFunctionality upCommandFunc = onOffUpDownFunc
-                .Where(f => f.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType))
-                .First();
-            DeviceFunctionality downCommandFunc = onOffUpDownFunc
-                .Where(f => f.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType))
-                .First();
-
-            //buttons are visible in this order from top to bottom
-            GameObject btnObject = Instantiate(PrefabHolder.Instance.devices.onOffUpDownButton);
-            OnOffUpDownButton btnScript = btnObject.GetComponent<OnOffUpDownButton>();
-
-            btnScript.SetDownButtonData(downCommandFunc.ItemId, downCommandFunc.Commands.First(c => TYPE_DOWN_COMMAND == c.CommandType).RealCommandName);
-            btnScript.SetUpButtonData(upCommandFunc.ItemId, upCommandFunc.Commands.First(c => TYPE_UP_COMMAND == c.CommandType).RealCommandName);
-            btnScript.SetOnButtonData(onCommandFunc.ItemId, onCommandFunc.Commands.First(c => TYPE_ON_COMMAND == c.CommandType).RealCommandName);
-            btnScript.SetOffButtonData(offCommandFunc.ItemId, offCommandFunc.Commands.First(c => TYPE_OFF_COMMAND == c.CommandType).RealCommandName);
-
-            btnObject.transform.SetParent(layoutGroup, false);
-        }
-
-        private GameObject SpawnButton(DeviceFunctionality functionality, DeviceCommand command, Transform parent)
-        {
-            GameObject buttonPrefab = PrefabHolder.Instance.devices.defaultDeviceButton;
-            GameObject buttonInstance = Instantiate(buttonPrefab);
-            buttonInstance.transform.SetParent(parent, false);
-            DefaultDeviceButtonBehavior behavior = buttonInstance.GetComponent<DefaultDeviceButtonBehavior>();
-            behavior.CommandDisplayName = command.Name;
-            behavior.RealCommandName = command.RealCommandName;
-            behavior.DeviceId = functionality.ItemId;
-            return buttonInstance;
         }
 
         /// <summary>

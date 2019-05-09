@@ -102,32 +102,11 @@ namespace HoloFlows.Devices
             }
 
             var groupedList = groupedStates.ToList();
-
             DeviceState leftState = groupedList.FirstOrDefault(e => e.Key == leftHolder.groupBoxId)?.FirstOrDefault();
             DeviceState rightState = groupedList.FirstOrDefault(e => e.Key == rightHolder.groupBoxId)?.FirstOrDefault();
 
             leftHolder.deviceState = leftState;
             rightHolder.deviceState = rightState;
-
-            //if (groupedList.Count > 0)
-            //{
-            //    DeviceState firstState = groupedList[0].First();
-            //    rightHolder = new GroupBoxHolder()
-            //    {
-            //        transform = gameObject.transform.Find("RightDevice/RightGroup"),
-            //        deviceState = firstState
-            //    };
-            //}
-
-            //if (groupedList.Count > 1)
-            //{
-            //    DeviceState secondState = groupedList[1].First();
-            //    leftHolder = new GroupBoxHolder()
-            //    {
-            //        transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
-            //        deviceState = secondState
-            //    };
-            //}
         }
 
         private void AddButtons()
@@ -145,17 +124,48 @@ namespace HoloFlows.Devices
                 return;
             }
 
-            var groupedList = groupedFuncs.ToList();
-            //groupedList.Where(k => k.Key == leftHolder.)
-
-            //TODO Buttons
-
+            foreach (var grouping in groupedFuncs)
+            {
+                AddButtonsToGroup(grouping);
+            }
         }
 
-        public void CopyFromBasicDevices(GameObject basic1, GameObject basic2)
+        private void AddButtonsToGroup(IGrouping<string, DeviceFunctionality> funcs)
         {
-            CopyBillboardGroup(basic1.transform.Find("EmptyBillboardgroup"), transform.Find("RightDevice/RightGroup"));
-            CopyBillboardGroup(basic2.transform.Find("EmptyBillboardgroup"), transform.Find("LeftDevice/LeftGroup"));
+            GroupBoxHolder holder = GetHolderById(funcs.Key);
+            List<DeviceFunctionality> onOffUpDown = GetOffUpDownFunctionalities(funcs.ToList());
+            if (onOffUpDown.Count > 0)
+            {
+                AddOnOffUpDownCombination(holder.transform, onOffUpDown);
+            }
+
+            //foreach (var func in funcs)
+            //{
+            //    if (onOffUpDown.Contains(func)) continue;
+            //    if (func.Commands == null) continue;
+
+            //    foreach (var cmd in func.Commands)
+            //    {
+            //        SpawnButton(func, cmd, holder.transform);
+            //    }
+            //}
+        }
+
+        private List<DeviceFunctionality> GetOffUpDownFunctionalities(List<DeviceFunctionality> funcs)
+        {
+            return (from func in funcs
+                    where (func.Commands.Any(c => TYPE_ON_COMMAND == c.CommandType)
+                    && func.Commands.Any(c => TYPE_OFF_COMMAND == c.CommandType))
+                    || (func.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType)
+                    && func.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType))
+                    select func).ToList();
+        }
+
+        private GroupBoxHolder GetHolderById(string id)
+        {
+            if (id == leftHolder.groupBoxId) return leftHolder;
+            if (id == rightHolder.groupBoxId) return rightHolder;
+            return null; //should not happen
         }
 
         private void SetDeviceState(Transform transform, DeviceState deviceState)
@@ -169,7 +179,7 @@ namespace HoloFlows.Devices
             value.text = deviceState.RealStateValue + " " + GetValuePrefix(deviceState.UnitOfMeasure);
         }
 
-        protected override DeviceType GetDeviceType() { return DeviceType.TWO_PIECE; }
+        public override DeviceType GetDeviceType() { return DeviceType.TWO_PIECE; }
 
 
     }

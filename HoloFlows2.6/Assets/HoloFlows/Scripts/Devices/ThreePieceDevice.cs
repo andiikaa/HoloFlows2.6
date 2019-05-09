@@ -37,6 +37,36 @@ namespace HoloFlows.Devices
             UpdateStateAndSetValues(leftHolder);
         }
 
+        private void InitGroupBoxes()
+        {
+            List<GroupBox> boxes = new List<GroupBox>();
+            foreach (var info in DeviceInfos) { boxes.AddRange(info.GroupBoxes); }
+
+            if (boxes.Count != 3)
+            {
+                Debug.LogError("ThreePieceDevice needs 3 GroupBoxes!");
+                return;
+            }
+
+            leftHolder = new GroupBoxHolder()
+            {
+                groupBoxId = boxes[0].Uid,
+                transform = gameObject.transform.Find("LeftDevice/LeftGroup")
+            };
+
+            middleHolder = new GroupBoxHolder()
+            {
+                groupBoxId = boxes[1].Uid,
+                transform = gameObject.transform.Find("MiddleDevice/MiddleGroup")
+            };
+
+            rightHolder = new GroupBoxHolder()
+            {
+                groupBoxId = boxes[2].Uid,
+                transform = gameObject.transform.Find("RightDevice/RightGroup")
+            };
+        }
+
         private void UpdateStateAndSetValues(GroupBoxHolder holder)
         {
             if (holder != null)
@@ -53,7 +83,19 @@ namespace HoloFlows.Devices
         public void SetDeviceInfos(params DeviceInfo[] infos)
         {
             DeviceInfos.AddRange(infos.ToList());
+            InitGroupBoxes();
+            if (leftHolder == null || middleHolder == null || rightHolder == null)
+            {
+                Debug.LogError("Could not init device information. Failed to set all groupboxes");
+                return;
+            }
+            AddStates();
+            UpdateDeviceStates();
+            AddButtons();
+        }
 
+        private void AddStates()
+        {
             List<DeviceState> states = new List<DeviceState>();
             foreach (var tmpInfo in DeviceInfos)
             {
@@ -69,37 +111,78 @@ namespace HoloFlows.Devices
 
             var groupedList = groupedStates.ToList();
 
-            if (groupedList.Count > 0)
+            DeviceState leftState = groupedList.FirstOrDefault(e => e.Key == leftHolder.groupBoxId)?.FirstOrDefault();
+            DeviceState middleState = groupedList.FirstOrDefault(e => e.Key == middleHolder.groupBoxId)?.FirstOrDefault();
+            DeviceState rightState = groupedList.FirstOrDefault(e => e.Key == rightHolder.groupBoxId)?.FirstOrDefault();
+
+            leftHolder.deviceState = leftState;
+            middleHolder.deviceState = middleState;
+            rightHolder.deviceState = rightState;
+        }
+
+        private void AddButtons()
+        {
+            List<DeviceFunctionality> funcs = new List<DeviceFunctionality>();
+            foreach (var tmpInfo in DeviceInfos)
             {
-                DeviceState firstState = groupedList[0].First();
-                rightHolder = new GroupBoxHolder()
-                {
-                    transform = gameObject.transform.Find("RightDevice/RightGroup"),
-                    deviceState = firstState
-                };
+                if (tmpInfo.Functionalities != null) funcs.AddRange(tmpInfo.Functionalities);
             }
 
-            if (groupedList.Count > 1)
+            var groupedFuncs = GetGroupedFunctionalities(funcs);
+            if (groupedFuncs == null || groupedFuncs.Count() == 0)
             {
-                DeviceState secondState = groupedList[1].First();
-                middleHolder = new GroupBoxHolder()
-                {
-                    transform = gameObject.transform.Find("MiddleDevice/MiddleGroup"),
-                    deviceState = secondState
-                };
+                Debug.LogWarning("TwoPieceDevice with no functions");
+                return;
             }
 
-            if (groupedList.Count > 2)
+            foreach (var grouping in groupedFuncs)
             {
-                DeviceState thirdState = groupedList[2].First();
-                leftHolder = new GroupBoxHolder()
-                {
-                    transform = gameObject.transform.Find("LeftDevice/LeftGroup"),
-                    deviceState = thirdState
-                };
+                AddButtonsToGroup(grouping);
+            }
+        }
+
+        private void AddButtonsToGroup(IGrouping<string, DeviceFunctionality> funcs)
+        {
+            GroupBoxHolder holder = GetHolderById(funcs.Key);
+            List<DeviceFunctionality> onOffUpDown = GetOffUpDownFunctionalities(funcs.ToList());
+            if (onOffUpDown.Count > 0)
+            {
+                AddOnOffUpDownCombination(holder.transform, onOffUpDown);
             }
 
-            UpdateDeviceStates();
+            //foreach (var func in funcs)
+            //{
+            //    if (onOffUpDown.Contains(func)) continue;
+            //    if (func.Commands == null) continue;
+
+            //    foreach (var cmd in func.Commands)
+            //    {
+            //        SpawnButton(func, cmd, holder.transform);
+            //    }
+            //}
+        }
+
+        private void AddColorButtons(DeviceFunctionality colorFunc, Transform target)
+        {
+
+        }
+
+        private List<DeviceFunctionality> GetOffUpDownFunctionalities(List<DeviceFunctionality> funcs)
+        {
+            return (from func in funcs
+                    where (func.Commands.Any(c => TYPE_ON_COMMAND == c.CommandType)
+                    && func.Commands.Any(c => TYPE_OFF_COMMAND == c.CommandType))
+                    || (func.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType)
+                    && func.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType))
+                    select func).ToList();
+        }
+
+        private GroupBoxHolder GetHolderById(string id)
+        {
+            if (id == leftHolder.groupBoxId) return leftHolder;
+            if (id == middleHolder.groupBoxId) return middleHolder;
+            if (id == rightHolder.groupBoxId) return rightHolder;
+            return null; //should not happen
         }
 
         private void SetDeviceState(Transform transform, DeviceState deviceState)
@@ -118,7 +201,7 @@ namespace HoloFlows.Devices
             return string.IsNullOrEmpty(state.Label) ? state.ItemId : state.Label;
         }
 
-        protected override DeviceType GetDeviceType() { return DeviceType.THREE_PIECE; }
+        public override DeviceType GetDeviceType() { return DeviceType.THREE_PIECE; }
 
     }
 }

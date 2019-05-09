@@ -75,6 +75,18 @@ namespace HoloFlows
             /// </summary>
             [Tooltip("Button group which contains (nice arranged) on, off, up and down.")]
             public GameObject onOffUpDownButton;
+
+            /// <summary>
+            /// Button for up
+            /// </summary>
+            [Tooltip("Button group which contains (nice arranged) on, off, up and down.")]
+            public GameObject upButton;
+
+            /// <summary>
+            /// Button for down
+            /// </summary>
+            [Tooltip("Button group which contains (nice arranged) on, off, up and down.")]
+            public GameObject downButton;
         }
 
         #endregion

@@ -4,7 +4,6 @@ using HoloFlows.Model;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace HoloFlows.Devices
 {
@@ -32,7 +31,7 @@ namespace HoloFlows.Devices
         /// <summary>
         /// Gets the current <see cref=" DeviceType"/>
         /// </summary>
-        protected abstract DeviceType GetDeviceType();
+        public abstract DeviceType GetDeviceType();
 
         /// <summary>
         /// Called, when the device should update its device states (if there are any).
@@ -52,39 +51,6 @@ namespace HoloFlows.Devices
                 frameNumber = 0;
                 UpdateDeviceStates();
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="groupSource">A group which contains the buttons</param>
-        /// <param name="groupTarget">A group which should contain the copied buttons</param>
-        private void CopyButtonsWithBehaviors(Transform groupSource, Transform groupTarget)
-        {
-            if (groupSource.childCount > 1)
-            {
-                for (int i = 1; i < groupSource.childCount; i++)
-                {
-                    Transform child = groupSource.GetChild(i);
-
-                    //TODO a better check would be nice
-                    if (child.gameObject.name.Contains("button") || child.gameObject.name.Contains("Button"))
-                    {
-                        CreateNewButtons(groupTarget, child);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Copies the billboard groups with the whole contents and behaviors
-        /// </summary>
-        /// <param name="groupSource"></param>
-        /// <param name="groupTarget"></param>
-        protected void CopyBillboardGroup(Transform groupSource, Transform groupTarget)
-        {
-            CopyDeviceHeaderData(groupSource.Find("Canvas"), groupTarget.Find("Canvas"));
-            CopyButtonsWithBehaviors(groupSource, groupTarget);
         }
 
         protected static string GetValuePrefix(UnitOfMeasure unitOfMeasure)
@@ -120,43 +86,56 @@ namespace HoloFlows.Devices
                    select newGroup;
         }
 
-        private void CopyDeviceHeaderData(Transform sourceCanvas, Transform targetCanvas)
+        protected void AddColorButtons(DeviceFunctionality colorFunc, Transform target)
         {
-            //TODO image source
-            SpriteRenderer sourceImage = sourceCanvas.Find("Image").GetComponent<SpriteRenderer>();
-            var sDesc = sourceCanvas.Find("Description").GetComponent<Text>();
-            var sValue = sourceCanvas.Find("Value").GetComponent<Text>();
-
-            SpriteRenderer targetImage = targetCanvas.Find("Image").GetComponent<SpriteRenderer>();
-            var tDesc = targetCanvas.Find("Description").GetComponent<Text>();
-            var tValue = targetCanvas.Find("Value").GetComponent<Text>();
-
-            targetImage.sprite = sourceImage.sprite;
-            tDesc.text = sDesc.text;
-            tValue.text = sValue.text;
+            //GET COLOR BUTTON
         }
 
-        private void CreateNewButtons(Transform parent, Transform sourceChild)
+        protected GameObject SpawnButton(DeviceFunctionality functionality, DeviceCommand command, Transform parent)
         {
-            GameObject newChild = Instantiate(sourceChild.gameObject);
+            GameObject buttonPrefab = GetTypeSpecificButtonPrefab(command);
+            GameObject buttonInstance = Instantiate(buttonPrefab);
+            buttonInstance.transform.SetParent(parent, false);
+            DefaultDeviceButtonBehavior behavior = buttonInstance.GetComponent<DefaultDeviceButtonBehavior>();
+            behavior.CommandDisplayName = command.Name;
+            behavior.RealCommandName = command.RealCommandName;
+            behavior.DeviceId = functionality.ItemId;
+            return buttonInstance;
+        }
 
-            DefaultDeviceButtonBehavior[] sourceBehaviors = sourceChild.GetComponentsInChildren<DefaultDeviceButtonBehavior>();
-            DefaultDeviceButtonBehavior[] targetBehaviors = newChild.GetComponentsInChildren<DefaultDeviceButtonBehavior>();
+        private GameObject GetTypeSpecificButtonPrefab(DeviceCommand cmd)
+        {
+            //TODO add button for color changing
+            if (TYPE_DOWN_COMMAND.Equals(cmd.CommandType)) return PrefabHolder.Instance.devices.downButton;
+            if (TYPE_UP_COMMAND.Equals(cmd.CommandType)) return PrefabHolder.Instance.devices.upButton;
+            return PrefabHolder.Instance.devices.defaultDeviceButton;
+        }
 
-            if (sourceBehaviors.Length != targetBehaviors.Length)
-            {
-                Debug.LogError("defaultbuttonbehaviors count does not match for copied instance");
-                return;
-            }
+        protected void AddOnOffUpDownCombination(Transform layoutGroup, List<DeviceFunctionality> onOffUpDownFunc)
+        {
+            DeviceFunctionality onCommandFunc = onOffUpDownFunc
+                .Where(f => f.Commands.Any(c => TYPE_ON_COMMAND == c.CommandType))
+                .First();
+            DeviceFunctionality offCommandFunc = onOffUpDownFunc
+                .Where(f => f.Commands.Any(c => TYPE_OFF_COMMAND == c.CommandType))
+                .First();
+            DeviceFunctionality upCommandFunc = onOffUpDownFunc
+                .Where(f => f.Commands.Any(c => TYPE_UP_COMMAND == c.CommandType))
+                .First();
+            DeviceFunctionality downCommandFunc = onOffUpDownFunc
+                .Where(f => f.Commands.Any(c => TYPE_DOWN_COMMAND == c.CommandType))
+                .First();
 
-            for (int i = 0; i < sourceBehaviors.Length; i++)
-            {
-                targetBehaviors[i].DeviceId = sourceBehaviors[i].DeviceId;
-                targetBehaviors[i].RealCommandName = sourceBehaviors[i].RealCommandName;
-                targetBehaviors[i].CommandDisplayName = sourceBehaviors[i].CommandDisplayName;
-            }
+            //buttons are visible in this order from top to bottom
+            GameObject btnObject = Instantiate(PrefabHolder.Instance.devices.onOffUpDownButton);
+            OnOffUpDownButton btnScript = btnObject.GetComponent<OnOffUpDownButton>();
 
-            newChild.transform.SetParent(parent, false);
+            btnScript.SetDownButtonData(downCommandFunc.ItemId, downCommandFunc.Commands.First(c => TYPE_DOWN_COMMAND == c.CommandType).RealCommandName);
+            btnScript.SetUpButtonData(upCommandFunc.ItemId, upCommandFunc.Commands.First(c => TYPE_UP_COMMAND == c.CommandType).RealCommandName);
+            btnScript.SetOnButtonData(onCommandFunc.ItemId, onCommandFunc.Commands.First(c => TYPE_ON_COMMAND == c.CommandType).RealCommandName);
+            btnScript.SetOffButtonData(offCommandFunc.ItemId, offCommandFunc.Commands.First(c => TYPE_OFF_COMMAND == c.CommandType).RealCommandName);
+
+            btnObject.transform.SetParent(layoutGroup, false);
         }
 
         #region managed object
