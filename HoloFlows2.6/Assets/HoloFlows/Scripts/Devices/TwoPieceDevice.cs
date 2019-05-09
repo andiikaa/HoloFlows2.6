@@ -134,9 +134,16 @@ namespace HoloFlows.Devices
         {
             GroupBoxHolder holder = GetHolderById(funcs.Key);
             List<DeviceFunctionality> onOffUpDown = GetOffUpDownFunctionalities(funcs.ToList());
+
             if (onOffUpDown.Count > 0)
             {
                 AddOnOffUpDownCombination(holder.transform, onOffUpDown);
+            }
+
+            DeviceFunctionality colorFunc = funcs.Where(f => FUNC_TYPE_COLOR_CONTROL == f.FunctionalityType).FirstOrDefault();
+            if (colorFunc != null)
+            {
+                //add color func button
             }
 
             //foreach (var func in funcs)

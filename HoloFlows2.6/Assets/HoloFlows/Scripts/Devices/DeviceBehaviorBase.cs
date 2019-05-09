@@ -13,6 +13,7 @@ namespace HoloFlows.Devices
         protected const string TYPE_OFF_COMMAND = "dogont:OffCommand";
         protected const string TYPE_DOWN_COMMAND = "dogont:DownCommand";
         protected const string TYPE_UP_COMMAND = "dogont:UpCommand";
+        protected const string FUNC_TYPE_COLOR_CONTROL = "dogont:ColorControlFunctionality";
 
         public bool IsBasicDevice { get { return GetDeviceType() == DeviceType.BASIC; } }
         public bool IsTwoPieceDevice { get { return GetDeviceType() == DeviceType.TWO_PIECE; } }

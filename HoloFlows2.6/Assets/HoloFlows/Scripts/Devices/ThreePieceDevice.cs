@@ -162,11 +162,6 @@ namespace HoloFlows.Devices
             //}
         }
 
-        private void AddColorButtons(DeviceFunctionality colorFunc, Transform target)
-        {
-
-        }
-
         private List<DeviceFunctionality> GetOffUpDownFunctionalities(List<DeviceFunctionality> funcs)
         {
             return (from func in funcs

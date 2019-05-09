@@ -203,7 +203,7 @@ namespace HoloFlows.Client
             DeviceFunctionality color = new DeviceFunctionality()
             {
                 FunctionalityType = "dogont:ColorControlFunctionality",
-                Commands = new[] { upCommand, downCommand },
+                //Commands = new[] { },
                 ItemId = "hue_bulb210_color_1",
                 GroupBox = box
             };
