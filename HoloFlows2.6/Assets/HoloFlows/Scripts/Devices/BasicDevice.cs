@@ -80,16 +80,22 @@ namespace HoloFlows.Devices
                 AddOnOffUpDownCombination(layoutGroup, onOffUpDownFunc);
             }
 
-            foreach (var func in info.Functionalities)
+            DeviceFunctionality colorFunc = info.Functionalities.Where(f => FUNC_TYPE_COLOR_CONTROL == f.FunctionalityType).FirstOrDefault();
+            if (colorFunc != null)
             {
-                if (onOffUpDownFunc.Contains(func)) continue;
-                if (func.Commands == null) continue;
-
-                foreach (var cmd in func.Commands)
-                {
-                    SpawnButton(func, cmd, layoutGroup);
-                }
+                AddColorButtons(colorFunc, layoutGroup);
             }
+
+            //foreach (var func in info.Functionalities)
+            //{
+            //    if (onOffUpDownFunc.Contains(func)) continue;
+            //    if (func.Commands == null) continue;
+
+            //    foreach (var cmd in func.Commands)
+            //    {
+            //        SpawnButton(func, cmd, layoutGroup);
+            //    }
+            //}
 
             return true;
         }

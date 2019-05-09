@@ -33,8 +33,11 @@ namespace HoloFlows.Client
 
         private IEnumerator InternalExecute(string postData, bool handleResponse = false)
         {
-            UnityWebRequest www = UnityWebRequest.Post(requestURL, postData);
+            //Dirty hack, cause unity encodes all Post data: 
+            //https://answers.unity.com/questions/1163204/prevent-unitywebrequestpost-from-url-encoding-the.html
+            UnityWebRequest www = UnityWebRequest.Put(requestURL, postData);
             www.SetRequestHeader("Content-Type", contentType);
+            www.method = "POST";
             yield return www.SendWebRequest();
 
             while (!www.isDone)

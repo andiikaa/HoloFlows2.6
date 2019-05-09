@@ -140,10 +140,11 @@ namespace HoloFlows.Devices
                 AddOnOffUpDownCombination(holder.transform, onOffUpDown);
             }
 
+            //add color func button
             DeviceFunctionality colorFunc = funcs.Where(f => FUNC_TYPE_COLOR_CONTROL == f.FunctionalityType).FirstOrDefault();
             if (colorFunc != null)
             {
-                //add color func button
+                AddColorButtons(colorFunc, holder.transform);
             }
 
             //foreach (var func in funcs)

@@ -89,7 +89,12 @@ namespace HoloFlows.Devices
 
         protected void AddColorButtons(DeviceFunctionality colorFunc, Transform target)
         {
-            //GET COLOR BUTTON
+            GameObject colorPickerPrefab = PrefabHolder.Instance.devices.poorColorPicker;
+            GameObject colorPicker = Instantiate(colorPickerPrefab);
+            colorPicker.transform.SetParent(target, false);
+            colorPicker.SetActive(true);
+            DefaultColorPickerButton btn = colorPicker.GetComponent<DefaultColorPickerButton>();
+            btn.SetFunctionality(colorFunc);
         }
 
         protected GameObject SpawnButton(DeviceFunctionality functionality, DeviceCommand command, Transform parent)

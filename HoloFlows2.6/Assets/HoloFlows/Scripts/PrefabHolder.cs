@@ -87,6 +87,12 @@ namespace HoloFlows
             /// </summary>
             [Tooltip("Button group which contains (nice arranged) on, off, up and down.")]
             public GameObject downButton;
+
+            /// <summary>
+            /// Simple colorpicker button
+            /// </summary>
+            [Tooltip("Simple colorpicker buttonn")]
+            public GameObject poorColorPicker;
         }
 
         #endregion

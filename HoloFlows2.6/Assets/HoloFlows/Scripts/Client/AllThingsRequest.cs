@@ -184,6 +184,13 @@ namespace HoloFlows.Client
                 CommandType = "dogont:DownCommand"
             };
 
+            DeviceCommand colorCommand = new DeviceCommand()
+            {
+                Name = "DEFAULT_COLOR_COMMAND",
+                RealCommandName = "359,100,100",
+                CommandType = "dogont:SetColorHSBCommand"
+            };
+
             DeviceFunctionality lightOnOff = new DeviceFunctionality()
             {
                 FunctionalityType = "dogont:OnOffFunctionality",
@@ -203,7 +210,7 @@ namespace HoloFlows.Client
             DeviceFunctionality color = new DeviceFunctionality()
             {
                 FunctionalityType = "dogont:ColorControlFunctionality",
-                //Commands = new[] { },
+                Commands = new[] { colorCommand },
                 ItemId = "hue_bulb210_color_1",
                 GroupBox = box
             };
