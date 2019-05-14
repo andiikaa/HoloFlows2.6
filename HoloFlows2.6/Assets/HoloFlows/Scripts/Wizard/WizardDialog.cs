@@ -31,12 +31,31 @@ namespace HoloFlows.Wizard
 
         void Start()
         {
+            if (mainContent == null) { InitReferences(); }
+        }
+
+        private void InitReferences()
+        {
             isFinished = false;
             mainContent = gameObject.transform.Find(MAIN_CONTENT).gameObject;
             nextBtn = gameObject.transform.Find(NEXT_BTN).gameObject;
             mainText = mainContent.GetComponentInChildren<Text>();
             mainImage = mainContent.GetComponentInChildren<Image>();
             audioSource = GetComponent<AudioSource>();
+        }
+
+        public void LoadFirstTaskAndActivate()
+        {
+            if (mainContent == null) { InitReferences(); }
+            ActivateMainView(false);
+            nextTask = WizardTaskManager.Instance.GetNextTask();
+
+            if (nextTask != null) { Debug.Log("first task is ready!"); }
+            else { Debug.LogError("no first task was found!"); }
+
+            gameObject.SetActive(true);
+            UpdateContent();
+            ActivateMainView();
         }
 
         /// <summary>
@@ -82,9 +101,6 @@ namespace HoloFlows.Wizard
                 yield return null;
             }
             Debug.Log("Closing done...");
-
-
-            yield break;
         }
 
         private IEnumerator LoadNextTaskInternal()
@@ -102,16 +118,12 @@ namespace HoloFlows.Wizard
             yield return DisableProgressIndicator();
 
             ActivateMainView();
-
-            //break indicates that there are no more stmts coming
-            yield break;
         }
 
-        private void ActivateMainView()
+        private void ActivateMainView(bool activate = true)
         {
-            Debug.Log("Activate Main View");
-            mainContent.SetActive(true);
-            nextBtn.SetActive(true);
+            mainContent.SetActive(activate);
+            nextBtn.SetActive(activate);
         }
 
         private void UpdateContent()
@@ -126,6 +138,9 @@ namespace HoloFlows.Wizard
             isFinished = true;
             mainText.text = "You have finished the assembly. Close this dialog to interact with you new device.";
             nextBtn.GetComponentInChildren<Text>().text = "Close";
+
+            Sprite sprite = GetResource<Sprite>("file://Assets/HoloFlows/Resources/Wizard/Image/done.png");
+            mainImage.sprite = sprite;
         }
 
         private void UpdateContentWithNextTask()

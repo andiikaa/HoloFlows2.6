@@ -48,7 +48,7 @@ namespace HoloFlows.Client
 
             if (www.isNetworkError || www.isHttpError)
             {
-                Debug.Log("PostRequest: " + requestURL + " " + www.error);
+                Debug.LogError("PostRequest: " + requestURL + " " + www.error);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using HoloFlows.ObjectDetection;
 using HoloToolkit.Unity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -36,6 +37,16 @@ namespace HoloFlows.Wizard
                 return;
             }
             qrCodeData = scannedData;
+        }
+
+        public void LoadWorkflowForLastScan(Action<bool> workflowReady)
+        {
+            tasks.Clear();
+            //send request
+            //wait for first human task
+            //add content
+            tasks.AddRange(WizardDemo.CreateCompleteBulbExample());
+            workflowReady?.Invoke(true);
         }
 
         public void AddTask(WizardTask task)
