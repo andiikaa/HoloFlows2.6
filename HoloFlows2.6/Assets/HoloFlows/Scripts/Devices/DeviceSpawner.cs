@@ -28,24 +28,24 @@ namespace HoloFlows.Devices
         public void SpawnDevice(string deviceUid, Action<GameObject> handleGameObject)
         {
             //TODO use the deviceUid from the scan
-            deviceUid = "tinkerforge_irTemp_1";
+            //deviceUid = "tinkerforge_irTemp_1";
 
-            if (lastSpawned == null)
-            {
-                deviceUid = "tinkerforge_irTemp_1";
-            }
-            else if (lastSpawned == "tinkerforge_irTemp_1")
-            {
-                deviceUid = "hue_bulb210_1";
-            }
-            else if (lastSpawned == "hue_bulb210_1")
-            {
-                deviceUid = "tinkerforge_ambientLight_ambientLight_2";
-            }
-            else if (lastSpawned == "tinkerforge_ambientLight_ambientLight_2")
-            {
-                deviceUid = "tinkerforge_irTemp_1";
-            }
+            //if (lastSpawned == null)
+            //{
+            //    deviceUid = "tinkerforge_irTemp_1";
+            //}
+            //else if (lastSpawned == "tinkerforge_irTemp_1")
+            //{
+            //    deviceUid = "hue_bulb210_1";
+            //}
+            //else if (lastSpawned == "hue_bulb210_1")
+            //{
+            //    deviceUid = "tinkerforge_ambientLight_ambientLight_2";
+            //}
+            //else if (lastSpawned == "tinkerforge_ambientLight_ambientLight_2")
+            //{
+            //    deviceUid = "tinkerforge_irTemp_1";
+            //}
 
             lastSpawned = deviceUid;
 
