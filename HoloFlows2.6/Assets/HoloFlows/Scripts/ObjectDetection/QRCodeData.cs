@@ -26,14 +26,48 @@
         public static QRCodeData FromQrCodeData(string data)
         {
             //TODO remove hardcoded stuff
-            QRCodeData qrData = new QRCodeData
+
+            if (internalData == null)
             {
-                BindingId = "hue",
-                ThingId = "hue_bulb210_1",
-                IsValid = true
-            };
-            return qrData;
+                internalData = new QRCodeData
+                {
+                    BindingId = "hue",
+                    ThingId = "hue_bulb210_1",
+                    IsValid = true
+                };
+            }
+            else if ("hue_bulb210_1".Equals(internalData.ThingId))
+            {
+                internalData = new QRCodeData
+                {
+                    BindingId = "tinkerforge1",
+                    ThingId = "tinkerforge_irTemp_1",
+                    IsValid = true
+                };
+            }
+            else if ("tinkerforge_irTemp_1".Equals(internalData.ThingId))
+            {
+                internalData = new QRCodeData
+                {
+                    BindingId = "tinkerforge1",
+                    ThingId = "tinkerforge_ambientLight_ambientLight_2",
+                    IsValid = true
+                };
+            }
+            else
+            {
+                internalData = new QRCodeData
+                {
+                    BindingId = "hue",
+                    ThingId = "hue_bulb210_1",
+                    IsValid = true
+                };
+            }
+
+            return internalData;
         }
+
+        private static QRCodeData internalData = null;
 
 
     }

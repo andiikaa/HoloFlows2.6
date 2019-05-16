@@ -42,10 +42,25 @@ namespace HoloFlows.Wizard
         public void LoadWorkflowForLastScan(Action<bool> workflowReady)
         {
             tasks.Clear();
+
+            //TODO remove hardcoded
+
             //send request
             //wait for first human task
             //add content
-            tasks.AddRange(WizardDemo.CreateCompleteBulbExample());
+            if (qrCodeData.ThingId == "hue_bulb210_1")
+            {
+                tasks.AddRange(WizardDemo.CreateCompleteBulbExample());
+            }
+            else if (qrCodeData.ThingId == "tinkerforge_irTemp_1")
+            {
+                tasks.AddRange(WizardDemo.CreateTinkerforgeIRExample());
+            }
+            else
+            {
+                tasks.AddRange(WizardDemo.CreateTinkerforgeAmbientLight());
+            }
+
             workflowReady?.Invoke(true);
         }
 

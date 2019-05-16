@@ -16,6 +16,8 @@ namespace HoloFlows.Wizard
         private const string MAIN_CONTENT_TEXT = "Text";
         private const string MAIN_CONTENT_IMAGE = "Image";
 
+        private const float STATIC_WAIT_TIME = 0.8f;
+
         private GameObject mainContent;
         private GameObject nextBtn;
         private Text mainText;
@@ -107,7 +109,7 @@ namespace HoloFlows.Wizard
         {
             Debug.Log("Loading next task...");
             EnableTransition();
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(STATIC_WAIT_TIME);
 
             //TODO with remote process engine it is better to use a metatask which indicates the finish
             nextTask = WizardTaskManager.Instance.GetNextTask();
