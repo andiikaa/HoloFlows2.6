@@ -1,0 +1,9 @@
+hue
+hue_bulb210_1
+hue_bridge
+
+tinkerforge1
+tinkerforge_irTemp_1
+
+tinkerforge1
+tinkerforge_ambientLight_2

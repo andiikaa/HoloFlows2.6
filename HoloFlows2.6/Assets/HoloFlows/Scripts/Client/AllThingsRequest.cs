@@ -100,7 +100,7 @@ namespace HoloFlows.Client
         {
             DeviceInfo info = new DeviceInfo()
             {
-                Uid = "tinkerforge_ambientLight_ambientLight_2",
+                Uid = "tinkerforge_ambientLight_2",
                 DisplayName = "Ambient Light Sensor"
             };
 

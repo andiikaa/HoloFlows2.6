@@ -100,7 +100,8 @@ namespace HoloFlows.Manager
             }
 
             //instantiate devices, which have an anchor stored on the hololens
-            InstantiateExisitingDevices();
+            //TODO uncomment if for final usage
+            //InstantiateExisitingDevices();
         }
 
         private void InstantiateExisitingDevices()
