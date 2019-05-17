@@ -15,12 +15,22 @@ namespace HoloFlows.Devices
         protected const string TYPE_UP_COMMAND = "dogont:UpCommand";
         protected const string FUNC_TYPE_COLOR_CONTROL = "dogont:ColorControlFunctionality";
 
+        private string deviceId;
+
         public bool IsBasicDevice { get { return GetDeviceType() == DeviceType.BASIC; } }
         public bool IsTwoPieceDevice { get { return GetDeviceType() == DeviceType.TWO_PIECE; } }
         public bool IsThreePieceDevice { get { return GetDeviceType() == DeviceType.THREE_PIECE; } }
         public bool IsMultiDevice { get { return GetDeviceType() == DeviceType.MULTI; } }
 
-        public string DeviceId { get; set; }
+        public string DeviceId
+        {
+            get { return deviceId; }
+            set
+            {
+                deviceId = value;
+                UpdateDeviceIdForTapToPlace();
+            }
+        }
 
 
         /// <summary>
@@ -142,6 +152,23 @@ namespace HoloFlows.Devices
             btnScript.SetOffButtonData(offCommandFunc.ItemId, offCommandFunc.Commands.First(c => TYPE_OFF_COMMAND == c.CommandType).RealCommandName);
 
             btnObject.transform.SetParent(layoutGroup, false);
+        }
+
+        private void UpdateDeviceIdForTapToPlace()
+        {
+            if (DeviceId == null)
+            {
+                Debug.LogError("cant update TapToPlaceParent.DeviceId with value 'null'");
+                return;
+            }
+
+            TapToPlaceParent tapToPlace = gameObject.GetComponentInChildren<TapToPlaceParent>();
+            if (tapToPlace == null)
+            {
+                Debug.LogError("tap to place behavior not found");
+                return;
+            }
+            tapToPlace.DeviceId = DeviceId;
         }
 
         #region managed object

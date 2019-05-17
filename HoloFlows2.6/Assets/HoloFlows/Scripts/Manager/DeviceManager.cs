@@ -1,5 +1,6 @@
 ﻿
 using HoloFlows.Client;
+using HoloFlows.Devices;
 using HoloFlows.Model;
 using HoloToolkit.Unity;
 using System;
@@ -29,6 +30,8 @@ namespace HoloFlows.Manager
 
         //TODO Get this uri somehow via the discovery service
         private string openhabUri = Settings.OPENHAB_URI;
+
+        private bool initializedExisitingDevices = false;
 
         //TODO device state formatter
 
@@ -94,6 +97,54 @@ namespace HoloFlows.Manager
                     Debug.LogErrorFormat("device info not found for uid '{0}'", thingUid);
                 }
                 handleDeviceInfo?.Invoke(outInfo);
+            }
+
+            //instantiate devices, which have an anchor stored on the hololens
+            InstantiateExisitingDevices();
+        }
+
+        private void InstantiateExisitingDevices()
+        {
+            if (initializedExisitingDevices)
+            {
+                return;
+            }
+
+            initializedExisitingDevices = true;
+
+            if (WorldAnchorManager.IsInitialized)
+            {
+                foreach (string anchorId in WorldAnchorManager.Instance.AnchorStore.GetAllIds())
+                {
+                    DeviceInfo info = null;
+                    DeviceInfos.TryGetValue(anchorId, out info);
+                    if (info == null)
+                    {
+                        Debug.LogErrorFormat("device with anchor id '{0}' not found\n removing from AnchorManager...", anchorId);
+                        if (WorldAnchorManager.IsInitialized)
+                        {
+                            WorldAnchorManager.Instance.RemoveAnchor(anchorId);
+                        }
+                    }
+                    else
+                    {
+                        DeviceSpawner.Instance.SpawnDevice(anchorId, e =>
+                        {
+                            if (e != null)
+                            {
+                                Debug.LogFormat("spawned exisiting device with id '{0}'", anchorId);
+                            }
+                            else
+                            {
+                                Debug.LogErrorFormat("failed to spawn exisiting device with anchor id '{0}'\n removing from AnchorManager...", anchorId);
+                                if (WorldAnchorManager.IsInitialized)
+                                {
+                                    WorldAnchorManager.Instance.RemoveAnchor(anchorId);
+                                }
+                            }
+                        });
+                    }
+                }
             }
         }
 

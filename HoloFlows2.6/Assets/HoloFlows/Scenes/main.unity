@@ -985,7 +985,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnchorDebugText: {fileID: 0}
   ShowDetailedLogs: 0
-  PersistentAnchors: 0
+  PersistentAnchors: 1
 --- !u!1 &1165787603
 GameObject:
   m_ObjectHideFlags: 0

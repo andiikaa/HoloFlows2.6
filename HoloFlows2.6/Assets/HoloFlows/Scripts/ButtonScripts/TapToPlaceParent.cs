@@ -1,5 +1,4 @@
-﻿using HoloFlows.Client;
-using HoloFlows.Devices;
+﻿using HoloFlows.Devices;
 using HoloToolkit.Unity;
 using HoloToolkit.Unity.InputModule;
 using UnityEngine;
@@ -13,11 +12,24 @@ namespace HoloFlows.ButtonScripts
         private static readonly Color BLOBB_COLOR_DEFAULT = new Color(0f, 0.6f, 0.877f, 1f);
         private static readonly Color BLOBB_COLOR_HIT = Color.red;
 
+        private string deviceId;
+
         /// <summary>
         /// This is the id, which is used to find/save the postion of the device control.
         /// </summary>
-        //TODO if this name changes, we need to load/save the anchor
-        public string DeviceUid { get; private set; } = "SavedAnchorFriendlyName";
+        public string DeviceId
+        {
+            get { return deviceId; }
+            set
+            {
+                if (deviceId != null && WorldAnchorManager.IsInitialized)
+                {
+                    WorldAnchorManager.Instance.RemoveAnchor(deviceId);
+                }
+                deviceId = value;
+                SetInitialAnchor();
+            }
+        }
 
         //to check if placing is enabled
         private bool placing = false;
@@ -44,21 +56,7 @@ namespace HoloFlows.ButtonScripts
         void Start()
         {
             //SpatialMapping.Instance.DrawVisualMeshes = false;
-            DeviceUid = GetAnchorName() ?? DeviceUid;
-
-            // ***** remove comment syntax ****** //
-            if (WorldAnchorManager.Instance == null)
-            {
-                Debug.LogError("This script expects that you have a WorldAnchorManager component in your scene.");
-            }
-
-            if (WorldAnchorManager.Instance != null)
-            {
-                if (!placing)
-                {
-                    //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
-                }
-            }
+            SetInitialAnchor();
         }
 
         // Called by GazeGestureManager when the user performs a Select gesture
@@ -77,14 +75,21 @@ namespace HoloFlows.ButtonScripts
                 placing = !placing;
                 if (placing)
                 {
-                    //Debug.LogFormat("Remove anchor for '{0}'", transform.parent.gameObject.name);
-                    //WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
+                    Debug.LogFormat("Remove anchor for '{0}'", transform.parent.gameObject.name);
+                    WorldAnchorManager.Instance.RemoveAnchor(transform.parent.gameObject);
                 }
                 else
                 {
-                    Debug.LogFormat("Attach anchor with id '{0}'", DeviceUid);
-                    //WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, SavedAnchorFriendlyName);
+                    Debug.LogFormat("Updating anchor with id '{0}'", DeviceId);
+                    if (DeviceId == null)
+                    {
+                        Debug.LogError("no device id set. no anchor is set");
+                    }
 
+                    if (DeviceId != null)
+                    {
+                        WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, DeviceId);
+                    }
 
                     // TODO reload the position via unity? with the load method? 
                     // https://docs.unity3d.com/560/Documentation/ScriptReference/VR.WSA.Persistence.WorldAnchorStore.html
@@ -92,13 +97,13 @@ namespace HoloFlows.ButtonScripts
                     // the sharing could maybe be used for persistence in database?
 
 
-
-                    var request = new UpdateWorldPositionRequest("", DeviceUid);
-                    SerializableVector3 sv3 = transform.parent.position;
+                    //TODO we cant share the position in this way
+                    //var request = new UpdateWorldPositionRequest("", DeviceUid);
+                    //SerializableVector3 sv3 = transform.parent.position;
 
                     //TODO update request to openhab
-                    StartCoroutine(request.ExecuteRequest(sv3.ToJson()));
-                    Debug.LogFormat("Position: {0}", sv3.ToString());
+                    //StartCoroutine(request.ExecuteRequest(sv3.ToJson()));
+                    //Debug.LogFormat("Position: {0}", sv3.ToString());
                 }
             }
         }
@@ -110,6 +115,11 @@ namespace HoloFlows.ButtonScripts
             // update the placement to match the user's gaze.
             DoPlacing();
             DoMerging();
+        }
+
+        public void RemoveAnchor()
+        {
+            if (WorldAnchorManager.IsInitialized) { }
         }
 
         private void DoMerging()
@@ -212,16 +222,16 @@ namespace HoloFlows.ButtonScripts
 
         }
 
-        private string GetAnchorName()
+        private void SetInitialAnchor()
         {
-            GameObject root = GetRootParent(gameObject);
-            DeviceBehaviorBase db = root.GetComponent<DeviceBehaviorBase>();
-            if (db == null)
+            if (!placing && DeviceId != null && WorldAnchorManager.IsInitialized)
             {
-                Debug.LogErrorFormat("DeviceBehavior not found for '{0}'", root.name);
-                return null;
+                WorldAnchorManager.Instance.AttachAnchor(transform.parent.gameObject, DeviceId);
             }
-            return db.DeviceId;
+            else
+            {
+                Debug.LogWarning("cant attach anchor. anchormanager is or device id is null or placing mode is active");
+            }
         }
 
         public void OnTriggerEnter(Collider other)

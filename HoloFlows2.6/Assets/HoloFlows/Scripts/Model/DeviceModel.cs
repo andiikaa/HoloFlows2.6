@@ -13,7 +13,7 @@
         /// <summary>
         /// Info wether the device is currently in hf integrated or not
         /// </summary>
-        public bool IsInHoloFlows { get; set; }
+        public bool IsInHoloFlows { get; set; } = false;
     }
 
     /// <summary>
