@@ -27,19 +27,23 @@
         /// </summary>
         public static QRCodeData FromQrCodeData(string data)
         {
-            //TODO remove hardcoded stuff
-            //SetDebuggingData();
             if (string.IsNullOrEmpty(data)) return null;
             if (!data.Contains("\n") && !data.Contains("\r")) return null;
 
             string[] split = data.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
             if (split.Length < 2) return null;
 
-            internalData = new QRCodeData();
-            internalData.BindingId = split[0];
-            internalData.ThingId = split[1];
-            internalData.IsValid = !string.IsNullOrEmpty(internalData.BindingId) && !string.IsNullOrEmpty(internalData.ThingId);
+            QRCodeData newData = new QRCodeData();
+            newData.BindingId = split[0];
+            newData.ThingId = split[1];
+            newData.IsValid = !string.IsNullOrEmpty(newData.BindingId) && !string.IsNullOrEmpty(newData.ThingId);
 
+            return newData;
+        }
+
+        public static QRCodeData ForDebug()
+        {
+            SetDebuggingData();
             return internalData;
         }
 

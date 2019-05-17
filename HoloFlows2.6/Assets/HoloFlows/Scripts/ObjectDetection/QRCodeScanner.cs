@@ -48,6 +48,16 @@ namespace HoloFlows.ObjectDetection
         void OnDestroy() { Debug.Log("destroying the qrcode scanning object"); }
         void OnDisable() { Debug.Log("disabling the qrcode scanning object"); }
 
+        public void InitDefaults()
+        {
+            photoCaptureObject = null;
+            scanJob = null;
+            imageBuffer.Clear();
+            captureStarted = false;
+            firstScan = true;
+            cancel = false;
+        }
+
         //- firstScan indicates, if an image was already captured
         //- there is one ScanJob which uses the captured image and tries to decode the barcode
         //- we do this async or the framerate will drop to 2-3 fps :(
