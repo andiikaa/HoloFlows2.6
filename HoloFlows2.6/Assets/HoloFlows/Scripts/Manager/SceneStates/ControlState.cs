@@ -27,6 +27,20 @@ namespace HoloFlows.Manager.SceneStates
             //hide all
             HideAllManagedObjects();
 
+            //check if in editor, cause the cam of the pc is used, 
+            //which wont work with the qr scan in most cases
+            if (Application.isEditor)
+            {
+                JumpToWizard();
+            }
+            else
+            {
+                StartQrScanning();
+            }
+        }
+
+        private void StartQrScanning()
+        {
             //enable scan interface and set fixed position to camera
             GameObject cameraObject = GameObject.Find(CAM_NAME);
             if (cameraObject == null) { throw new System.NullReferenceException(string.Format(ERR_CAM_MSG, CAM_NAME)); }
@@ -40,9 +54,6 @@ namespace HoloFlows.Manager.SceneStates
 
             SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
             Debug.Log("Switched to QRScanState");
-            //TODO jump to Wizard for debug
-            //maybe implement a case, when the app is running in editor (via compiler flags)
-            //JumpToWizard();
         }
 
         private void JumpToWizard()
