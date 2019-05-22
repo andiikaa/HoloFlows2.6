@@ -189,13 +189,13 @@ public class WizardDemo : Singleton<WizardDemo>
             ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/IR/10.png"
         };
 
-        WizardTask t11 = new WizardTask()
-        {
-            Name = "Erfolgreich",
-            Instruction = "Die Einrichtung vom Infrarot Temperatur Bricklet war erfolgreich.",
-            AudioUri = "file://Assets/HoloFlows/Resources/Wizard/Audio/Tinkerforge/IR/11.wav",
-            ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/IR/11.png"
-        };
+        //WizardTask t11 = new WizardTask()
+        //{
+        //    Name = "Erfolgreich",
+        //    Instruction = "Die Einrichtung vom Infrarot Temperatur Bricklet war erfolgreich.",
+        //    AudioUri = "file://Assets/HoloFlows/Resources/Wizard/Audio/Tinkerforge/IR/11.wav",
+        //    ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/IR/11.png"
+        //};
 
         tasks.Add(t1);
         tasks.Add(t2);
@@ -207,7 +207,7 @@ public class WizardDemo : Singleton<WizardDemo>
         tasks.Add(t8);
         tasks.Add(t9);
         tasks.Add(t10);
-        tasks.Add(t11);
+        //tasks.Add(t11);
         return tasks;
     }
 
@@ -247,19 +247,19 @@ public class WizardDemo : Singleton<WizardDemo>
             ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/AmbientLight/4.png"
         };
 
-        WizardTask t5 = new WizardTask()
-        {
-            Name = "Erfolgreich",
-            Instruction = "Die Einrichtung vom Helligkeits-Sensor Bricklet war erfolgreich.",
-            AudioUri = "file://Assets/HoloFlows/Resources/Wizard/Audio/Tinkerforge/AmbientLight/5.wav",
-            ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/AmbientLight/5.png"
-        };
+        //WizardTask t5 = new WizardTask()
+        //{
+        //    Name = "Erfolgreich",
+        //    Instruction = "Die Einrichtung vom Helligkeits-Sensor Bricklet war erfolgreich.",
+        //    AudioUri = "file://Assets/HoloFlows/Resources/Wizard/Audio/Tinkerforge/AmbientLight/5.wav",
+        //    ImageUri = "file://Assets/HoloFlows/Resources/Wizard/Image/Tinkerforge/AmbientLight/5.png"
+        //};
 
         tasks.Add(t1);
         tasks.Add(t2);
         tasks.Add(t3);
         tasks.Add(t4);
-        tasks.Add(t5);
+        //tasks.Add(t5);
         return tasks;
     }
 }
