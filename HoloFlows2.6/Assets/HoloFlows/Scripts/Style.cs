@@ -11,6 +11,8 @@ namespace HoloFlows
         public Color defaultColor;
         public Material ClickedOnMat;
         public Color ClickedOnColor;
+        public Color InactiveButtonColor;
+        public Color ActiveStateColor;
 
         public Material LineMaterialWFMode;
         public Material LineMaterialNotWFMode;

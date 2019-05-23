@@ -23,10 +23,8 @@ namespace HoloFlows.ButtonScripts
         private Style style;
         private bool isSelected;
 
-        // Use this for initialization
-        public override void Start()
+        public override void ButtonStart()
         {
-            base.Start();
             BtnSpriteRenderer = transform.Find("BorderSprite").GetComponent<SpriteRenderer>();
             style = GameObject.Find("GlobalStyle").GetComponent<Style>();
         }

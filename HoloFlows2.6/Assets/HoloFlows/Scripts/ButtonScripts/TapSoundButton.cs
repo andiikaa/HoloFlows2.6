@@ -16,7 +16,7 @@ namespace HoloFlows.ButtonScripts
         /// <summary>
         /// Base class starting routine. If overriden you must call this method explicit.
         /// </summary>
-        public virtual void Start()
+        public void Start()
         {
             if (!AudioLibrary.IsInitialized)
             {
@@ -25,7 +25,10 @@ namespace HoloFlows.ButtonScripts
             }
 
             airTapAudio = AudioLibrary.Instance.ButtonAirTap;
+            ButtonStart();
         }
+
+        public virtual void ButtonStart() { }
 
         /// <summary>
         /// Handles the click, playes the sound and redirects the event to <see cref="HandleClickEvent(InputClickedEventData)"/> method.

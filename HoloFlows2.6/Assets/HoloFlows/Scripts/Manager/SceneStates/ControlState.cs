@@ -11,9 +11,9 @@ namespace HoloFlows.Manager.SceneStates
         public override void SwitchToEdit()
         {
             EnablePlacingModeForManagedObjects(true);
-            sceneManager.InternalState = new EditState(sceneManager);
+            SetNewState(new EditState(sceneManager));
             PlayTransitionSound();
-            Debug.Log("Switched to QRScanState");
+            Debug.Log("Switched to Edit Mode");
         }
 
         protected override AudioSource GetTransitionSound()

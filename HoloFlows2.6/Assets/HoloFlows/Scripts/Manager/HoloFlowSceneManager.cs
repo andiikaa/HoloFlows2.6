@@ -12,6 +12,7 @@ namespace HoloFlows.Manager
     public class HoloFlowSceneManager : Singleton<HoloFlowSceneManager>, IApplicationStateManager
     {
         internal HashSet<IManagedObject> ManagedObjects { get; private set; } = new HashSet<IManagedObject>();
+        internal List<IAppStateListener> AppStateListeners { get; private set; } = new List<IAppStateListener>();
         internal AppState InternalState { get; set; }
 
         /// <summary>
@@ -37,6 +38,24 @@ namespace HoloFlows.Manager
         }
 
         /// <summary>
+        /// Registers a <see cref="IAppStateListener"/> which gets informed about app state changes
+        /// </summary>
+        /// <param name="listener"></param>
+        public void RegisterAppStateListener(IAppStateListener listener)
+        {
+            AppStateListeners.Add(listener);
+        }
+
+        /// <summary>
+        /// Unregisters a <see cref="IAppStateListener"/> which gets informed about app state changes
+        /// </summary>
+        /// <param name="listener"></param>
+        public void UnregisterAppStateListener(IAppStateListener listener)
+        {
+            AppStateListeners.Remove(listener);
+        }
+
+        /// <summary>
         /// Unregister the <see cref="IManagedObject"/>. The object is then no longer managed by the <see cref="HoloFlowSceneManager"/>
         /// </summary>
         /// <param name="mObject"></param>
@@ -57,10 +76,21 @@ namespace HoloFlows.Manager
 
         #region State Switches
         public void SwitchToQRScan() { InternalState.SwitchToQRScan(); }
+
         public void SwitchToEdit() { InternalState.SwitchToEdit(); }
+
         public void SwitchToControl() { InternalState.SwitchToControl(); }
+
         public void SwitchToWizard(QRCodeData data) { InternalState.SwitchToWizard(data); }
         #endregion
+
+        internal void InformAppStateListeners()
+        {
+            foreach (IAppStateListener listener in AppStateListeners)
+            {
+                listener.AppStateChanged(InternalState.ApplicationState);
+            }
+        }
 
     }
 

@@ -82,6 +82,7 @@ namespace HoloFlows.Manager.SceneStates
         protected void SetNewState(AppState state)
         {
             sceneManager.InternalState = state;
+            sceneManager.InformAppStateListeners();
         }
 
         /// <summary>
