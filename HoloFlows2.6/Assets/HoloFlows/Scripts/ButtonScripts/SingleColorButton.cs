@@ -19,13 +19,20 @@ namespace HoloFlows.ButtonScripts
         public string RealCommandName { get; set; }
 
         private SpriteRenderer BtnSpriteRenderer;
+        private RectTransform rectTransform;
 
         private Style style;
         private bool isSelected;
+        //scale if a color is not selected
+        private float currentDefaultScale = 0.9f;
+        //offset if a color is selected
+        private float scaleOffset = 0.3f;
 
         public override void ButtonStart()
         {
             BtnSpriteRenderer = transform.Find("BorderSprite").GetComponent<SpriteRenderer>();
+            rectTransform = gameObject.GetComponent<RectTransform>();
+            currentDefaultScale = currentDefaultScale = rectTransform.localScale.x;
             style = GameObject.Find("GlobalStyle").GetComponent<Style>();
         }
 
@@ -62,12 +69,18 @@ namespace HoloFlows.ButtonScripts
         public void OnFocusEnter()
         {
             if (BtnSpriteRenderer != null)
+            {
                 BtnSpriteRenderer.color = style.highlightColor;
+                var tmpScale = currentDefaultScale + scaleOffset;
+                rectTransform.localScale = new Vector3(tmpScale, tmpScale);
+            }
 
         }
 
         public void OnFocusExit()
         {
+            rectTransform.localScale = new Vector3(currentDefaultScale, currentDefaultScale);
+
             if (!isSelected)
             {
                 if (BtnSpriteRenderer != null)
