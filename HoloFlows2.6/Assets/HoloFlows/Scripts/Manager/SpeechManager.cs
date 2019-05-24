@@ -7,6 +7,9 @@ using UnityEngine.Windows.Speech;
 
 namespace HoloFlows.Manager
 {
+    /// <summary>
+    /// Speechmanager handles the speech input of the user to switch between the app states
+    /// </summary>
     public class SpeechManager : Singleton<SpeechManager>
     {
         private HoloFlowSceneManager sceneManager;
@@ -34,6 +37,13 @@ namespace HoloFlows.Manager
 
         private void InitKeywordRecognizer()
         {
+            //FIXME
+            //Sometimes init failes with the following error:
+            //'Speech recognition is not supported on this machine.'
+            //Also the speech is sometimes not recognized anymore after using the app for a while.
+            //Restarting the HoloLens will fix the problem only for a few moments.
+            //SpeechManager was replaced with a ControlPanel. 
+
             try
             {
                 keywordRecognizer = new KeywordRecognizer(keywords.Keys.ToArray(), ConfidenceLevel.Low);
