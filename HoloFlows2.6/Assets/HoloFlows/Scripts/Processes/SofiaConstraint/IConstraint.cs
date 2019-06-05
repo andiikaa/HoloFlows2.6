@@ -1,4 +1,5 @@
-﻿using Processes.Sofia;
+﻿using HoloFlows.Processes.Sofia;
+using HoloFlows.Processes.SofiaUtil;
 using System;
 
 namespace HoloFlows.Processes.SofiaConstraint

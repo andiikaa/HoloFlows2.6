@@ -1,8 +1,10 @@
-﻿using HoloFlows.Processes.Sofia;
+﻿
+using HoloFlows.Processes.Sofia;
+using HoloFlows.Processes.SofiaConstraint;
 using HoloFlows.Processes.SofiaUtil;
 using System;
 
-namespace HoloFlows.Processes.SofiaConstraint
+namespace HoloFlows.Processes.SofiaConstraint2
 {
     /// <summary>
     /// Checks if each id is unique and not null or empty in the model.

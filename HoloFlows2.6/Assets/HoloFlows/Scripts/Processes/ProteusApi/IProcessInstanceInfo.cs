@@ -20,7 +20,7 @@ namespace Processes.Proteus.Rest.Model
     /// IProcessInstanceInfo
     /// </summary>
     [DataContract]
-    public partial class IProcessInstanceInfo :  IEquatable<IProcessInstanceInfo>
+    public partial class IProcessInstanceInfo : IEquatable<IProcessInstanceInfo>
     {
         /// <summary>
         /// Defines State
@@ -28,73 +28,73 @@ namespace Processes.Proteus.Rest.Model
         [JsonConverter(typeof(StringEnumConverter))]
         public enum StateEnum
         {
-            
+
             /// <summary>
             /// Enum ACTIVE for value: ACTIVE
             /// </summary>
             [EnumMember(Value = "ACTIVE")]
             ACTIVE = 1,
-            
+
             /// <summary>
             /// Enum INACTIVE for value: INACTIVE
             /// </summary>
             [EnumMember(Value = "INACTIVE")]
             INACTIVE = 2,
-            
+
             /// <summary>
             /// Enum EXECUTING for value: EXECUTING
             /// </summary>
             [EnumMember(Value = "EXECUTING")]
             EXECUTING = 3,
-            
+
             /// <summary>
             /// Enum EXECUTED for value: EXECUTED
             /// </summary>
             [EnumMember(Value = "EXECUTED")]
             EXECUTED = 4,
-            
+
             /// <summary>
             /// Enum PAUSED for value: PAUSED
             /// </summary>
             [EnumMember(Value = "PAUSED")]
             PAUSED = 5,
-            
+
             /// <summary>
             /// Enum STOPPED for value: STOPPED
             /// </summary>
             [EnumMember(Value = "STOPPED")]
             STOPPED = 6,
-            
+
             /// <summary>
             /// Enum FAILED for value: FAILED
             /// </summary>
             [EnumMember(Value = "FAILED")]
             FAILED = 7,
-            
+
             /// <summary>
             /// Enum KILLED for value: KILLED
             /// </summary>
             [EnumMember(Value = "KILLED")]
             KILLED = 8,
-            
+
             /// <summary>
             /// Enum WAITING for value: WAITING
             /// </summary>
             [EnumMember(Value = "WAITING")]
             WAITING = 9,
-            
+
             /// <summary>
             /// Enum UNDEPLOYED for value: UNDEPLOYED
             /// </summary>
             [EnumMember(Value = "UNDEPLOYED")]
             UNDEPLOYED = 10,
-            
+
             /// <summary>
             /// Enum ESCALATED for value: ESCALATED
             /// </summary>
             [EnumMember(Value = "ESCALATED")]
             ESCALATED = 11,
-            
+
             /// <summary>
             /// Enum DEACTIVATED for value: DEACTIVATED
             /// </summary>
@@ -105,7 +105,7 @@ namespace Processes.Proteus.Rest.Model
         /// <summary>
         /// Gets or Sets State
         /// </summary>
-        [DataMember(Name="state", EmitDefaultValue=false)]
+        [DataMember(Name = "state", EmitDefaultValue = false)]
         public StateEnum? State { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IProcessInstanceInfo" /> class.
@@ -127,42 +127,42 @@ namespace Processes.Proteus.Rest.Model
             this.ProcessType = ProcessType;
             this.ProcessId = ProcessId;
         }
-        
+
 
         /// <summary>
         /// Gets or Sets ProcessInstanceId
         /// </summary>
-        [DataMember(Name="processInstanceId", EmitDefaultValue=false)]
+        [DataMember(Name = "processInstanceId", EmitDefaultValue = false)]
         public string ProcessInstanceId { get; set; }
 
         /// <summary>
         /// Gets or Sets InstanceNumber
         /// </summary>
-        [DataMember(Name="instanceNumber", EmitDefaultValue=false)]
+        [DataMember(Name = "instanceNumber", EmitDefaultValue = false)]
         public int? InstanceNumber { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessDescription
         /// </summary>
-        [DataMember(Name="processDescription", EmitDefaultValue=false)]
+        [DataMember(Name = "processDescription", EmitDefaultValue = false)]
         public string ProcessDescription { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessName
         /// </summary>
-        [DataMember(Name="processName", EmitDefaultValue=false)]
+        [DataMember(Name = "processName", EmitDefaultValue = false)]
         public string ProcessName { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessType
         /// </summary>
-        [DataMember(Name="processType", EmitDefaultValue=false)]
+        [DataMember(Name = "processType", EmitDefaultValue = false)]
         public string ProcessType { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessId
         /// </summary>
-        [DataMember(Name="processId", EmitDefaultValue=false)]
+        [DataMember(Name = "processId", EmitDefaultValue = false)]
         public string ProcessId { get; set; }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -213,37 +213,37 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.State == input.State ||
                     (this.State != null &&
                     this.State.Equals(input.State))
-                ) && 
+                ) &&
                 (
                     this.ProcessInstanceId == input.ProcessInstanceId ||
                     (this.ProcessInstanceId != null &&
                     this.ProcessInstanceId.Equals(input.ProcessInstanceId))
-                ) && 
+                ) &&
                 (
                     this.InstanceNumber == input.InstanceNumber ||
                     (this.InstanceNumber != null &&
                     this.InstanceNumber.Equals(input.InstanceNumber))
-                ) && 
+                ) &&
                 (
                     this.ProcessDescription == input.ProcessDescription ||
                     (this.ProcessDescription != null &&
                     this.ProcessDescription.Equals(input.ProcessDescription))
-                ) && 
+                ) &&
                 (
                     this.ProcessName == input.ProcessName ||
                     (this.ProcessName != null &&
                     this.ProcessName.Equals(input.ProcessName))
-                ) && 
+                ) &&
                 (
                     this.ProcessType == input.ProcessType ||
                     (this.ProcessType != null &&
                     this.ProcessType.Equals(input.ProcessType))
-                ) && 
+                ) &&
                 (
                     this.ProcessId == input.ProcessId ||
                     (this.ProcessId != null &&
