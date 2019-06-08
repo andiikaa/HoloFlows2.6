@@ -21,8 +21,11 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONComplexType
     /// </summary>
     [DataContract]
-    public partial class IJSONComplexType : IJSONType,  IEquatable<IJSONComplexType>
+    public partial class IJSONComplexType : IJSONType, IEquatable<IJSONComplexType>
     {
+
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONComplexType"; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONComplexType" /> class.
         /// </summary>
@@ -31,11 +34,11 @@ namespace Processes.Proteus.Rest.Model
         //{
         //    this.SubTypes = SubTypes;
         //}
-        
+
         /// <summary>
         /// Gets or Sets SubTypes
         /// </summary>
-        [DataMember(Name="subTypes", EmitDefaultValue=false)]
+        [DataMember(Name = "subTypes", EmitDefaultValue = false)]
         public List<IJSONType> SubTypes { get; set; }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -81,7 +84,7 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.SubTypes == input.SubTypes ||
                     this.SubTypes != null &&

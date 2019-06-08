@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,10 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONEscalationPortInstance
     /// </summary>
     [DataContract]
-    public partial class IJSONEscalationPortInstance : IJSONPortInstance,  IEquatable<IJSONEscalationPortInstance>
+    public partial class IJSONEscalationPortInstance : IJSONPortInstance, IEquatable<IJSONEscalationPortInstance>
     {
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsonprocessstepinstances.JSONEscalationPortInstance"; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONEscalationPortInstance" /> class.
         /// </summary>
@@ -30,11 +31,11 @@ namespace Processes.Proteus.Rest.Model
         //{
         //    this.EscalationReason = EscalationReason;
         //}
-        
+
         /// <summary>
         /// Gets or Sets EscalationReason
         /// </summary>
-        [DataMember(Name="escalationReason", EmitDefaultValue=false)]
+        [DataMember(Name = "escalationReason", EmitDefaultValue = false)]
         public string EscalationReason { get; set; }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -80,7 +81,7 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.EscalationReason == input.EscalationReason ||
                     (this.EscalationReason != null &&

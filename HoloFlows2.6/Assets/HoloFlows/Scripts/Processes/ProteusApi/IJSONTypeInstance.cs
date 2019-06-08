@@ -9,9 +9,7 @@
  */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -28,62 +26,20 @@ namespace Processes.Proteus.Rest.Model
     [KnownType(typeof(IJSONComplexTypeInstance))]
     [KnownType(typeof(IJSONBooleanTypeInstance))]
     [KnownType(typeof(IJSONDoubleTypeInstance))]
-    public partial class IJSONTypeInstance :  IEquatable<IJSONTypeInstance>
+    public partial class IJSONTypeInstance : IEquatable<IJSONTypeInstance>
     {
-        /// <summary>
-        /// Defines DataTypeInstanceType
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum DataTypeInstanceTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum StringTypeInstance for value: StringTypeInstance
-            /// </summary>
-            [EnumMember(Value = "StringTypeInstance")]
-            StringTypeInstance = 1,
-            
-            /// <summary>
-            /// Enum BooleanTypeInstance for value: BooleanTypeInstance
-            /// </summary>
-            [EnumMember(Value = "BooleanTypeInstance")]
-            BooleanTypeInstance = 2,
-            
-            /// <summary>
-            /// Enum ComplexTypeInstance for value: ComplexTypeInstance
-            /// </summary>
-            [EnumMember(Value = "ComplexTypeInstance")]
-            ComplexTypeInstance = 3,
-            
-            /// <summary>
-            /// Enum IntegerTypeInstance for value: IntegerTypeInstance
-            /// </summary>
-            [EnumMember(Value = "IntegerTypeInstance")]
-            IntegerTypeInstance = 4,
-            
-            /// <summary>
-            /// Enum DoubleTypeInstance for value: DoubleTypeInstance
-            /// </summary>
-            [EnumMember(Value = "DoubleTypeInstance")]
-            DoubleTypeInstance = 5,
-            
-            /// <summary>
-            /// Enum ListTypeInstance for value: ListTypeInstance
-            /// </summary>
-            [EnumMember(Value = "ListTypeInstance")]
-            ListTypeInstance = 6,
-            
-            /// <summary>
-            /// Enum SetTypeInstance for value: SetTypeInstance
-            /// </summary>
-            [EnumMember(Value = "SetTypeInstance")]
-            SetTypeInstance = 7
-        }
+
+        //FIXME JSONTypeInstance is abstract in proteus and could not be instantiated
+        protected virtual string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypeinstances.JSONStringTypeInstance"; }
+
+        [JsonProperty("@class")]
+        public string ClassInfo { get { return CreateJavaClassInfo(); } }
+
 
         /// <summary>
         /// Gets or Sets DataTypeInstanceType
         /// </summary>
-        [DataMember(Name="dataTypeInstanceType", EmitDefaultValue=false)]
+        [DataMember(Name = "dataTypeInstanceType", EmitDefaultValue = false)]
         public DataTypeInstanceTypeEnum? DataTypeInstanceType { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONTypeInstance" /> class.
@@ -97,66 +53,66 @@ namespace Processes.Proteus.Rest.Model
         /// <param name="ValueStringComplete">ValueStringComplete.</param>
         /// <param name="DataTypeID">DataTypeID.</param>
         /// <param name="InstanceID">InstanceID.</param>
-        //public IJSONTypeInstance(string Name = default(string), IJSONType DataType = default(IJSONType), string ValueString = default(string), Object ValueAsObject = default(Object), string TypeClass = default(string), DataTypeInstanceTypeEnum? DataTypeInstanceType = default(DataTypeInstanceTypeEnum?), string ValueStringComplete = default(string), string DataTypeID = default(string), string InstanceID = default(string))
-        //{
-        //    this.Name = Name;
-        //    this.DataType = DataType;
-        //    this.ValueString = ValueString;
-        //    this.ValueAsObject = ValueAsObject;
-        //    this.TypeClass = TypeClass;
-        //    this.DataTypeInstanceType = DataTypeInstanceType;
-        //    this.ValueStringComplete = ValueStringComplete;
-        //    this.DataTypeID = DataTypeID;
-        //    this.InstanceID = InstanceID;
-        //}
-        
+        public IJSONTypeInstance(string Name = default(string), IJSONType DataType = default(IJSONType), string ValueString = default(string), Object ValueAsObject = default(Object), string TypeClass = default(string), DataTypeInstanceTypeEnum? DataTypeInstanceType = default(DataTypeInstanceTypeEnum?), string ValueStringComplete = default(string), string DataTypeID = default(string), string InstanceID = default(string))
+        {
+            this.Name = Name;
+            this.DataType = DataType;
+            this.ValueString = ValueString;
+            this.ValueAsObject = ValueAsObject;
+            this.TypeClass = TypeClass;
+            this.DataTypeInstanceType = DataTypeInstanceType;
+            this.ValueStringComplete = ValueStringComplete;
+            this.DataTypeID = DataTypeID;
+            this.InstanceID = InstanceID;
+        }
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
+        [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets DataType
         /// </summary>
-        [DataMember(Name="dataType", EmitDefaultValue=false)]
+        [DataMember(Name = "dataType", EmitDefaultValue = false)]
         public IJSONType DataType { get; set; }
 
         /// <summary>
         /// Gets or Sets ValueString
         /// </summary>
-        [DataMember(Name="valueString", EmitDefaultValue=false)]
+        [DataMember(Name = "valueString", EmitDefaultValue = false)]
         public string ValueString { get; set; }
 
         /// <summary>
         /// Gets or Sets ValueAsObject
         /// </summary>
-        [DataMember(Name="valueAsObject", EmitDefaultValue=false)]
+        [DataMember(Name = "valueAsObject", EmitDefaultValue = false)]
         public Object ValueAsObject { get; set; }
 
         /// <summary>
         /// Gets or Sets TypeClass
         /// </summary>
-        [DataMember(Name="typeClass", EmitDefaultValue=false)]
+        [DataMember(Name = "typeClass", EmitDefaultValue = false)]
         public string TypeClass { get; set; }
 
 
         /// <summary>
         /// Gets or Sets ValueStringComplete
         /// </summary>
-        [DataMember(Name="valueStringComplete", EmitDefaultValue=false)]
+        [DataMember(Name = "valueStringComplete", EmitDefaultValue = false)]
         public string ValueStringComplete { get; set; }
 
         /// <summary>
         /// Gets or Sets DataTypeID
         /// </summary>
-        [DataMember(Name="dataTypeID", EmitDefaultValue=false)]
+        [DataMember(Name = "dataTypeID", EmitDefaultValue = false)]
         public string DataTypeID { get; set; }
 
         /// <summary>
         /// Gets or Sets InstanceID
         /// </summary>
-        [DataMember(Name="instanceID", EmitDefaultValue=false)]
+        [DataMember(Name = "instanceID", EmitDefaultValue = false)]
         public string InstanceID { get; set; }
 
         /// <summary>
@@ -179,7 +135,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -209,47 +165,47 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
+                ) &&
                 (
                     this.DataType == input.DataType ||
                     (this.DataType != null &&
                     this.DataType.Equals(input.DataType))
-                ) && 
+                ) &&
                 (
                     this.ValueString == input.ValueString ||
                     (this.ValueString != null &&
                     this.ValueString.Equals(input.ValueString))
-                ) && 
+                ) &&
                 (
                     this.ValueAsObject == input.ValueAsObject ||
                     (this.ValueAsObject != null &&
                     this.ValueAsObject.Equals(input.ValueAsObject))
-                ) && 
+                ) &&
                 (
                     this.TypeClass == input.TypeClass ||
                     (this.TypeClass != null &&
                     this.TypeClass.Equals(input.TypeClass))
-                ) && 
+                ) &&
                 (
                     this.DataTypeInstanceType == input.DataTypeInstanceType ||
                     (this.DataTypeInstanceType != null &&
                     this.DataTypeInstanceType.Equals(input.DataTypeInstanceType))
-                ) && 
+                ) &&
                 (
                     this.ValueStringComplete == input.ValueStringComplete ||
                     (this.ValueStringComplete != null &&
                     this.ValueStringComplete.Equals(input.ValueStringComplete))
-                ) && 
+                ) &&
                 (
                     this.DataTypeID == input.DataTypeID ||
                     (this.DataTypeID != null &&
                     this.DataTypeID.Equals(input.DataTypeID))
-                ) && 
+                ) &&
                 (
                     this.InstanceID == input.InstanceID ||
                     (this.InstanceID != null &&

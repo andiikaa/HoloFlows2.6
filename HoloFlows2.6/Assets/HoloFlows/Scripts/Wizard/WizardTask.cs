@@ -10,6 +10,8 @@ namespace HoloFlows.Wizard
         public string AudioUri { get; set; }
         public string ImageUri { get; set; }
 
+        public byte[] ImageData { get; set; }
+
         /// <summary>
         /// Timeout for static functionality evaluation.
         /// Not to be used in production!

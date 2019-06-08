@@ -21,8 +21,11 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONListTypeInstance
     /// </summary>
     [DataContract]
-    public partial class IJSONListTypeInstance : IJSONTypeInstance,  IEquatable<IJSONListTypeInstance>
+    public partial class IJSONListTypeInstance : IJSONTypeInstance, IEquatable<IJSONListTypeInstance>
     {
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypeinstances.JSONListTypeInstance"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONListTypeInstance" /> class.
         /// </summary>
@@ -37,29 +40,29 @@ namespace Processes.Proteus.Rest.Model
         //    this.ValueAsObject = ValueAsObject;
         //    this.SubTypes = SubTypes;
         //}
-        
+
         /// <summary>
         /// Gets or Sets CollectionType
         /// </summary>
-        [DataMember(Name="collectionType", EmitDefaultValue=false)]
+        [DataMember(Name = "collectionType", EmitDefaultValue = false)]
         public IJSONType CollectionType { get; set; }
 
         /// <summary>
         /// Gets or Sets DataType
         /// </summary>
-        [DataMember(Name="dataType", EmitDefaultValue=false)]
+        [DataMember(Name = "dataType", EmitDefaultValue = false)]
         new public IJSONListType DataType { get; set; }
 
         /// <summary>
         /// Gets or Sets ValueAsObject
         /// </summary>
-        [DataMember(Name="valueAsObject", EmitDefaultValue=false)]
+        [DataMember(Name = "valueAsObject", EmitDefaultValue = false)]
         new public List<IJSONTypeInstance> ValueAsObject { get; set; }
 
         /// <summary>
         /// Gets or Sets SubTypes
         /// </summary>
-        [DataMember(Name="subTypes", EmitDefaultValue=false)]
+        [DataMember(Name = "subTypes", EmitDefaultValue = false)]
         public List<IJSONTypeInstance> SubTypes { get; set; }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -108,22 +111,22 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.CollectionType == input.CollectionType ||
                     (this.CollectionType != null &&
                     this.CollectionType.Equals(input.CollectionType))
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.DataType == input.DataType ||
                     (this.DataType != null &&
                     this.DataType.Equals(input.DataType))
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.ValueAsObject == input.ValueAsObject ||
                     this.ValueAsObject != null &&
                     this.ValueAsObject.SequenceEqual(input.ValueAsObject)
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.SubTypes == input.SubTypes ||
                     this.SubTypes != null &&

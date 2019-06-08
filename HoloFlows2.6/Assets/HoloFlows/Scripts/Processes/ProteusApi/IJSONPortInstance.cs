@@ -9,7 +9,6 @@
  */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,135 +23,24 @@ namespace Processes.Proteus.Rest.Model
     [DataContract]
     [KnownType(typeof(IJSONDataPortInstance))]
     [KnownType(typeof(IJSONEscalationPortInstance))]
-    public partial class IJSONPortInstance :  IEquatable<IJSONPortInstance>
+    public partial class IJSONPortInstance : IEquatable<IJSONPortInstance>
     {
-        /// <summary>
-        /// Defines PortInstanceType
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum PortInstanceTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum StartDataPortInstance for value: StartDataPortInstance
-            /// </summary>
-            [EnumMember(Value = "StartDataPortInstance")]
-            StartDataPortInstance = 1,
-            
-            /// <summary>
-            /// Enum EndDataPortInstance for value: EndDataPortInstance
-            /// </summary>
-            [EnumMember(Value = "EndDataPortInstance")]
-            EndDataPortInstance = 2,
-            
-            /// <summary>
-            /// Enum StartControlPortInstance for value: StartControlPortInstance
-            /// </summary>
-            [EnumMember(Value = "StartControlPortInstance")]
-            StartControlPortInstance = 3,
-            
-            /// <summary>
-            /// Enum EndControlPortInstance for value: EndControlPortInstance
-            /// </summary>
-            [EnumMember(Value = "EndControlPortInstance")]
-            EndControlPortInstance = 4,
-            
-            /// <summary>
-            /// Enum EscalationPortInstance for value: EscalationPortInstance
-            /// </summary>
-            [EnumMember(Value = "EscalationPortInstance")]
-            EscalationPortInstance = 5
-        }
+        protected virtual string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsonprocessstepinstances.JSONPortInstance"; }
+
+        [JsonProperty("@class")]
+        public string ClassInfo { get { return CreateJavaClassInfo(); } }
 
         /// <summary>
         /// Gets or Sets PortInstanceType
         /// </summary>
-        [DataMember(Name="portInstanceType", EmitDefaultValue=false)]
+        [DataMember(Name = "portInstanceType", EmitDefaultValue = false)]
         public PortInstanceTypeEnum? PortInstanceType { get; set; }
-        /// <summary>
-        /// Defines ExecutionState
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum ExecutionStateEnum
-        {
-            
-            /// <summary>
-            /// Enum ACTIVE for value: ACTIVE
-            /// </summary>
-            [EnumMember(Value = "ACTIVE")]
-            ACTIVE = 1,
-            
-            /// <summary>
-            /// Enum INACTIVE for value: INACTIVE
-            /// </summary>
-            [EnumMember(Value = "INACTIVE")]
-            INACTIVE = 2,
-            
-            /// <summary>
-            /// Enum EXECUTING for value: EXECUTING
-            /// </summary>
-            [EnumMember(Value = "EXECUTING")]
-            EXECUTING = 3,
-            
-            /// <summary>
-            /// Enum EXECUTED for value: EXECUTED
-            /// </summary>
-            [EnumMember(Value = "EXECUTED")]
-            EXECUTED = 4,
-            
-            /// <summary>
-            /// Enum PAUSED for value: PAUSED
-            /// </summary>
-            [EnumMember(Value = "PAUSED")]
-            PAUSED = 5,
-            
-            /// <summary>
-            /// Enum STOPPED for value: STOPPED
-            /// </summary>
-            [EnumMember(Value = "STOPPED")]
-            STOPPED = 6,
-            
-            /// <summary>
-            /// Enum FAILED for value: FAILED
-            /// </summary>
-            [EnumMember(Value = "FAILED")]
-            FAILED = 7,
-            
-            /// <summary>
-            /// Enum KILLED for value: KILLED
-            /// </summary>
-            [EnumMember(Value = "KILLED")]
-            KILLED = 8,
-            
-            /// <summary>
-            /// Enum WAITING for value: WAITING
-            /// </summary>
-            [EnumMember(Value = "WAITING")]
-            WAITING = 9,
-            
-            /// <summary>
-            /// Enum UNDEPLOYED for value: UNDEPLOYED
-            /// </summary>
-            [EnumMember(Value = "UNDEPLOYED")]
-            UNDEPLOYED = 10,
-            
-            /// <summary>
-            /// Enum ESCALATED for value: ESCALATED
-            /// </summary>
-            [EnumMember(Value = "ESCALATED")]
-            ESCALATED = 11,
-            
-            /// <summary>
-            /// Enum DEACTIVATED for value: DEACTIVATED
-            /// </summary>
-            [EnumMember(Value = "DEACTIVATED")]
-            DEACTIVATED = 12
-        }
+
 
         /// <summary>
         /// Gets or Sets ExecutionState
         /// </summary>
-        [DataMember(Name="executionState", EmitDefaultValue=false)]
+        [DataMember(Name = "executionState", EmitDefaultValue = false)]
         public ExecutionStateEnum? ExecutionState { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONPortInstance" /> class.
@@ -182,61 +70,61 @@ namespace Processes.Proteus.Rest.Model
             this.TypeId = TypeId;
             this.PortType = PortType;
         }
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
+        [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
+        [DataMember(Name = "type", EmitDefaultValue = false)]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or Sets OutTransitions
         /// </summary>
-        [DataMember(Name="outTransitions", EmitDefaultValue=false)]
+        [DataMember(Name = "outTransitions", EmitDefaultValue = false)]
         public List<IJSONTransitionInstance> OutTransitions { get; set; }
 
         /// <summary>
         /// Gets or Sets DoDeactivation
         /// </summary>
-        [DataMember(Name="doDeactivation", EmitDefaultValue=false)]
+        [DataMember(Name = "doDeactivation", EmitDefaultValue = false)]
         public bool? DoDeactivation { get; set; }
 
 
         /// <summary>
         /// Gets or Sets InstanceNumber
         /// </summary>
-        [DataMember(Name="instanceNumber", EmitDefaultValue=false)]
+        [DataMember(Name = "instanceNumber", EmitDefaultValue = false)]
         public int? InstanceNumber { get; set; }
 
 
         /// <summary>
         /// Gets or Sets InstanceId
         /// </summary>
-        [DataMember(Name="instanceId", EmitDefaultValue=false)]
+        [DataMember(Name = "instanceId", EmitDefaultValue = false)]
         public string InstanceId { get; set; }
 
         /// <summary>
         /// Gets or Sets InTransitions
         /// </summary>
-        [DataMember(Name="inTransitions", EmitDefaultValue=false)]
+        [DataMember(Name = "inTransitions", EmitDefaultValue = false)]
         public IJSONTransitionInstance InTransitions { get; set; }
 
         /// <summary>
         /// Gets or Sets TypeId
         /// </summary>
-        [DataMember(Name="typeId", EmitDefaultValue=false)]
+        [DataMember(Name = "typeId", EmitDefaultValue = false)]
         public string TypeId { get; set; }
 
         /// <summary>
         /// Gets or Sets PortType
         /// </summary>
-        [DataMember(Name="portType", EmitDefaultValue=false)]
+        [DataMember(Name = "portType", EmitDefaultValue = false)]
         public IJSONPort PortType { get; set; }
 
         /// <summary>
@@ -261,7 +149,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -291,57 +179,57 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
+                ) &&
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
-                ) && 
+                ) &&
                 (
                     this.OutTransitions == input.OutTransitions ||
                     this.OutTransitions != null &&
                     this.OutTransitions.SequenceEqual(input.OutTransitions)
-                ) && 
+                ) &&
                 (
                     this.DoDeactivation == input.DoDeactivation ||
                     (this.DoDeactivation != null &&
                     this.DoDeactivation.Equals(input.DoDeactivation))
-                ) && 
+                ) &&
                 (
                     this.PortInstanceType == input.PortInstanceType ||
                     (this.PortInstanceType != null &&
                     this.PortInstanceType.Equals(input.PortInstanceType))
-                ) && 
+                ) &&
                 (
                     this.InstanceNumber == input.InstanceNumber ||
                     (this.InstanceNumber != null &&
                     this.InstanceNumber.Equals(input.InstanceNumber))
-                ) && 
+                ) &&
                 (
                     this.ExecutionState == input.ExecutionState ||
                     (this.ExecutionState != null &&
                     this.ExecutionState.Equals(input.ExecutionState))
-                ) && 
+                ) &&
                 (
                     this.InstanceId == input.InstanceId ||
                     (this.InstanceId != null &&
                     this.InstanceId.Equals(input.InstanceId))
-                ) && 
+                ) &&
                 (
                     this.InTransitions == input.InTransitions ||
                     (this.InTransitions != null &&
                     this.InTransitions.Equals(input.InTransitions))
-                ) && 
+                ) &&
                 (
                     this.TypeId == input.TypeId ||
                     (this.TypeId != null &&
                     this.TypeId.Equals(input.TypeId))
-                ) && 
+                ) &&
                 (
                     this.PortType == input.PortType ||
                     (this.PortType != null &&

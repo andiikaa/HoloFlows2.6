@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,11 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONSetType
     /// </summary>
     [DataContract]
-    public partial class IJSONSetType : IJSONType,  IEquatable<IJSONSetType>
+    public partial class IJSONSetType : IJSONType, IEquatable<IJSONSetType>
     {
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONSetType"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONSetType" /> class.
         /// </summary>
@@ -30,11 +32,11 @@ namespace Processes.Proteus.Rest.Model
         {
             this.CollectionType = CollectionType;
         }
-        
+
         /// <summary>
         /// Gets or Sets CollectionType
         /// </summary>
-        [DataMember(Name="collectionType", EmitDefaultValue=false)]
+        [DataMember(Name = "collectionType", EmitDefaultValue = false)]
         public IJSONType CollectionType { get; set; }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -80,7 +82,7 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.CollectionType == input.CollectionType ||
                     (this.CollectionType != null &&

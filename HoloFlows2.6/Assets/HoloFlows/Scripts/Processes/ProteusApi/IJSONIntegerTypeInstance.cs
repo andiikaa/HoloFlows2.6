@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,12 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONIntegerTypeInstance
     /// </summary>
     [DataContract]
-    public partial class IJSONIntegerTypeInstance : IJSONTypeInstance,  IEquatable<IJSONIntegerTypeInstance>
+    public partial class IJSONIntegerTypeInstance : IJSONTypeInstance, IEquatable<IJSONIntegerTypeInstance>
     {
+
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypeinstances.JSONIntegerTypeInstance"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONIntegerTypeInstance" /> class.
         /// </summary>
@@ -32,17 +35,17 @@ namespace Processes.Proteus.Rest.Model
         //    this.Value = Value;
         //    this.ValueAsObject = ValueAsObject;
         //}
-        
+
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
-        [DataMember(Name="value", EmitDefaultValue=false)]
+        [DataMember(Name = "value", EmitDefaultValue = false)]
         public int? Value { get; set; }
 
         /// <summary>
         /// Gets or Sets ValueAsObject
         /// </summary>
-        [DataMember(Name="valueAsObject", EmitDefaultValue=false)]
+        [DataMember(Name = "valueAsObject", EmitDefaultValue = false)]
         new public int? ValueAsObject { get; set; }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -89,12 +92,12 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.Value == input.Value ||
                     (this.Value != null &&
                     this.Value.Equals(input.Value))
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.ValueAsObject == input.ValueAsObject ||
                     (this.ValueAsObject != null &&

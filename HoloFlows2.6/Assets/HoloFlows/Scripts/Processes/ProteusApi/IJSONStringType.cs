@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,15 +19,19 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONStringType
     /// </summary>
     [DataContract]
-    public partial class IJSONStringType : IJSONType,  IEquatable<IJSONStringType>
+    public partial class IJSONStringType : IJSONType, IEquatable<IJSONStringType>
     {
+
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONStringType"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONStringType" /> class.
         /// </summary>
         public IJSONStringType(string Name = default(string), string Id = default(string), DataTypeTypeEnum? DataTypeType = default(DataTypeTypeEnum?), string TypeClass = default(string)) : base(Name, Id, DataTypeType, TypeClass)
         {
         }
-        
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
@@ -41,7 +44,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>

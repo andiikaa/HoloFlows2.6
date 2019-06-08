@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,11 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONIntegerType
     /// </summary>
     [DataContract]
-    public partial class IJSONIntegerType : IJSONType,  IEquatable<IJSONIntegerType>
+    public partial class IJSONIntegerType : IJSONType, IEquatable<IJSONIntegerType>
     {
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONIntegerType"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONIntegerType" /> class.
         /// </summary>
@@ -32,17 +34,17 @@ namespace Processes.Proteus.Rest.Model
         //    this.Max = Max;
         //    this.Min = Min;
         //}
-        
+
         /// <summary>
         /// Gets or Sets Max
         /// </summary>
-        [DataMember(Name="max", EmitDefaultValue=false)]
+        [DataMember(Name = "max", EmitDefaultValue = false)]
         public int? Max { get; set; }
 
         /// <summary>
         /// Gets or Sets Min
         /// </summary>
-        [DataMember(Name="min", EmitDefaultValue=false)]
+        [DataMember(Name = "min", EmitDefaultValue = false)]
         public int? Min { get; set; }
 
         /// <summary>
@@ -59,7 +61,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -89,12 +91,12 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.Max == input.Max ||
                     (this.Max != null &&
                     this.Max.Equals(input.Max))
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.Min == input.Min ||
                     (this.Min != null &&

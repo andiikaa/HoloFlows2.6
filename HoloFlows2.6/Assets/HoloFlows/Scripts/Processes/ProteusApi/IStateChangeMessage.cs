@@ -9,7 +9,6 @@
  */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,92 +21,13 @@ namespace Processes.Proteus.Rest.Model
     /// IStateChangeMessage
     /// </summary>
     [DataContract]
-    public partial class IStateChangeMessage :  IEquatable<IStateChangeMessage>
+    public partial class IStateChangeMessage : IEquatable<IStateChangeMessage>
     {
-        /// <summary>
-        /// Defines State
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum StateEnum
-        {
-            
-            /// <summary>
-            /// Enum ACTIVE for value: ACTIVE
-            /// </summary>
-            [EnumMember(Value = "ACTIVE")]
-            ACTIVE = 1,
-            
-            /// <summary>
-            /// Enum INACTIVE for value: INACTIVE
-            /// </summary>
-            [EnumMember(Value = "INACTIVE")]
-            INACTIVE = 2,
-            
-            /// <summary>
-            /// Enum EXECUTING for value: EXECUTING
-            /// </summary>
-            [EnumMember(Value = "EXECUTING")]
-            EXECUTING = 3,
-            
-            /// <summary>
-            /// Enum EXECUTED for value: EXECUTED
-            /// </summary>
-            [EnumMember(Value = "EXECUTED")]
-            EXECUTED = 4,
-            
-            /// <summary>
-            /// Enum PAUSED for value: PAUSED
-            /// </summary>
-            [EnumMember(Value = "PAUSED")]
-            PAUSED = 5,
-            
-            /// <summary>
-            /// Enum STOPPED for value: STOPPED
-            /// </summary>
-            [EnumMember(Value = "STOPPED")]
-            STOPPED = 6,
-            
-            /// <summary>
-            /// Enum FAILED for value: FAILED
-            /// </summary>
-            [EnumMember(Value = "FAILED")]
-            FAILED = 7,
-            
-            /// <summary>
-            /// Enum KILLED for value: KILLED
-            /// </summary>
-            [EnumMember(Value = "KILLED")]
-            KILLED = 8,
-            
-            /// <summary>
-            /// Enum WAITING for value: WAITING
-            /// </summary>
-            [EnumMember(Value = "WAITING")]
-            WAITING = 9,
-            
-            /// <summary>
-            /// Enum UNDEPLOYED for value: UNDEPLOYED
-            /// </summary>
-            [EnumMember(Value = "UNDEPLOYED")]
-            UNDEPLOYED = 10,
-            
-            /// <summary>
-            /// Enum ESCALATED for value: ESCALATED
-            /// </summary>
-            [EnumMember(Value = "ESCALATED")]
-            ESCALATED = 11,
-            
-            /// <summary>
-            /// Enum DEACTIVATED for value: DEACTIVATED
-            /// </summary>
-            [EnumMember(Value = "DEACTIVATED")]
-            DEACTIVATED = 12
-        }
 
         /// <summary>
         /// Gets or Sets State
         /// </summary>
-        [DataMember(Name="state", EmitDefaultValue=false)]
+        [DataMember(Name = "state", EmitDefaultValue = false)]
         public StateEnum? State { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IStateChangeMessage" /> class.
@@ -145,90 +65,90 @@ namespace Processes.Proteus.Rest.Model
             this.Timestamp = Timestamp;
             this.MessageId = MessageId;
         }
-        
+
 
         /// <summary>
         /// Gets or Sets PeerId
         /// </summary>
-        [DataMember(Name="peerId", EmitDefaultValue=false)]
+        [DataMember(Name = "peerId", EmitDefaultValue = false)]
         public string PeerId { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessInstanceId
         /// </summary>
-        [DataMember(Name="processInstanceId", EmitDefaultValue=false)]
+        [DataMember(Name = "processInstanceId", EmitDefaultValue = false)]
         public string ProcessInstanceId { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessName
         /// </summary>
-        [DataMember(Name="processName", EmitDefaultValue=false)]
+        [DataMember(Name = "processName", EmitDefaultValue = false)]
         public string ProcessName { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessId
         /// </summary>
-        [DataMember(Name="processId", EmitDefaultValue=false)]
+        [DataMember(Name = "processId", EmitDefaultValue = false)]
         public string ProcessId { get; set; }
 
         /// <summary>
         /// Gets or Sets InstanceId
         /// </summary>
-        [DataMember(Name="instanceId", EmitDefaultValue=false)]
+        [DataMember(Name = "instanceId", EmitDefaultValue = false)]
         public string InstanceId { get; set; }
 
         /// <summary>
         /// Gets or Sets OriginalProcessInstanceId
         /// </summary>
-        [DataMember(Name="originalProcessInstanceId", EmitDefaultValue=false)]
+        [DataMember(Name = "originalProcessInstanceId", EmitDefaultValue = false)]
         public string OriginalProcessInstanceId { get; set; }
 
         /// <summary>
         /// Gets or Sets ProcessModelId
         /// </summary>
-        [DataMember(Name="processModelId", EmitDefaultValue=false)]
+        [DataMember(Name = "processModelId", EmitDefaultValue = false)]
         public string ProcessModelId { get; set; }
 
         /// <summary>
         /// Gets or Sets EndControlPorts
         /// </summary>
-        [DataMember(Name="endControlPorts", EmitDefaultValue=false)]
+        [DataMember(Name = "endControlPorts", EmitDefaultValue = false)]
         public Dictionary<string, IJSONPortInstance> EndControlPorts { get; set; }
 
         /// <summary>
         /// Gets or Sets StartDataPorts
         /// </summary>
-        [DataMember(Name="startDataPorts", EmitDefaultValue=false)]
+        [DataMember(Name = "startDataPorts", EmitDefaultValue = false)]
         public Dictionary<string, IJSONDataPortInstance> StartDataPorts { get; set; }
 
         /// <summary>
         /// Gets or Sets StartControlPorts
         /// </summary>
-        [DataMember(Name="startControlPorts", EmitDefaultValue=false)]
+        [DataMember(Name = "startControlPorts", EmitDefaultValue = false)]
         public Dictionary<string, IJSONPortInstance> StartControlPorts { get; set; }
 
         /// <summary>
         /// Gets or Sets EndDataPorts
         /// </summary>
-        [DataMember(Name="endDataPorts", EmitDefaultValue=false)]
+        [DataMember(Name = "endDataPorts", EmitDefaultValue = false)]
         public Dictionary<string, IJSONDataPortInstance> EndDataPorts { get; set; }
 
         /// <summary>
         /// Gets or Sets ModelId
         /// </summary>
-        [DataMember(Name="modelId", EmitDefaultValue=false)]
+        [DataMember(Name = "modelId", EmitDefaultValue = false)]
         public string ModelId { get; set; }
 
         /// <summary>
         /// Gets or Sets Timestamp
         /// </summary>
-        [DataMember(Name="timestamp", EmitDefaultValue=false)]
+        [DataMember(Name = "timestamp", EmitDefaultValue = false)]
         public long? Timestamp { get; set; }
 
         /// <summary>
         /// Gets or Sets MessageId
         /// </summary>
-        [DataMember(Name="messageId", EmitDefaultValue=false)]
+        [DataMember(Name = "messageId", EmitDefaultValue = false)]
         public string MessageId { get; set; }
 
         /// <summary>
@@ -257,7 +177,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -287,77 +207,77 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.State == input.State ||
                     (this.State != null &&
                     this.State.Equals(input.State))
-                ) && 
+                ) &&
                 (
                     this.PeerId == input.PeerId ||
                     (this.PeerId != null &&
                     this.PeerId.Equals(input.PeerId))
-                ) && 
+                ) &&
                 (
                     this.ProcessInstanceId == input.ProcessInstanceId ||
                     (this.ProcessInstanceId != null &&
                     this.ProcessInstanceId.Equals(input.ProcessInstanceId))
-                ) && 
+                ) &&
                 (
                     this.ProcessName == input.ProcessName ||
                     (this.ProcessName != null &&
                     this.ProcessName.Equals(input.ProcessName))
-                ) && 
+                ) &&
                 (
                     this.ProcessId == input.ProcessId ||
                     (this.ProcessId != null &&
                     this.ProcessId.Equals(input.ProcessId))
-                ) && 
+                ) &&
                 (
                     this.InstanceId == input.InstanceId ||
                     (this.InstanceId != null &&
                     this.InstanceId.Equals(input.InstanceId))
-                ) && 
+                ) &&
                 (
                     this.OriginalProcessInstanceId == input.OriginalProcessInstanceId ||
                     (this.OriginalProcessInstanceId != null &&
                     this.OriginalProcessInstanceId.Equals(input.OriginalProcessInstanceId))
-                ) && 
+                ) &&
                 (
                     this.ProcessModelId == input.ProcessModelId ||
                     (this.ProcessModelId != null &&
                     this.ProcessModelId.Equals(input.ProcessModelId))
-                ) && 
+                ) &&
                 (
                     this.EndControlPorts == input.EndControlPorts ||
                     this.EndControlPorts != null &&
                     this.EndControlPorts.SequenceEqual(input.EndControlPorts)
-                ) && 
+                ) &&
                 (
                     this.StartDataPorts == input.StartDataPorts ||
                     this.StartDataPorts != null &&
                     this.StartDataPorts.SequenceEqual(input.StartDataPorts)
-                ) && 
+                ) &&
                 (
                     this.StartControlPorts == input.StartControlPorts ||
                     this.StartControlPorts != null &&
                     this.StartControlPorts.SequenceEqual(input.StartControlPorts)
-                ) && 
+                ) &&
                 (
                     this.EndDataPorts == input.EndDataPorts ||
                     this.EndDataPorts != null &&
                     this.EndDataPorts.SequenceEqual(input.EndDataPorts)
-                ) && 
+                ) &&
                 (
                     this.ModelId == input.ModelId ||
                     (this.ModelId != null &&
                     this.ModelId.Equals(input.ModelId))
-                ) && 
+                ) &&
                 (
                     this.Timestamp == input.Timestamp ||
                     (this.Timestamp != null &&
                     this.Timestamp.Equals(input.Timestamp))
-                ) && 
+                ) &&
                 (
                     this.MessageId == input.MessageId ||
                     (this.MessageId != null &&

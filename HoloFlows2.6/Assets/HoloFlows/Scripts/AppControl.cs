@@ -1,5 +1,7 @@
 ﻿using HoloFlows.ButtonScripts;
 using HoloFlows.Manager;
+using HoloFlows.Processes;
+using System.Collections;
 using UnityEngine;
 
 namespace HoloFlows
@@ -34,6 +36,15 @@ namespace HoloFlows
                 Debug.LogWarning("The current app state is not availaible. Using Control State instead.");
                 AppStateChanged(ApplicationState.Control);
             }
+
+            StartCoroutine(RequestHumanTasks());
+        }
+
+        private IEnumerator RequestHumanTasks() {
+            ProteusRestClient client = new ProteusRestClient("http://127.0.0.1:8082/");
+            yield return client.GetHumanTaskList(r => {
+                Debug.LogFormat("Has HumanTask Error: {0}", r.HasError);                      
+            });
         }
 
         public void AppStateChanged(ApplicationState appState)

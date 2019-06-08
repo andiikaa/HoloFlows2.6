@@ -41,6 +41,63 @@ namespace HoloFlows.Processes
         #region process instance methods
 
         /// <summary>
+        /// Get all human tasks
+        /// </summary>
+        public IEnumerator GetHumanTaskList(Action<RequestCompleteData<Dictionary<string, IHumanTaskRequest>>> onComplete)
+        {
+            var request = UnityWebRequest.Get(baseUri + "humantasks/");
+            var result = new RequestCompleteData<Dictionary<string, IHumanTaskRequest>>();
+            yield return request.SendWebRequest();
+
+            HandleResponse(onComplete, request, result);
+        }
+
+        /// <summary>
+        /// Get all human tasks for a process id
+        /// </summary>
+        public IEnumerator GetHumanTaskListForProcess(string instanceId, Action<RequestCompleteData<Dictionary<string, IHumanTaskRequest>>> onComplete)
+        {
+            var request = UnityWebRequest.Get(baseUri + "humantasks/" + instanceId);
+            var result = new RequestCompleteData<Dictionary<string, IHumanTaskRequest>>();
+            yield return request.SendWebRequest();
+
+            HandleResponse(onComplete, request, result);
+        }
+
+        /// <summary>
+        /// Sends a HumanTaskResponse to proteus
+        /// </summary>
+        public IEnumerator PostHumanTaskResponse(IHumanTaskResponse response, Action<RequestCompleteData<string>> onComplete)
+        {
+            //if some error will happen with posting data
+            //see PostRequestBase
+            var jsonSerializerSettings = new JsonSerializerSettings()
+            {
+                TypeNameHandling = TypeNameHandling.None,
+                Formatting = Formatting.Indented
+
+            };
+
+            //https://stackoverflow.com/questions/9490345/json-net-change-type-field-to-another-name
+
+            string postData = JsonConvert.SerializeObject(response, jsonSerializerSettings);
+
+
+
+            //a hack for correct deserialization 
+            postData = MapTypeInformation(postData);
+
+            UnityWebRequest request = UnityWebRequest.Put(baseUri + "humantasks/", postData);
+            request.SetRequestHeader(CONTENT_TYPE, JSON_CONTENT);
+            request.method = "POST";
+
+            var result = new RequestCompleteData<string>();
+            yield return request.SendWebRequest();
+
+            HandleResponse(onComplete, request, result);
+        }
+
+        /// <summary>
         /// List all available process instances
         /// </summary>
         public IEnumerator GetProcessInstances(Action<RequestCompleteData<List<IProcessInstanceInfo>>> onComplete)
@@ -189,6 +246,11 @@ namespace HoloFlows.Processes
 
             onComplete(result);
 
+        }
+
+        private static string MapTypeInformation(string json)
+        {
+            return json;
         }
 
     }

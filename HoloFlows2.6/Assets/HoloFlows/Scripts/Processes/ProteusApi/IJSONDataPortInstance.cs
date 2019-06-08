@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,12 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONDataPortInstance
     /// </summary>
     [DataContract]
-    public partial class IJSONDataPortInstance : IJSONPortInstance,  IEquatable<IJSONDataPortInstance>
+    public partial class IJSONDataPortInstance : IJSONPortInstance, IEquatable<IJSONDataPortInstance>
     {
+
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsonprocessstepinstances.JSONDataPortInstance"; }
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONDataPortInstance" /> class.
         /// </summary>
@@ -32,17 +35,17 @@ namespace Processes.Proteus.Rest.Model
         //    this.DataTypeInstance = DataTypeInstance;
         //    this.PortType = PortType;
         //}
-        
+
         /// <summary>
         /// Gets or Sets DataTypeInstance
         /// </summary>
-        [DataMember(Name="dataTypeInstance", EmitDefaultValue=false)]
+        [DataMember(Name = "dataTypeInstance", EmitDefaultValue = false)]
         public IJSONTypeInstance DataTypeInstance { get; set; }
 
         /// <summary>
         /// Gets or Sets PortType
         /// </summary>
-        [DataMember(Name="portType", EmitDefaultValue=false)]
+        [DataMember(Name = "portType", EmitDefaultValue = false)]
         new public IJSONDataPort PortType { get; set; }
 
         /// <summary>
@@ -59,7 +62,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -89,12 +92,12 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.DataTypeInstance == input.DataTypeInstance ||
                     (this.DataTypeInstance != null &&
                     this.DataTypeInstance.Equals(input.DataTypeInstance))
-                ) && base.Equals(input) && 
+                ) && base.Equals(input) &&
                 (
                     this.PortType == input.PortType ||
                     (this.PortType != null &&

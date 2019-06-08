@@ -9,9 +9,7 @@
  */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -28,62 +26,21 @@ namespace Processes.Proteus.Rest.Model
     [KnownType(typeof(IJSONSetType))]
     [KnownType(typeof(IJSONIntegerType))]
     [KnownType(typeof(IJSONListType))]
-    public partial class IJSONType :  IEquatable<IJSONType>
+    public partial class IJSONType : IEquatable<IJSONType>
     {
-        /// <summary>
-        /// Defines DataTypeType
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum DataTypeTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum StringType for value: StringType
-            /// </summary>
-            [EnumMember(Value = "StringType")]
-            StringType = 1,
-            
-            /// <summary>
-            /// Enum BooleanType for value: BooleanType
-            /// </summary>
-            [EnumMember(Value = "BooleanType")]
-            BooleanType = 2,
-            
-            /// <summary>
-            /// Enum ComplexType for value: ComplexType
-            /// </summary>
-            [EnumMember(Value = "ComplexType")]
-            ComplexType = 3,
-            
-            /// <summary>
-            /// Enum IntegerType for value: IntegerType
-            /// </summary>
-            [EnumMember(Value = "IntegerType")]
-            IntegerType = 4,
-            
-            /// <summary>
-            /// Enum DoubleType for value: DoubleType
-            /// </summary>
-            [EnumMember(Value = "DoubleType")]
-            DoubleType = 5,
-            
-            /// <summary>
-            /// Enum ListType for value: ListType
-            /// </summary>
-            [EnumMember(Value = "ListType")]
-            ListType = 6,
-            
-            /// <summary>
-            /// Enum SetType for value: SetType
-            /// </summary>
-            [EnumMember(Value = "SetType")]
-            SetType = 7
-        }
+
+        //FIXME JSONType is abstract in proteus and could not be instantiated
+        protected virtual string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONStringType"; }
+
+        [JsonProperty("@class")]
+        public string ClassInfo { get { return CreateJavaClassInfo(); } }
+
+
 
         /// <summary>
         /// Gets or Sets DataTypeType
         /// </summary>
-        [DataMember(Name="dataTypeType", EmitDefaultValue=false)]
+        [DataMember(Name = "dataTypeType", EmitDefaultValue = false)]
         public DataTypeTypeEnum? DataTypeType { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONType" /> class.
@@ -99,24 +56,24 @@ namespace Processes.Proteus.Rest.Model
             this.DataTypeType = DataTypeType;
             this.TypeClass = TypeClass;
         }
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
+        [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
+        [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 
 
         /// <summary>
         /// Gets or Sets TypeClass
         /// </summary>
-        [DataMember(Name="typeClass", EmitDefaultValue=false)]
+        [DataMember(Name = "typeClass", EmitDefaultValue = false)]
         public string TypeClass { get; set; }
 
         /// <summary>
@@ -134,7 +91,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -164,22 +121,22 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
+                ) &&
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && 
+                ) &&
                 (
                     this.DataTypeType == input.DataTypeType ||
                     (this.DataTypeType != null &&
                     this.DataTypeType.Equals(input.DataTypeType))
-                ) && 
+                ) &&
                 (
                     this.TypeClass == input.TypeClass ||
                     (this.TypeClass != null &&

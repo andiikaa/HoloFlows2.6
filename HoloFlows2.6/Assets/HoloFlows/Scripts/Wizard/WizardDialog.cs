@@ -50,14 +50,16 @@ namespace HoloFlows.Wizard
         {
             if (mainContent == null) { InitReferences(); }
             ActivateMainView(false);
-            nextTask = WizardTaskManager.Instance.GetNextTask();
+            WizardTaskManager.Instance.GetNextTask(t =>
+            {
+                nextTask = t;
+                if (nextTask != null) { Debug.Log("first task is ready!"); }
+                else { Debug.LogError("no first task was found!"); }
 
-            if (nextTask != null) { Debug.Log("first task is ready!"); }
-            else { Debug.LogError("no first task was found!"); }
-
-            gameObject.SetActive(true);
-            UpdateContent();
-            ActivateMainView();
+                gameObject.SetActive(true);
+                UpdateContent();
+                ActivateMainView();
+            });
         }
 
         /// <summary>
@@ -109,16 +111,19 @@ namespace HoloFlows.Wizard
         {
             Debug.Log("Loading next task...");
             EnableTransition();
-            yield return new WaitForSeconds(STATIC_WAIT_TIME);
 
-            //TODO with remote process engine it is better to use a metatask which indicates the finish
-            nextTask = WizardTaskManager.Instance.GetNextTask();
-            Debug.Log("Task Loaded!");
+            bool isDone = false;
+            WizardTaskManager.Instance.GetNextTask(t =>
+            {
+                nextTask = t;
+                Debug.Log("Task Loaded!");
+                UpdateContent();
+                isDone = true;
+            });
 
-            UpdateContent();
+            while (!isDone) { yield return new WaitForSeconds(0.1f); }
 
             yield return DisableProgressIndicator();
-
             ActivateMainView();
         }
 

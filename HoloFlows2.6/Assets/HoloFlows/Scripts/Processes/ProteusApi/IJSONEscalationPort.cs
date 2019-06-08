@@ -10,7 +10,6 @@
 
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
@@ -20,8 +19,11 @@ namespace Processes.Proteus.Rest.Model
     /// IJSONEscalationPort
     /// </summary>
     [DataContract]
-    public partial class IJSONEscalationPort : IJSONPort,  IEquatable<IJSONEscalationPort>
+    public partial class IJSONEscalationPort : IJSONPort, IEquatable<IJSONEscalationPort>
     {
+
+        protected override string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsonprocesssteps.JSONEscalationPort"; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONEscalationPort" /> class.
         /// </summary>
@@ -30,11 +32,11 @@ namespace Processes.Proteus.Rest.Model
         //{
         //    this.EscalationTime = EscalationTime;
         //}
-        
+
         /// <summary>
         /// Gets or Sets EscalationTime
         /// </summary>
-        [DataMember(Name="escalationTime", EmitDefaultValue=false)]
+        [DataMember(Name = "escalationTime", EmitDefaultValue = false)]
         public long? EscalationTime { get; set; }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -80,7 +82,7 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return base.Equals(input) && 
+            return base.Equals(input) &&
                 (
                     this.EscalationTime == input.EscalationTime ||
                     (this.EscalationTime != null &&

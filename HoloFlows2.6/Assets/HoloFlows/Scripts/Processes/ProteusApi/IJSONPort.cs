@@ -9,7 +9,6 @@
  */
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,50 +23,19 @@ namespace Processes.Proteus.Rest.Model
     [DataContract]
     [KnownType(typeof(IJSONDataPort))]
     [KnownType(typeof(IJSONEscalationPort))]
-    public partial class IJSONPort :  IEquatable<IJSONPort>
+    public partial class IJSONPort : IEquatable<IJSONPort>
     {
-        /// <summary>
-        /// Defines PortType
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum PortTypeEnum
-        {
-            
-            /// <summary>
-            /// Enum StartDataPort for value: StartDataPort
-            /// </summary>
-            [EnumMember(Value = "StartDataPort")]
-            StartDataPort = 1,
-            
-            /// <summary>
-            /// Enum EndDataPort for value: EndDataPort
-            /// </summary>
-            [EnumMember(Value = "EndDataPort")]
-            EndDataPort = 2,
-            
-            /// <summary>
-            /// Enum StartControlPort for value: StartControlPort
-            /// </summary>
-            [EnumMember(Value = "StartControlPort")]
-            StartControlPort = 3,
-            
-            /// <summary>
-            /// Enum EndControlPort for value: EndControlPort
-            /// </summary>
-            [EnumMember(Value = "EndControlPort")]
-            EndControlPort = 4,
-            
-            /// <summary>
-            /// Enum EscalationPort for value: EscalationPort
-            /// </summary>
-            [EnumMember(Value = "EscalationPort")]
-            EscalationPort = 5
-        }
+
+        protected virtual string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsonprocesssteps.JSONPort"; }
+
+        [JsonProperty("@class")]
+        public string ClassInfo { get { return CreateJavaClassInfo(); } }
+
 
         /// <summary>
         /// Gets or Sets PortType
         /// </summary>
-        [DataMember(Name="portType", EmitDefaultValue=false)]
+        [DataMember(Name = "portType", EmitDefaultValue = false)]
         public PortTypeEnum? PortType { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="IJSONPort" /> class.
@@ -91,47 +59,47 @@ namespace Processes.Proteus.Rest.Model
             this.InTransitions = InTransitions;
             this.PortType = PortType;
         }
-        
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name="name", EmitDefaultValue=false)]
+        [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
+        [DataMember(Name = "id", EmitDefaultValue = false)]
         public string Id { get; set; }
 
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
+        [DataMember(Name = "type", EmitDefaultValue = false)]
         public string Type { get; set; }
 
         /// <summary>
         /// Gets or Sets OutTransitions
         /// </summary>
-        [DataMember(Name="outTransitions", EmitDefaultValue=false)]
+        [DataMember(Name = "outTransitions", EmitDefaultValue = false)]
         public List<IJSONTransition> OutTransitions { get; set; }
 
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
-        [DataMember(Name="description", EmitDefaultValue=false)]
+        [DataMember(Name = "description", EmitDefaultValue = false)]
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or Sets Optional
         /// </summary>
-        [DataMember(Name="optional", EmitDefaultValue=false)]
+        [DataMember(Name = "optional", EmitDefaultValue = false)]
         public bool? Optional { get; set; }
 
         /// <summary>
         /// Gets or Sets InTransitions
         /// </summary>
-        [DataMember(Name="inTransitions", EmitDefaultValue=false)]
+        [DataMember(Name = "inTransitions", EmitDefaultValue = false)]
         public IJSONTransition InTransitions { get; set; }
 
 
@@ -154,7 +122,7 @@ namespace Processes.Proteus.Rest.Model
             sb.Append("}\n");
             return sb.ToString();
         }
-  
+
         /// <summary>
         /// Returns the JSON string presentation of the object
         /// </summary>
@@ -184,42 +152,42 @@ namespace Processes.Proteus.Rest.Model
             if (input == null)
                 return false;
 
-            return 
+            return
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && 
+                ) &&
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && 
+                ) &&
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
-                ) && 
+                ) &&
                 (
                     this.OutTransitions == input.OutTransitions ||
                     this.OutTransitions != null &&
                     this.OutTransitions.SequenceEqual(input.OutTransitions)
-                ) && 
+                ) &&
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && 
+                ) &&
                 (
                     this.Optional == input.Optional ||
                     (this.Optional != null &&
                     this.Optional.Equals(input.Optional))
-                ) && 
+                ) &&
                 (
                     this.InTransitions == input.InTransitions ||
                     (this.InTransitions != null &&
                     this.InTransitions.Equals(input.InTransitions))
-                ) && 
+                ) &&
                 (
                     this.PortType == input.PortType ||
                     (this.PortType != null &&
