@@ -4,6 +4,7 @@ using HoloToolkit.Unity;
 using Processes.Proteus.Rest.Model;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -59,7 +60,7 @@ namespace HoloFlows.Wizard
         public void LoadWorkflowForLastScan(Action<bool> workflowReady)
         {
             //FIXME get this from the qrcode
-            processId = "_17j-IIloEem6b9zSoTSELQ"; //simple wizard
+            processId = "_IjP9YI0LEemo-tbczAUMtw"; //tinkerforge ambiente light
             StartCoroutine(DeployAndStartProcess(processId, workflowReady));
         }
 
@@ -157,7 +158,31 @@ namespace HoloFlows.Wizard
             WizardTask wTask = new WizardTask();
             wTask.Name = request.Name;
             wTask.Instruction = request.Description;
+            List<IJSONDataPortInstance> startPorts = request.StartDataPorts.Values.ToList();
+            wTask.AudioUri = GetDataPortValue("audioUri", startPorts);
+            wTask.ImageUri = GetDataPortValue("imageUri", startPorts);
             return wTask;
+        }
+
+        /// <summary>
+        /// gets string values from data ports
+        /// </summary>
+        private static string GetDataPortValue(string portName, List<IJSONDataPortInstance> dataPorts)
+        {
+            IJSONDataPortInstance port = dataPorts.Where(p => p.Name == portName).FirstOrDefault();
+            if (port == null)
+            {
+                Debug.LogErrorFormat("HumanTask has no data port with name '{0}'", portName);
+                return null;
+            }
+            if (port.DataTypeInstance == null
+                || port.DataTypeInstance.DataTypeInstanceType != DataTypeInstanceTypeEnum.StringTypeInstance)
+            {
+                Debug.LogErrorFormat("HumanTask data port '{0}' has no string value", portName);
+                return null;
+            }
+
+            return ((IJSONStringTypeInstance)port.DataTypeInstance).Value;
         }
 
         //private void LoadWorkflowForLastScanStatic(Action<bool> workflowReady)
