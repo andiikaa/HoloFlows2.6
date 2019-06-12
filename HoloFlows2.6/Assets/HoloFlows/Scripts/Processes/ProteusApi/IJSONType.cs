@@ -32,6 +32,10 @@ namespace Processes.Proteus.Rest.Model
         //FIXME JSONType is abstract in proteus and could not be instantiated
         protected virtual string CreateJavaClassInfo() { return "eu.vicci.process.model.util.serialization.jsontypes.JSONStringType"; }
 
+        /// <summary>
+        /// This information is needed by proteus for deserialization (type information). 
+        /// Newtonsoft uses some other format ($type), which cant be changed very easy.
+        /// </summary>
         [JsonProperty("@class")]
         public string ClassInfo { get { return CreateJavaClassInfo(); } }
 

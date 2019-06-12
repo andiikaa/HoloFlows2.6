@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HoloFlows.Processes.ProteusJsonConverter;
+using Newtonsoft.Json;
 using Processes.Proteus.Rest.Model;
 using System;
 using System.Collections;
@@ -23,8 +24,16 @@ namespace HoloFlows.Processes
         private const string JSON_CONTENT = "application/json";
         private const string CONTENT_TYPE = "Content-Type";
 
+        private static JsonConverter[] PROTEUS_CONVERTER = {
+            new ProteusApiTypeConverter<IJSONType>(),
+            new ProteusApiTypeConverter<IJSONPort>(),
+            new ProteusApiTypeConverter<IJSONPortInstance>(),
+            new ProteusApiTypeConverter<IJSONTypeInstance>() };
+
         // base uri should contain the / as last char
         private readonly string baseUri;
+
+
 
 
         public ProteusRestClient() : this(Settings.PROTEUS_BASE_URI) { }
@@ -49,7 +58,7 @@ namespace HoloFlows.Processes
             var result = new RequestCompleteData<Dictionary<string, IHumanTaskRequest>>();
             yield return request.SendWebRequest();
 
-            HandleResponse(onComplete, request, result);
+            HandleResponse(onComplete, request, result, PROTEUS_CONVERTER);
         }
 
         /// <summary>
@@ -61,7 +70,7 @@ namespace HoloFlows.Processes
             var result = new RequestCompleteData<Dictionary<string, IHumanTaskRequest>>();
             yield return request.SendWebRequest();
 
-            HandleResponse(onComplete, request, result);
+            HandleResponse(onComplete, request, result, PROTEUS_CONVERTER);
         }
 
         /// <summary>
@@ -212,7 +221,14 @@ namespace HoloFlows.Processes
         /// <param name="request"></param>
         /// <param name="result"></param>
         /// <param name="hasData">if true (default), we expect, there is some data received</param>
-        private static void HandleResponse<T>(Action<RequestCompleteData<T>> onComplete, UnityWebRequest request, RequestCompleteData<T> result)
+        private static void HandleResponse<T>(Action<RequestCompleteData<T>> onComplete, UnityWebRequest request,
+            RequestCompleteData<T> result)
+        {
+            HandleResponse(onComplete, request, result, new JsonConverter[] { });
+        }
+
+        private static void HandleResponse<T>(Action<RequestCompleteData<T>> onComplete, UnityWebRequest request,
+            RequestCompleteData<T> result, params JsonConverter[] customConverter)
         {
             if (request.isNetworkError || request.isHttpError)
             {
@@ -230,8 +246,17 @@ namespace HoloFlows.Processes
                     }
                     else
                     {
-                        T obj = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
-                        result.Data = obj;
+                        object obj = null;
+                        if (customConverter.Length > 0)
+                        {
+                            obj = JsonConvert.DeserializeObject<T>(request.downloadHandler.text, customConverter);
+                        }
+                        else
+                        {
+                            obj = JsonConvert.DeserializeObject<T>(request.downloadHandler.text);
+                        }
+
+                        result.Data = (T)obj;
                     }
 
 
@@ -245,7 +270,6 @@ namespace HoloFlows.Processes
             }
 
             onComplete(result);
-
         }
 
         private static string MapTypeInformation(string json)

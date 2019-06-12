@@ -199,6 +199,7 @@ namespace HoloFlows.Devices
 
         private string GetLabelOrItemId(DeviceState state)
         {
+            //TODO should be the group box name?
             return string.IsNullOrEmpty(state.Label) ? state.ItemId : state.Label;
         }
 

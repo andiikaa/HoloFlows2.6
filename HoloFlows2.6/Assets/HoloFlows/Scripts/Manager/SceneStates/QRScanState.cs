@@ -21,6 +21,8 @@ namespace HoloFlows.Manager.SceneStates
 
         public override void SwitchToWizard(QRCodeData data)
         {
+            //TODO check if the device is already present in sal
+
             //sceneManager.InternalDestroy(scanInterface);
             scanInterface.SetActive(false);
             if (!data.IsValid)

@@ -14,6 +14,8 @@
         /// Info wether the device is currently in hf integrated or not
         /// </summary>
         public bool IsInHoloFlows { get; set; } = false;
+
+        public MergedThing IsMergedIn { get; set; }
     }
 
     /// <summary>
@@ -70,5 +72,14 @@
         public string Uid { get; set; }
         public string Name { get; set; }
         public string IconName { get; set; }
+    }
+
+    /// <summary>
+    /// Indicates some merges
+    /// </summary>
+    public class MergedThing
+    {
+        public string Uid { get; set; }
+
     }
 }
