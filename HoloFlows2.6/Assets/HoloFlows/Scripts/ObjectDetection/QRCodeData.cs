@@ -13,6 +13,16 @@
         public string ThingId { get; private set; }
 
         /// <summary>
+        /// Unique Workflow id
+        /// </summary>
+        public string WorkflowId { get; private set; }
+
+        /// <summary>
+        /// Workflow name human readably for easy demo managment
+        /// </summary>
+        public string WorkflowName { get; private set; }
+
+        /// <summary>
         /// If false, the qr code has not the correct data stored
         /// </summary>
         public bool IsValid { get; private set; } = false;
@@ -31,13 +41,17 @@
             if (!data.Contains("\n") && !data.Contains("\r")) return null;
 
             string[] split = data.Split(new[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
-            if (split.Length < 2) return null;
+            if (split.Length < 4) return null;
 
             QRCodeData newData = new QRCodeData();
             newData.BindingId = split[0];
             newData.ThingId = split[1];
-            newData.IsValid = !string.IsNullOrEmpty(newData.BindingId) && !string.IsNullOrEmpty(newData.ThingId);
-
+            newData.WorkflowId = split[2];
+            newData.WorkflowName = split[3];
+            newData.IsValid = !string.IsNullOrEmpty(newData.BindingId)
+                && !string.IsNullOrEmpty(newData.ThingId)
+                && !string.IsNullOrEmpty(newData.WorkflowId)
+                && !string.IsNullOrEmpty(newData.WorkflowName);
             return newData;
         }
 
@@ -57,6 +71,8 @@
                 {
                     BindingId = "hue",
                     ThingId = "hue_bulb210_1",
+                    WorkflowId = "_kzOggI0TEemo-tbczAUMtw",
+                    WorkflowName = "hue_bulb210",
                     IsValid = true
                 };
             }
@@ -66,6 +82,8 @@
                 {
                     BindingId = "tinkerforge1",
                     ThingId = "tinkerforge_irTemp_1",
+                    WorkflowId = "_Afr5II0XEemo-tbczAUMtw",
+                    WorkflowName = "tinkerforge_irTemp",
                     IsValid = true
                 };
             }
@@ -75,6 +93,8 @@
                 {
                     BindingId = "tinkerforge1",
                     ThingId = "tinkerforge_ambientLight_2",
+                    WorkflowId = "_IjP9YI0LEemo-tbczAUMtw",
+                    WorkflowName = "tinkerforge_ambientLight",
                     IsValid = true
                 };
             }
@@ -84,6 +104,8 @@
                 {
                     BindingId = "hue",
                     ThingId = "hue_bulb210_1",
+                    WorkflowId = "_kzOggI0TEemo-tbczAUMtw",
+                    WorkflowName = "hue_bulb210",
                     IsValid = true
                 };
             }

@@ -27,6 +27,13 @@ namespace HoloFlows.Wizard
         private string processId;
         private IHumanTaskRequest latestRequest;
 
+        #region upload, deploy and start helpers
+
+        List<IProcessInfo> uProcessInfos = null;
+        bool? uHasError = null;
+
+        #endregion
+
         // Use this for initialization
         void Start()
         {
@@ -60,21 +67,30 @@ namespace HoloFlows.Wizard
         public void LoadWorkflowForLastScan(Action<bool> workflowReady)
         {
             //FIXME get this from the qrcode
-            processId = "_IjP9YI0LEemo-tbczAUMtw"; //tinkerforge ambiente light
+            //processId = "_IjP9YI0LEemo-tbczAUMtw"; //tinkerforge ambiente light
+            processId = qrCodeData.WorkflowId;
             StartCoroutine(DeployAndStartProcess(processId, workflowReady));
         }
 
+        public void GetNextTask(Action<WizardTask> taskReady)
+        {
+            StartCoroutine(GetNextTaskInternal(taskReady));
+        }
+
+        //TODO error handling if something fails - to bring back the default state and let the user scan again
         private IEnumerator DeployAndStartProcess(string processId, Action<bool> workflowReady)
         {
-            //TODO check if process is deployed on proteus
-            //if process is not deployed, deploy from remote store
+            uHasError = null;
+            uProcessInfos = null;
 
-            yield return proteusRestClient.DeployProcessInstance(processId, response =>
-            {
-                processInstanceId = response.Data;
-            });
+            yield return GetDeployedProcessList();
+            if (uHasError == true) yield break;
 
-            yield return new WaitForSeconds(2);
+            yield return UploadProcessIfNotDeployed();
+            if (uHasError == true) yield break;
+
+            yield return DeployProcessInstance();
+            if (uHasError == true) yield break;
 
             yield return proteusRestClient.StartProcessInstance(processInstanceId, isRunning =>
             {
@@ -82,10 +98,93 @@ namespace HoloFlows.Wizard
             });
         }
 
-        public void GetNextTask(Action<WizardTask> taskReady)
+        #region upload, deploy and start methods
+
+
+        private IEnumerator DeployProcessInstance()
         {
-            StartCoroutine(GetNextTaskInternal(taskReady));
+            bool? hasError = null;
+            yield return proteusRestClient.DeployProcessInstance(processId, response =>
+            {
+                processInstanceId = response.Data;
+                hasError = response.HasError;
+            });
+
+            while (hasError == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            if (hasError == true || processInstanceId == null)
+            {
+                Debug.LogError("failed to deploy process instance");
+            }
+
+            uHasError = hasError;
         }
+
+        private IEnumerator GetDeployedProcessList()
+        {
+            bool? hasError = null;
+            yield return proteusRestClient.GetProcesses(pl =>
+            {
+                hasError = pl.HasError;
+                uProcessInfos = pl.Data;
+            });
+
+            while (hasError == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            if (hasError == true || uProcessInfos == null)
+            {
+                Debug.LogError("failed to get process list from proteus");
+            }
+            uHasError = hasError;
+        }
+
+        private IEnumerator UploadProcessIfNotDeployed()
+        {
+            bool? hasError = null;
+            bool processAlreadyDeployed = uProcessInfos.Any(p => p.ProcessId == processId);
+            if (processAlreadyDeployed) yield break;
+
+            string processDoc = ProcessLoadUtil.LoadLocalProcessDefinition(qrCodeData.WorkflowName);
+            if (processDoc == null)
+            {
+                Debug.LogErrorFormat("failed to load local process file: {0}", qrCodeData.WorkflowName);
+                uHasError = true;
+                yield break;
+            }
+
+            UploadAndDeployRequest uploadAndDeployRequest = new UploadAndDeployRequest()
+            {
+                OverrideExisting = true,
+                Processdocument = processDoc
+            };
+
+            string proteusProcessId = null;
+            yield return proteusRestClient.UploadAndDeployProcess(uploadAndDeployRequest, uploadResponse =>
+            {
+                proteusProcessId = uploadResponse.Data;
+                hasError = uploadResponse.HasError;
+            });
+
+            while (hasError == null)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            if (hasError == true || proteusProcessId != processId)
+            {
+                Debug.LogError("failed to upload and deploy process");
+            }
+            uHasError = hasError;
+        }
+
+        #endregion
+
 
         //TODO error handling and timeout or something would be nice?
         private IEnumerator GetNextTaskInternal(Action<WizardTask> taskReady)
@@ -151,6 +250,8 @@ namespace HoloFlows.Wizard
             processId = null;
             latestRequest = null;
             qrCodeData = null;
+            uHasError = null;
+            uProcessInfos = null;
         }
 
         private static WizardTask CreateWizardTaskFrom(IHumanTaskRequest request)
