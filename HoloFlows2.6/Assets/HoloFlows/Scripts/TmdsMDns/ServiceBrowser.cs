@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
+using UnityEngine;
 
 namespace Tmds.MDns
 {
@@ -220,7 +221,16 @@ namespace Tmds.MDns
             {
                 CheckNetworkInterfaceStatuses(interfaceHandlers);
             };
-            NetworkChange.NetworkAddressChanged += _networkAddressChangedEventHandler;
+
+            try
+            {
+                NetworkChange.NetworkAddressChanged += _networkAddressChangedEventHandler;
+            }
+            catch (Exception e)
+            {
+                Debug.LogErrorFormat("NetworkDiscovery: {0}", e.Message);
+            }
+
             CheckNetworkInterfaceStatuses(interfaceHandlers);
         }
 
@@ -250,7 +260,26 @@ namespace Tmds.MDns
                         continue;
                     }
 
-                    int index = networkInterface.GetIPProperties().GetIPv4Properties().Index;
+                    int index = 0;
+
+                    try
+                    {
+                        var props = networkInterface.GetIPProperties();
+                        //FIXME: Crashes Unity editor here without exception in editor. 
+                        //tu lan problem? or interface problem?
+                        if (props.DnsSuffix == "inf.tu-dresden.de")
+                            continue;
+                        //FIXME: crashes with exception with message: no adapter found for index
+                        var ipv4Props = props.GetIPv4Properties();
+                        index = ipv4Props.Index;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogErrorFormat("NetworkDiscovery: {0}", e.Message);
+                        continue;
+                    }
+
+
                     NetworkInterfaceHandler interfaceHandler;
                     _interfaceHandlers.TryGetValue(index, out interfaceHandler);
                     if (interfaceHandler == null)

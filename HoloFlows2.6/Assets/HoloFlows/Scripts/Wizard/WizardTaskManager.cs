@@ -56,8 +56,7 @@ namespace HoloFlows.Wizard
                 Debug.LogError("Invalid qr code data added to the WizardTaskManager");
                 return;
             }
-            //FIXME if possible 
-            proteusRestClient = new ProteusRestClient("http://127.0.0.1:8082");
+            proteusRestClient = new ProteusRestClient();
             qrCodeData = scannedData;
         }
 

@@ -43,7 +43,7 @@ namespace HoloFlows
         //TODO remove this from here
         private IEnumerator RequestHumanTasks()
         {
-            ProteusRestClient client = new ProteusRestClient("http://127.0.0.1:8082/");
+            ProteusRestClient client = new ProteusRestClient();
             yield return client.GetHumanTaskList(r =>
             {
                 Debug.LogFormat("Has HumanTask Error: {0}", r.HasError);
