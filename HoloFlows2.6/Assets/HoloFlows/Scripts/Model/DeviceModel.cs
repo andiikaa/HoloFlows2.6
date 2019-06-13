@@ -10,10 +10,6 @@
         public DeviceFunctionality[] Functionalities { get; set; }
         public DeviceState[] States { get; set; }
         public GroupBox[] GroupBoxes { get; set; }
-        /// <summary>
-        /// Info wether the device is currently in hf integrated or not
-        /// </summary>
-        public bool IsInHoloFlows { get; set; } = false;
 
         public MergedThing IsMergedIn { get; set; }
     }
