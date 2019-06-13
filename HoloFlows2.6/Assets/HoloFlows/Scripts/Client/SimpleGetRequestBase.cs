@@ -11,12 +11,15 @@ namespace HoloFlows.Client
     {
         private const string HTTP = "http://";
         private readonly string requestURL;
+        private readonly bool continueWithError;
 
-        public SimpleGetRequestBase(string requestURL, string uriTarget)
+
+        public SimpleGetRequestBase(string requestURL, string uriTarget, bool continueWithError = false)
         {
             this.requestURL = requestURL.StartsWith(HTTP) ? requestURL : HTTP + requestURL;
             if (!this.requestURL.EndsWith("/")) { this.requestURL = this.requestURL + "/"; }
             this.requestURL = this.requestURL + uriTarget;
+            this.continueWithError = continueWithError;
         }
 
         public IEnumerator ExecuteRequest()
@@ -33,6 +36,7 @@ namespace HoloFlows.Client
             if (www.isNetworkError || www.isHttpError)
             {
                 Debug.Log("SimpleGetRequest: " + requestURL + " " + www.error);
+                if (continueWithError) HandleResponse(www);
             }
             else
             {

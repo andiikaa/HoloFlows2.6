@@ -29,14 +29,15 @@ namespace HoloFlows.Manager.SceneStates
 
             //check if in editor, cause the cam of the pc is used, 
             //which wont work with the qr scan in most cases
-            if (Application.isEditor)
-            {
-                JumpToWizard();
-            }
-            else
-            {
-                StartQrScanning();
-            }
+            //if (Application.isEditor)
+            //{
+            //    JumpToWizard();
+            //}
+            //else
+            //{
+            //    StartQrScanning();
+            //}
+            StartQrScanning();
         }
 
         private void StartQrScanning()
@@ -49,16 +50,28 @@ namespace HoloFlows.Manager.SceneStates
 
             QRCodeScanner scanner = scanInterface.GetComponent<QRCodeScanner>();
             if (scanner == null) { throw new System.NullReferenceException("QrCodeScanner behavior not found"); }
-            scanner.InitDefaults();
-            scanInterface.gameObject.SetActive(true);
+
+            //check if in editor, cause the cam of the pc is used, 
+            //which wont work with the qr scan in most cases
+            if (!Application.isEditor)
+            {
+                scanner.InitDefaults();
+                scanInterface.gameObject.SetActive(true);
+            }
 
             SetNewState(new QRScanState(sceneManager, scanInterface.gameObject));
+
+            if (Application.isEditor)
+            {
+                sceneManager.SwitchToWizard(QRCodeData.ForDebug());
+            }
+
             Debug.Log("Switched to QRScanState");
         }
 
         private void JumpToWizard()
         {
-            //TODO ftom qr code data
+            //debug data cause camera will not work in editor
             QRCodeData data = QRCodeData.ForDebug();
             WizardTaskManager.Instance.AddLastScannedData(data);
             WizardState wState = new WizardState(sceneManager, data);
