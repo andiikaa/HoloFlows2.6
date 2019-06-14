@@ -32,7 +32,7 @@ namespace HoloFlows.ButtonScripts
         {
             BtnSpriteRenderer = transform.Find("BorderSprite").GetComponent<SpriteRenderer>();
             rectTransform = gameObject.GetComponent<RectTransform>();
-            currentDefaultScale = currentDefaultScale = rectTransform.localScale.x;
+            currentDefaultScale = rectTransform.localScale.x;
             style = GameObject.Find("GlobalStyle").GetComponent<Style>();
         }
 

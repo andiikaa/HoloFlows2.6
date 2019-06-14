@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 
 namespace HoloFlows.Processes.ProteusJsonConverter
 {
@@ -11,6 +12,11 @@ namespace HoloFlows.Processes.ProteusJsonConverter
     /// </summary>
     public abstract class JsonCreationConverter<T> : JsonConverter
     {
+        //FIXME if using System.Reflection is missing as using, 
+        //compilation will fail. This field ensures that using 
+        //is not dropped with auto format
+        private TypeInfo reflectionHolder;
+
         /// <summary>
         /// Create an instance of objectType, based properties in the JSON object
         /// </summary>
