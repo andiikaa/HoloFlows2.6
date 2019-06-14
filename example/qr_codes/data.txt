@@ -8,7 +8,7 @@ tinkerforge_irTemp_1
 _Afr5II0XEemo-tbczAUMtw
 tinkerforge_irTemp
 
-hue
-hue_bulb210_1
-_kzOggI0TEemo-tbczAUMtw
-hue_bulb210
+tinkerforge1
+tinkerforge_ambientLight_2
+_IjP9YI0LEemo-tbczAUMtw
+tinkerforge_ambientLight
