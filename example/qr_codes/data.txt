@@ -1,9 +1,14 @@
 hue
 hue_bulb210_1
-hue_bridge
+_kzOggI0TEemo-tbczAUMtw
+hue_bulb210
 
 tinkerforge1
 tinkerforge_irTemp_1
+_Afr5II0XEemo-tbczAUMtw
+tinkerforge_irTemp
 
-tinkerforge1
-tinkerforge_ambientLight_2
+hue
+hue_bulb210_1
+_kzOggI0TEemo-tbczAUMtw
+hue_bulb210
