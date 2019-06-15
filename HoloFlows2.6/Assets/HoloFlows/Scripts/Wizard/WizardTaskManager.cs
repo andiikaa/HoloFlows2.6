@@ -65,8 +65,6 @@ namespace HoloFlows.Wizard
         /// </summary>
         public void LoadWorkflowForLastScan(Action<bool> workflowReady)
         {
-            //FIXME get this from the qrcode
-            //processId = "_IjP9YI0LEemo-tbczAUMtw"; //tinkerforge ambiente light
             processId = qrCodeData.WorkflowId;
             StartCoroutine(DeployAndStartProcess(processId, workflowReady));
         }

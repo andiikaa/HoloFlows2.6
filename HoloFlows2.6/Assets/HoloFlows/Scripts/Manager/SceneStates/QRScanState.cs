@@ -1,5 +1,4 @@
-﻿using HoloFlows.Client;
-using HoloFlows.Devices;
+﻿using HoloFlows.Devices;
 using HoloFlows.Model;
 using HoloFlows.ObjectDetection;
 using HoloFlows.Wizard;
@@ -45,35 +44,46 @@ namespace HoloFlows.Manager.SceneStates
 
         private IEnumerator CheckIfDeviceIsAlreadyPresent(QRCodeData data, string itemName)
         {
-
-            if (itemName == null)
+            //for video capture
+            if (data.ThingId == "hue_bulb210_1")
+            {
+                JumpToEdit(data);
+            }
+            else
             {
                 MoveToWizard(data);
-                yield break;
             }
 
+            yield break;
+
+            //if (itemName == null)
+            //{
+            //    MoveToWizard(data);
+            //    yield break;
+            //}
+
             //TODO the check should go to the sal
-            var request = new SingleItemRequest(Settings.OPENHAB_URI, itemName, (item, isNotFound) =>
-            {
-                if (isNotFound)
-                {
-                    MoveToWizard(data);
-                    return;
-                }
+            //var request = new SingleItemRequest(Settings.OPENHAB_URI, itemName, (item, isNotFound) =>
+            //{
+            //    if (isNotFound)
+            //    {
+            //        MoveToWizard(data);
+            //        return;
+            //    }
 
-                if (item != null)
-                {
-                    JumpToEdit(data);
-                }
-                else
-                {
-                    Debug.LogError("Something wrong connecting openhab...");
-                    JumpToEdit(data);
-                }
+            //    if (item != null)
+            //    {
+            //        JumpToEdit(data);
+            //    }
+            //    else
+            //    {
+            //        Debug.LogError("Something wrong connecting openhab...");
+            //        JumpToEdit(data);
+            //    }
 
-            });
+            //});
 
-            yield return request.ExecuteRequest();
+            //yield return request.ExecuteRequest();
 
         }
 

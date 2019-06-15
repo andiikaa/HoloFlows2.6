@@ -35,14 +35,25 @@ namespace HoloFlows.ObjectDetection
             Debug.LogFormat("Take picture with w:{0} x h:{1}", cameraResolution.width, cameraResolution.height);
         }
 
+        int frameCounter = 0;
+
         // Update is called once per frame
         void Update()
         {
-            if (!cancel)
+            //handling for simulating the qr code scan
+            //for taking a video...
+            frameCounter++;
+            if(frameCounter > 240)
             {
-                StartCapture();
-                HandlePresentImage();
+                HoloFlowSceneManager.Instance.SwitchToWizard(QRCodeData.ForDebug());
+                frameCounter = 0;
             }
+
+            //if (!cancel)
+            //{
+            //    StartCapture();
+            //    HandlePresentImage();
+            //}
         }
 
         void OnDestroy() { Debug.Log("destroying the qrcode scanning object"); }

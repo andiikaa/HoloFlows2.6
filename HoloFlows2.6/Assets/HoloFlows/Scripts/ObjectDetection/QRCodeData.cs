@@ -69,17 +69,6 @@
             {
                 internalData = new QRCodeData
                 {
-                    BindingId = "hue",
-                    ThingId = "hue_bulb210_1",
-                    WorkflowId = "_kzOggI0TEemo-tbczAUMtw",
-                    WorkflowName = "hue_bulb210",
-                    IsValid = true
-                };
-            }
-            else if ("hue_bulb210_1".Equals(internalData.ThingId))
-            {
-                internalData = new QRCodeData
-                {
                     BindingId = "tinkerforge1",
                     ThingId = "tinkerforge_irTemp_1",
                     WorkflowId = "_Afr5II0XEemo-tbczAUMtw",
@@ -98,7 +87,7 @@
                     IsValid = true
                 };
             }
-            else
+            else if ("tinkerforge_ambientLight_2".Equals(internalData.ThingId))
             {
                 internalData = new QRCodeData
                 {
@@ -109,6 +98,63 @@
                     IsValid = true
                 };
             }
+            else
+            {
+                internalData = new QRCodeData
+                {
+                    BindingId = "tinkerforge1",
+                    ThingId = "tinkerforge_irTemp_1",
+                    WorkflowId = "_Afr5II0XEemo-tbczAUMtw",
+                    WorkflowName = "tinkerforge_irTemp",
+                    IsValid = true
+                };
+            }
+
+
+            //if (internalData == null)
+            //{
+            //    internalData = new QRCodeData
+            //    {
+            //        BindingId = "hue",
+            //        ThingId = "hue_bulb210_1",
+            //        WorkflowId = "_kzOggI0TEemo-tbczAUMtw",
+            //        WorkflowName = "hue_bulb210",
+            //        IsValid = true
+            //    };
+            //}
+            //else if ("hue_bulb210_1".Equals(internalData.ThingId))
+            //{
+            //    internalData = new QRCodeData
+            //    {
+            //        BindingId = "tinkerforge1",
+            //        ThingId = "tinkerforge_irTemp_1",
+            //        WorkflowId = "_Afr5II0XEemo-tbczAUMtw",
+            //        WorkflowName = "tinkerforge_irTemp",
+            //        IsValid = true
+            //    };
+            //}
+            //else if ("tinkerforge_irTemp_1".Equals(internalData.ThingId))
+            //{
+            //    internalData = new QRCodeData
+            //    {
+            //        BindingId = "tinkerforge1",
+            //        ThingId = "tinkerforge_ambientLight_2",
+            //        WorkflowId = "_IjP9YI0LEemo-tbczAUMtw",
+            //        WorkflowName = "tinkerforge_ambientLight",
+            //        IsValid = true
+            //    };
+            //}
+            //else
+            //{
+            //    internalData = new QRCodeData
+            //    {
+            //        BindingId = "hue",
+            //        ThingId = "hue_bulb210_1",
+            //        WorkflowId = "_kzOggI0TEemo-tbczAUMtw",
+            //        WorkflowName = "hue_bulb210",
+            //        IsValid = true
+            //    };
+            //}
         }
 
 
