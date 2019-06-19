@@ -8,5 +8,5 @@ Implementation uses:
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=I-FxphsJjcI
 " target="_blank"><img src="http://img.youtube.com/vi/I-FxphsJjcI/0.jpg" 
-alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
+alt="demo video" width="240" height="180" border="10" /></a>
 
